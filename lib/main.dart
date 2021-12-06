@@ -1,6 +1,8 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 
+import 'View/home/home.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -14,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.white,
       ),
-      home: RandomWords(),
+      home: Home(),
     );
   }
 }
@@ -35,9 +37,6 @@ class RandomWordsState extends State<RandomWords> {
     return ListView.builder(itemBuilder: (context, i) {
       if (i.isOdd) return new Divider();
       final index = i ~/ 2;
-      if (index >= _suggestions.length) {
-        _suggestions.addAll(generateWordPairs().take(10));
-      }
       return _buildRow(_suggestions[index]);
     });
   }
