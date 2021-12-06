@@ -1,4 +1,5 @@
 import 'package:english_words/english_words.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'View/home/home.dart';
@@ -11,10 +12,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: '开始生成名字',
-      theme: ThemeData(
-        primaryColor: Colors.white,
+    return CupertinoApp(
+      title: '小求',
+      theme: CupertinoThemeData(
+        barBackgroundColor: Colors.white,
       ),
       home: Home(),
     );
@@ -37,6 +38,9 @@ class RandomWordsState extends State<RandomWords> {
     return ListView.builder(itemBuilder: (context, i) {
       if (i.isOdd) return new Divider();
       final index = i ~/ 2;
+      if (index >= _suggestions.length) {
+        _suggestions.addAll(generateWordPairs().take(10));
+      }
       return _buildRow(_suggestions[index]);
     });
   }
