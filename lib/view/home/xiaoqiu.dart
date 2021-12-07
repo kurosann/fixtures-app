@@ -1,7 +1,17 @@
+import 'package:fixtures/view/home/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class XiaoqiuPage extends StatelessWidget {
+  static XiaoqiuPage _instance;
+
+  static XiaoqiuPage get instance {
+    if (_instance == null) {
+      _instance = XiaoqiuPage();
+    }
+    return _instance;
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -62,7 +72,9 @@ class XiaoqiuPage extends StatelessWidget {
               Text("找装修")
             ],
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(allContext, '/findFixture');
+          },
         ),
         CupertinoButton(
           child: Column(

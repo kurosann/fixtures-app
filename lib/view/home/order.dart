@@ -1,12 +1,19 @@
+import 'package:fixtures/model/Order.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class OrderPage extends StatefulWidget {
+  static OrderPage _instance;
+
+  static OrderPage get instance {
+    if (_instance == null) {
+      _instance = OrderPage();
+    }
+    return _instance;
+  }
   @override
   State<StatefulWidget> createState() => OrderPageState();
 }
-
-class Order {}
 
 class OrderPageState extends State<OrderPage> {
   /// 订单数据
@@ -15,17 +22,23 @@ class OrderPageState extends State<OrderPage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
-        middle: Text("订单"),
-      ),
-      child: ListView.builder(
-        itemCount: orderList.length * 2,
-        itemBuilder: (context, i) {
-          if (i.isOdd) return Divider();
-          final index = i ~/ 2;
-
-          return _itemCell();
+      child: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return [
+            CupertinoSliverNavigationBar(
+              largeTitle: Text("订单"),
+            )
+          ];
         },
+        body: ListView.builder(
+          itemCount: orderList.length * 2,
+          itemBuilder: (context, i) {
+            if (i.isOdd) return Divider();
+            final index = i ~/ 2;
+
+            return _itemCell();
+          },
+        ),
       ),
     );
   }

@@ -1,27 +1,22 @@
-import 'dart:ui';
-
-import 'package:fixtures/View/home/me.dart';
-import 'package:fixtures/View/home/xiaoqiu.dart';
+import 'package:fixtures/utils/util.dart';
+import 'package:fixtures/view/home/xiaoqiu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'my.dart';
 import 'order.dart';
 
-class Home extends StatelessWidget {
+BuildContext allContext;
+
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    allContext = context;
     return Scaffold(
-        appBar: PreferredSize(
-          preferredSize:
-              Size.fromHeight(MediaQuery.of(context).size.height * 0.07),
-          child: SafeArea(
-            top: true,
-            child: Offstage(),
-          ),
-        ),
-        body: _bottomNavigationBar(),
+      appBar: emptyAppBar(context),
+      body: _bottomNavigationBar(),
 //        bottomNavigationBar: _bottomNavigationBar()
-       );
+    );
   }
 
   // 底部导航界面总体
@@ -39,32 +34,33 @@ class Home extends StatelessWidget {
   Widget _tabBar() {
     return CupertinoTabBar(
       items: [
-        BottomNavigationBarItem(icon: Icon(Icons.message), title: Text("小求")),
+        BottomNavigationBarItem(icon: Icon(Icons.message), label: "小求"),
         BottomNavigationBarItem(
-            icon: Icon(Icons.format_list_bulleted), title: Text("订单")),
-        BottomNavigationBarItem(icon: Icon(Icons.person), title: Text("我的")),
+            icon: Icon(Icons.format_list_bulleted), label: "订单"),
+        BottomNavigationBarItem(icon: Icon(Icons.person), label: "我的"),
       ],
     );
   }
 
   /// 底部导航栏路由
   Widget _tabBuilder(context, index) {
+    var empty = Container();
     return CupertinoTabView(
       routes: {
-        '/xiaoqiu': (context) => XiaoqiuPage(),
-        '/order': (context) => OrderPage(),
-        '/me': (context) => MePage(),
+        '/home/xiaoqiu': (context) => XiaoqiuPage.instance,
+        '/home/order': (context) => XiaoqiuPage.instance,
+        '/home/my': (context) => MyPage.instance,
       },
       builder: (context) {
         switch (index) {
           case 0:
-            return XiaoqiuPage();
+            return XiaoqiuPage.instance;
           case 1:
-            return OrderPage();
+            return OrderPage.instance;
           case 2:
-            return MePage();
+            return MyPage.instance;
           default:
-            return Container();
+            return empty;
         }
       },
     );
