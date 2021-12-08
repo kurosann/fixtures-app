@@ -1,6 +1,7 @@
 import 'package:fixtures/view/findFixture/findFixture.dart';
 import 'package:fixtures/view/findFixture/publish.dart';
 import 'package:fixtures/view/home/home.dart';
+import 'package:fixtures/view/login/login.dart';
 import 'package:fixtures/view/setting/setting.dart';
 import 'package:flutter/cupertino.dart';
 
