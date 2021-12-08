@@ -1,9 +1,9 @@
 class Question {
   String num;
   String title;
-  int ans;
+  int? ans;
 
-  Question({this.num, this.title, this.ans}) : super();
+  Question({required this.num, required this.title, this.ans});
 
   @override
   String toString() {

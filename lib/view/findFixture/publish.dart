@@ -3,11 +3,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PublishPage extends StatefulWidget {
+  final String? id;
+
+  PublishPage({@required this.id});
+
   @override
-  State<StatefulWidget> createState() => PublishState();
+  State<StatefulWidget> createState() => PublishState(id: id);
 }
 
 class PublishState extends State<PublishPage> {
+  var id;
+
+  PublishState({@required this.id});
+
   var position = "惠州";
 
   var positions = <String>["惠州", "广州"];
@@ -68,7 +76,6 @@ class PublishState extends State<PublishPage> {
             child: CupertinoPicker(
               itemExtent: 28,
               onSelectedItemChanged: (int value) {
-                print(value);
                 setState(() {
                   position = positions[value];
                 });

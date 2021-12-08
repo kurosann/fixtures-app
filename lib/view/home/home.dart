@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'my.dart';
 import 'order.dart';
 
-BuildContext allContext;
+BuildContext? allContext;
 
 class HomePage extends StatelessWidget {
   @override
@@ -31,7 +31,7 @@ class HomePage extends StatelessWidget {
   }
 
   /// 底部导航栏按钮
-  Widget _tabBar() {
+  CupertinoTabBar _tabBar() {
     return CupertinoTabBar(
       items: [
         BottomNavigationBarItem(icon: Icon(Icons.message), label: "小求"),

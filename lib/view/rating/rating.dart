@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 class RatingPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => RatingState();
+  State<StatefulWidget> createState() => _RatingState();
 }
 
-class RatingState extends State<RatingPage> {
+class _RatingState extends State<RatingPage> {
   var rating = <Question>[
     Question(num: "1", title: "服务态度"),
     Question(num: "2", title: "工程时效"),

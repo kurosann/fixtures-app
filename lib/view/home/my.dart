@@ -5,19 +5,19 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'home.dart';
 
 class MyPage extends StatefulWidget {
-  static MyPage _instance;
+  static MyPage? _instance;
 
   static MyPage get instance {
     if (_instance == null) {
       _instance = MyPage();
     }
-    return _instance;
+    return _instance!;
   }
   @override
-  State<StatefulWidget> createState() => MyPageState();
+  State<StatefulWidget> createState() => _MyPageState();
 }
 
-class MyPageState extends State<MyPage> {
+class _MyPageState extends State<MyPage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -252,7 +252,7 @@ class MyPageState extends State<MyPage> {
             subtitle: Text("黄金会员"),
             trailing: Text("去升级"),
             onTap: () {
-              Navigator.of(allContext)
+              Navigator.of(allContext!)
                   .push(MaterialPageRoute(builder: (BuildContext context) {
                 return CupertinoPageScaffold(
                   child: Container(),
@@ -268,7 +268,7 @@ class MyPageState extends State<MyPage> {
             title: Text("余额提现"),
             trailing: Text("提现"),
             onTap: () {
-              Navigator.of(allContext)
+              Navigator.of(allContext!)
                   .push(MaterialPageRoute(builder: (BuildContext context) {
                 return CupertinoPageScaffold(
                   child: Container(),
@@ -287,7 +287,7 @@ class MyPageState extends State<MyPage> {
               size: 16,
             ),
             onTap: () {
-              Navigator.of(allContext)
+              Navigator.of(allContext!)
                   .push(MaterialPageRoute(builder: (BuildContext context) {
                 return CupertinoPageScaffold(
                   child: Container(),
@@ -303,7 +303,7 @@ class MyPageState extends State<MyPage> {
             title: Text("我的邀请码"),
             trailing: Text("336402"),
             onTap: () {
-              Navigator.of(allContext)
+              Navigator.of(allContext!)
                   .push(MaterialPageRoute(builder: (BuildContext context) {
                 return CupertinoPageScaffold(
                   child: Container(),
@@ -322,7 +322,7 @@ class MyPageState extends State<MyPage> {
               size: 16,
             ),
             onTap: () {
-              Navigator.of(allContext)
+              Navigator.of(allContext!)
                   .push(MaterialPageRoute(builder: (BuildContext context) {
                 return CupertinoPageScaffold(
                   child: Container(),
@@ -341,7 +341,7 @@ class MyPageState extends State<MyPage> {
               size: 16,
             ),
             onTap: () {
-              Navigator.pushNamed(allContext, "/setting");
+              Navigator.pushNamed(allContext!, "/setting");
             },
           ),
         ],

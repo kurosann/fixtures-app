@@ -11,5 +11,4 @@ var routes = {
   "/home": (context) => HomePage(),
   "/setting": (context) => SettingPage(),
   "/findFixture": (context) => FindFixturePage(),
-  "/findFixture/publish": (context) => PublishPage(),
 };

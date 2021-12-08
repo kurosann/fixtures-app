@@ -1,7 +1,6 @@
 import 'package:fixtures/routes.dart';
 import 'package:fixtures/view/findFixture/findFixture.dart';
 import 'package:fixtures/view/home/home.dart';
-import 'package:fixtures/view/rating/rating.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -15,10 +14,11 @@ class MyApp extends StatelessWidget {
     return CupertinoApp(
       title: '小求',
       routes: routes,
+      debugShowCheckedModeBanner: false,
       theme: CupertinoThemeData(
         barBackgroundColor: Colors.white,
       ),
-      home: FindFixturePage(),
+      home: HomePage(),
     );
   }
 }

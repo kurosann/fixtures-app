@@ -1,61 +1,62 @@
+import 'package:fixtures/model/Publish.dart';
 import 'package:fixtures/utils/util.dart';
+import 'package:fixtures/view/findFixture/publish.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class FindFixturePage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => FindFixtureState();
+  State<StatefulWidget> createState() => _FindFixtureState();
 }
 
-class FindFixtureState extends State<FindFixturePage> {
+class _FindFixtureState extends State<FindFixturePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: emptyAppBar(context),
       body: CupertinoPageScaffold(
-        child: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) {
-            return [
-              CupertinoSliverNavigationBar(
-                  padding: EdgeInsetsDirectional.all(4),
-                  previousPageTitle: "小求",
-                  largeTitle: Text("找装修"),
-              ),
-            ];
-          },
-          body: Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.all(4.0),
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: CupertinoSearchTextField(
-                  prefixIcon: Icon(CupertinoIcons.search),
-                  placeholder: "搜索",
-                  suffixMode: OverlayVisibilityMode.editing,
-                ),
-              ),
-              Container(
-                child: Expanded(
-                  child: GridView.builder(
-                    itemCount: 12,
-                    padding: EdgeInsets.all(10),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 10,
-                        childAspectRatio: 1.4,
-                        mainAxisSpacing: 20),
-                    itemBuilder: (context, index) => GestureDetector(
-                      child: _itemCell("门窗",
-                          "https://img2.baidu.com/it/u=2548989639,546384781&fm=15&fmt=auto"),
-                      onTap: () {
-                        Navigator.pushNamed(context, '/findFixture/publish');
-                      },
+        child: CustomScrollView(
+          slivers: <Widget>[
+            CupertinoSliverNavigationBar(
+              stretch: true,
+              previousPageTitle: "小求",
+              largeTitle: Text("找装修"),
+            ),
+            SliverFixedExtentList(
+                itemExtent: 50,
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  return Container(
+                    margin: const EdgeInsets.all(4.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: CupertinoSearchTextField(
+                      prefixIcon: Icon(CupertinoIcons.search),
+                      placeholder: "搜索",
+                      suffixMode: OverlayVisibilityMode.editing,
                     ),
-                  ),
-                ),
+                  );
+                }, childCount: 1)),
+            SliverGrid(
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 150.0,
+                mainAxisSpacing: 30.0,
+                crossAxisSpacing: 4.0,
+                childAspectRatio: 1.4,
               ),
-            ],
-          ),
+              delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                  return GestureDetector(
+                    child: _itemCell("门窗",
+                        "https://img2.baidu.com/it/u=2548989639,546384781&fm=15&fmt=auto"),
+                    onTap: () {
+                      Navigator.of(context).push(CupertinoPageRoute(builder: (context) => PublishPage(id: "1",),));
+//                      Navigator.pushNamed(context, '/findFixture/publish');
+                    },
+                  );
+                },
+                childCount: 12,
+              ),
+            )
+          ],
         ),
       ),
     );

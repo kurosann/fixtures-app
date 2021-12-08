@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -10,8 +9,8 @@ class Login extends StatefulWidget {
 class _Login extends State<Login> {
   //获取Key用来获取Form表单组件
   GlobalKey<FormState> loginKey = new GlobalKey<FormState>();
-  String userName;
-  String password;
+  String? userName;
+  String? password;
   bool isShowPassWord = false;
   final TextStyle _blackStyle = const TextStyle(
     fontSize: 14,
@@ -23,9 +22,9 @@ class _Login extends State<Login> {
     //读取当前的Form状态
     var loginForm = loginKey.currentState;
     //验证Form表单
-    if (loginForm.validate()) {
+    if (loginForm!.validate()) {
       loginForm.save();
-      print('userName: ' + userName + ' password: ' + password);
+      print('userName: ' + userName! + ' password: ' + password!);
     }
   }
 
@@ -53,7 +52,7 @@ class _Login extends State<Login> {
               padding: const EdgeInsets.all(16.0),
               child: new Form(
                 key: loginKey,
-                autovalidate: true,
+//                autovalidate: true,
                 child: new Column(
                   children: <Widget>[
                     new Container(
@@ -84,7 +83,7 @@ class _Login extends State<Login> {
                           userName = value;
                         },
                         validator: (phone) {
-                          if (phone.length == 0) {
+                          if (phone!.length == 0) {
                             return '请输入手机号';
                           }
                         },
@@ -137,7 +136,6 @@ class _Login extends State<Login> {
                         ),
                       ),
                     ),
-
                     new Container(
                       margin: EdgeInsets.only(top: 30.0),
                       padding: EdgeInsets.only(left: 8.0, right: 8.0),
@@ -163,35 +161,41 @@ class _Login extends State<Login> {
                         ],
                       ),
                     ),
-                    Padding(padding: EdgeInsets.only(top: 10),
+                    Padding(
+                      padding: EdgeInsets.only(top: 10),
                       child: new Row(
 //                          mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          new Container(height: 1,
+                          new Container(
+                            height: 1,
                             width: 100,
                             decoration: BoxDecoration(
-                                gradient: new LinearGradient(
-                                    colors: [ Colors.black54,
-                                      Colors.black54,
-                                    ])
-                            ),
+                                gradient: new LinearGradient(colors: [
+                              Colors.black54,
+                              Colors.black54,
+                            ])),
                           ),
                           new Padding(
                             padding: EdgeInsets.only(left: 15, right: 15),
-                            child: new Text("第三方登录", style: new TextStyle(
-                                fontSize: 16, color: Colors.black54),),),
-                          new Container(height: 1,
-                            width: 100,
-                            decoration: BoxDecoration(
-                                gradient: new LinearGradient(
-                                    colors: [ Colors.black54,
-                                      Colors.black54,
-                                    ])
+                            child: new Text(
+                              "第三方登录",
+                              style: new TextStyle(
+                                  fontSize: 16, color: Colors.black54),
                             ),
                           ),
+                          new Container(
+                            height: 1,
+                            width: 100,
+                            decoration: BoxDecoration(
+                                gradient: new LinearGradient(colors: [
+                              Colors.black54,
+                              Colors.black54,
+                            ])),
+                          ),
                         ],
-                      ),),
+                      ),
+                    ),
                     Container(
                       alignment: Alignment.center,
                       child: Row(

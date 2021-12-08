@@ -1,15 +1,16 @@
+import 'package:fixtures/view/findFixture/findFixture.dart';
 import 'package:fixtures/view/home/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class XiaoqiuPage extends StatelessWidget {
-  static XiaoqiuPage _instance;
+  static XiaoqiuPage? _instance;
 
   static XiaoqiuPage get instance {
     if (_instance == null) {
       _instance = XiaoqiuPage();
     }
-    return _instance;
+    return _instance!;
   }
 
   @override
@@ -73,7 +74,10 @@ class XiaoqiuPage extends StatelessWidget {
             ],
           ),
           onPressed: () {
-            Navigator.pushNamed(allContext, '/findFixture');
+            Navigator.of(allContext!).push(CupertinoPageRoute(builder: (context) {
+              return FindFixturePage();
+            },));
+            Navigator.pushNamed(allContext!, '/findFixture');
           },
         ),
         CupertinoButton(
