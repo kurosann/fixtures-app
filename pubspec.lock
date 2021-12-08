@@ -81,6 +81,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  gzx_dropdown_menu:
+    dependency: "direct main"
+    description:
+      name: gzx_dropdown_menu
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "3.1.0"
   http_parser:
     dependency: transitive
     description:

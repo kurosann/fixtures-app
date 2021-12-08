@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 class FindFixturePage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => FindFixture();
+  State<StatefulWidget> createState() => FindFixtureState();
 }
 
-class FindFixture extends State<FindFixturePage> {
+class FindFixtureState extends State<FindFixturePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,36 +17,44 @@ class FindFixture extends State<FindFixturePage> {
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return [
               CupertinoSliverNavigationBar(
-                padding: EdgeInsetsDirectional.all(4),
-                previousPageTitle: "返回",
-                middle: Text("找装修"),
-                largeTitle: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: CupertinoSearchTextField(
-                    prefixIcon: Icon(CupertinoIcons.search),
-                    placeholder: "搜索",
-                    suffixMode: OverlayVisibilityMode.editing,
-                  ),
-                ),
+                  padding: EdgeInsetsDirectional.all(4),
+                  previousPageTitle: "小求",
+                  largeTitle: Text("找装修"),
               ),
             ];
           },
-          body: GridView.builder(
-            itemCount: 12,
-            padding: EdgeInsets.all(10),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 10,
-                childAspectRatio: 1.4,
-                mainAxisSpacing: 20),
-
-            itemBuilder: (context, index) => GestureDetector(
-              child: _itemCell("门窗",
-                  "https://img2.baidu.com/it/u=2548989639,546384781&fm=15&fmt=auto"),
-              onTap: () {
-                Navigator.pushNamed(context, '/findFixture/publish');
-              },
-            ),
+          body: Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.all(4.0),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: CupertinoSearchTextField(
+                  prefixIcon: Icon(CupertinoIcons.search),
+                  placeholder: "搜索",
+                  suffixMode: OverlayVisibilityMode.editing,
+                ),
+              ),
+              Container(
+                child: Expanded(
+                  child: GridView.builder(
+                    itemCount: 12,
+                    padding: EdgeInsets.all(10),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 10,
+                        childAspectRatio: 1.4,
+                        mainAxisSpacing: 20),
+                    itemBuilder: (context, index) => GestureDetector(
+                      child: _itemCell("门窗",
+                          "https://img2.baidu.com/it/u=2548989639,546384781&fm=15&fmt=auto"),
+                      onTap: () {
+                        Navigator.pushNamed(context, '/findFixture/publish');
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
