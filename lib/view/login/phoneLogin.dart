@@ -1,16 +1,15 @@
-
-import 'package:fixtures/view/login/phoneLogin.dart';
+import 'package:fixtures/view/login/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class Login extends StatefulWidget {
+class PhoneLogin extends StatefulWidget {
   @override
-  _Login createState() => new _Login();
+  _PhoneLogin createState() => new _PhoneLogin();
 }
 
-class _Login extends State<Login> {
+class _PhoneLogin extends State<PhoneLogin> {
   final TextStyle _blackStyle = const TextStyle(
     fontSize: 14,
     textBaseline: TextBaseline.alphabetic,
@@ -24,7 +23,7 @@ class _Login extends State<Login> {
   //获取Key用来获取Form表单组件
   GlobalKey<FormState> loginKey = new GlobalKey<FormState>();
   final phoneText = TextEditingController();
-  final password = TextEditingController();
+  final phoneCode = TextEditingController();
   bool isShowPassWord = false;
 
   void login() {
@@ -33,7 +32,7 @@ class _Login extends State<Login> {
     //验证Form表单
     if (loginForm!.validate()) {
       loginForm.save();
-      print('userName: ' + phoneText.text + ' password: ' + password.text);
+      print('userName: ' + phoneText.text + ' password: ' + phoneCode.text);
     }
   }
 
@@ -61,7 +60,7 @@ class _Login extends State<Login> {
       );
     }
     return new MaterialApp(
-      title: '密码登录界面',
+      title: '手机验证码登录界面',
       home: new Scaffold(
         body: new Column(
           children: <Widget>[
@@ -119,7 +118,7 @@ class _Login extends State<Login> {
                                   color: Color.fromARGB(255, 240, 240, 240),
                                   width: 1.0))),
                       child: new TextFormField(
-                        controller: password,
+                        controller: phoneCode,
                         decoration: new InputDecoration(
                             labelText: '请输入验证码',
                             labelStyle: new TextStyle(
@@ -156,8 +155,38 @@ class _Login extends State<Login> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left:20,top: 10),
+                    new Container(
+                      margin: EdgeInsets.only(top: 10.0),
+                      child: new Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          new Container(
+                            child: FlatButton(
+                              child: Text(
+                                '密码登录',
+                                style: TextStyle(color: Colors.lightBlue),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).push(CupertinoPageRoute(
+                                  builder: (context) {
+                                    return Login();
+                                  },
+                                ));
+                              },
+                            ),
+                          ),
+                          FlatButton(
+                            child: Text(
+                              '忘记密码?',
+                              style: TextStyle(color: Colors.lightBlue),
+                            ),
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.topRight,
                       child: Row(
                         children: <Widget>[
                           Text.rich(TextSpan(
@@ -174,36 +203,6 @@ class _Login extends State<Login> {
                         ],
                       ),
                     ),
-                    new Container(
-                      margin: EdgeInsets.only(top: 10.0),
-                      child: new Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          new Container(
-                            child: FlatButton(
-                              child: Text(
-                                '密码登录',
-                                style: TextStyle(color: Colors.lightBlue),
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).push(CupertinoPageRoute(
-                                  builder: (context) {
-                                    return PhoneLogin();
-                                  },
-                                ));
-                              },
-                            ),
-                          ),
-                          FlatButton(
-                            child: Text(
-                              '忘记密码?',
-                              style: TextStyle(color: Colors.lightBlue),
-                            ),
-                            onPressed: () {},
-                          ),
-                        ],
-                      ),
-                    ),
                     Padding(
                       padding: EdgeInsets.only(top: 10),
                       child: new Row(
@@ -215,9 +214,9 @@ class _Login extends State<Login> {
                             width: 100,
                             decoration: BoxDecoration(
                                 gradient: new LinearGradient(colors: [
-                                  Colors.black54,
-                                  Colors.black54,
-                                ])),
+                              Colors.black54,
+                              Colors.black54,
+                            ])),
                           ),
                           new Padding(
                             padding: EdgeInsets.only(left: 15, right: 15),
@@ -232,9 +231,9 @@ class _Login extends State<Login> {
                             width: 100,
                             decoration: BoxDecoration(
                                 gradient: new LinearGradient(colors: [
-                                  Colors.black54,
-                                  Colors.black54,
-                                ])),
+                              Colors.black54,
+                              Colors.black54,
+                            ])),
                           ),
                         ],
                       ),
