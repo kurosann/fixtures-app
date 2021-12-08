@@ -44,7 +44,6 @@ class _PhoneLogin extends State<PhoneLogin> {
 
   @override
   Widget build(BuildContext context) {
-
     void _showInfoDialog(String content) {
       showDialog(
         context: context,
@@ -59,6 +58,7 @@ class _PhoneLogin extends State<PhoneLogin> {
         },
       );
     }
+
     return new MaterialApp(
       title: '手机验证码登录界面',
       home: new Scaffold(
@@ -69,8 +69,7 @@ class _PhoneLogin extends State<PhoneLogin> {
                 child: new Text(
                   '登录',
                   style: TextStyle(
-                      color: Color.fromARGB(255, 53, 53, 53),
-                      fontSize: 30.0),
+                      color: Color.fromARGB(255, 53, 53, 53), fontSize: 30.0),
                 )),
             new Container(
               padding: const EdgeInsets.all(16.0),
@@ -112,29 +111,41 @@ class _PhoneLogin extends State<PhoneLogin> {
                       ),
                     ),
                     new Container(
+                      padding: EdgeInsets.only(left: 10.0),
+                      margin: EdgeInsets.only(bottom: 30.0),
                       decoration: new BoxDecoration(
                           border: new Border(
                               bottom: BorderSide(
                                   color: Color.fromARGB(255, 240, 240, 240),
                                   width: 1.0))),
-                      child: new TextFormField(
-                        controller: phoneCode,
-                        decoration: new InputDecoration(
-                            labelText: '请输入验证码',
-                            labelStyle: new TextStyle(
-                                fontSize: 15.0,
-                                color: Color.fromARGB(255, 93, 93, 93)),
-                            border: InputBorder.none,
-                            suffixIcon: new IconButton(
-                              icon: new Icon(
-                                isShowPassWord
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                color: Color.fromARGB(255, 126, 126, 126),
+                      child: Row (
+                        children: <Widget>[
+                          Expanded(
+                            child: TextFormField(
+                              controller: phoneCode,
+                              decoration: new InputDecoration(
+                                labelText: '请输入验证码',
+                                labelStyle: new TextStyle(
+                                    fontSize: 15.0,
+                                    color: Color.fromARGB(255, 93, 93, 93)),
+                                border: InputBorder.none,
                               ),
-                              onPressed: showPassWord,
-                            )),
-                        obscureText: !isShowPassWord,
+                              keyboardType: TextInputType.text,
+                            ),
+                          ),
+                          Expanded(
+                            flex: 0,
+                              child: FlatButton(
+                                child: Text(
+                                  '获取验证码',
+                                  style: TextStyle(color: Colors.lightBlue),
+                                ),
+                                onPressed: (){
+
+                                },
+                              ),
+                          )
+                        ],
                       ),
                     ),
                     new Container(
@@ -185,10 +196,11 @@ class _PhoneLogin extends State<PhoneLogin> {
                         ],
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.topRight,
+                    Padding(
+                      padding: EdgeInsets.only(left: 20, top: 15),
                       child: Row(
                         children: <Widget>[
+                          Spacer(),
                           Text.rich(TextSpan(
                               text: '登陆即同意',
                               children: [
@@ -268,6 +280,3 @@ class _PhoneLogin extends State<PhoneLogin> {
     );
   }
 }
-
-
-

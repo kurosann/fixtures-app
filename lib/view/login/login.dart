@@ -157,9 +157,10 @@ class _Login extends State<Login> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left:20,top: 10),
+                      padding: EdgeInsets.only(left:20,top: 15),
                       child: Row(
                         children: <Widget>[
+                          Spacer(),
                           Text.rich(TextSpan(
                               text: '登陆即同意',
                               children: [
@@ -182,7 +183,7 @@ class _Login extends State<Login> {
                           new Container(
                             child: FlatButton(
                               child: Text(
-                                '密码登录',
+                                '短信验证登录',
                                 style: TextStyle(color: Colors.lightBlue),
                               ),
                               onPressed: () {

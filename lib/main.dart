@@ -1,6 +1,8 @@
 import 'package:fixtures/routes.dart';
 import 'package:fixtures/view/findFixture/findFixture.dart';
 import 'package:fixtures/view/home/home.dart';
+import 'package:fixtures/view/login/login.dart';
+import 'package:fixtures/view/login/phoneLogin.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: CupertinoThemeData(
         barBackgroundColor: Colors.white,
       ),
-      home: HomePage(),
+      home: PhoneLogin(),
     );
   }
 }
