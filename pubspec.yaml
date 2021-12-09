@@ -34,7 +34,8 @@ dependencies:
   # https://github.com/flutter/plugins/tree/master/packages/shared_preferences
   shared_preferences: ^2.0.9
   font_awesome_flutter: any
-
+  toast: ^0.1.4
+  flutter_spinkit: "^4.1.2"
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -50,7 +51,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets/
+    - assets/images/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

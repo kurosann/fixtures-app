@@ -17,9 +17,9 @@ class MyApp extends StatelessWidget {
       routes: routes,
       debugShowCheckedModeBanner: false,
       theme: CupertinoThemeData(
-        barBackgroundColor: Color.fromARGB(150, 255, 255, 255),
-        primaryColor: Colors.orange,
-        brightness: Brightness.light
+          barBackgroundColor: Color.fromARGB(150, 255, 255, 255),
+          primaryColor: Colors.orange,
+          brightness: Brightness.light
       ),
       home: HomePage(),
     );
