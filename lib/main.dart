@@ -17,10 +17,11 @@ class MyApp extends StatelessWidget {
       routes: routes,
       debugShowCheckedModeBanner: false,
       theme: CupertinoThemeData(
-        barBackgroundColor: Colors.white,
-        primaryColor: Colors.orange
+        barBackgroundColor: Color.fromARGB(150, 255, 255, 255),
+        primaryColor: Colors.orange,
+        brightness: Brightness.light
       ),
-      home: PhoneLogin(),
+      home: HomePage(),
     );
   }
 }

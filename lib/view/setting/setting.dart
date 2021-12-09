@@ -7,65 +7,67 @@ class SettingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: CupertinoPageScaffold(
-        navigationBar: CupertinoNavigationBar(
-          automaticallyImplyLeading: true,
-          middle: Text("设置"),
-        ),
-        child: ListView(
-          children: [
-            ListTile(
-              title: Text("修改密码"),
-              trailing: Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
+        child: CustomScrollView(slivers: [
+          CupertinoSliverNavigationBar(
+            stretch: true,
+            largeTitle: Text("设置"),
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate([
+              ListTile(
+                title: Text("修改密码"),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                ),
+                onTap: () {
+                  Navigator.of(allContext!)
+                      .push(MaterialPageRoute(builder: (BuildContext context) {
+                    return CupertinoPageScaffold(
+                      child: Container(),
+                    );
+                  }));
+                },
               ),
-              onTap: () {
-                Navigator.of(allContext!)
-                    .push(MaterialPageRoute(builder: (BuildContext context) {
-                  return CupertinoPageScaffold(
-                    child: Container(),
-                  );
-                }));
-              },
-            ),
-            Divider(
-              height: 1.0,
-            ),
-            ListTile(
-              title: Text("关于页面"),
-              trailing: Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
+              Divider(
+                height: 1.0,
               ),
-              onTap: () {
-                Navigator.of(allContext!)
-                    .push(MaterialPageRoute(builder: (BuildContext context) {
-                  return CupertinoPageScaffold(
-                    child: Container(),
-                  );
-                }));
-              },
-            ),
-            Divider(
-              height: 1.0,
-            ),
-            ListTile(
-              title: Text("退出登录"),
-              trailing: Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
+              ListTile(
+                title: Text("关于页面"),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                ),
+                onTap: () {
+                  Navigator.of(allContext!)
+                      .push(MaterialPageRoute(builder: (BuildContext context) {
+                    return CupertinoPageScaffold(
+                      child: Container(),
+                    );
+                  }));
+                },
               ),
-              onTap: () {
-                Navigator.of(allContext!)
-                    .push(MaterialPageRoute(builder: (BuildContext context) {
-                  return CupertinoPageScaffold(
-                    child: Container(),
-                  );
-                }));
-              },
-            ),
-          ],
-        ),
+              Divider(
+                height: 1.0,
+              ),
+              ListTile(
+                title: Text("退出登录"),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                ),
+                onTap: () {
+                  Navigator.of(allContext!)
+                      .push(MaterialPageRoute(builder: (BuildContext context) {
+                    return CupertinoPageScaffold(
+                      child: Container(),
+                    );
+                  }));
+                },
+              ),
+            ]),
+          )
+        ]),
       ),
     );
   }

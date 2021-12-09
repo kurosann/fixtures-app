@@ -1,4 +1,5 @@
 import 'package:fixtures/utils/util.dart';
+import 'package:fixtures/view/share.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -23,22 +24,20 @@ class _MyPageState extends State<MyPage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      child: CustomScrollView(
-        slivers: [
-          CupertinoSliverRefreshControl(
-            onRefresh: () async {
-
-            },
-          ),
-          SliverList(delegate: SliverChildListDelegate([
+      child: CustomScrollView(slivers: [
+        CupertinoSliverRefreshControl(
+          onRefresh: () async {},
+        ),
+        SliverList(
+            delegate: SliverChildListDelegate([
 //          _role(),
-            _profile(),
-            _score(),
-            _infoGrid(),
-            _actionList(),
-          ]))
-        ]
-      ),
+          _profile(),
+          _score(),
+          _infoGrid(),
+          _actionList(),
+          emptyAppBar(context)
+        ]))
+      ]),
     );
   }
 
@@ -259,7 +258,7 @@ class _MyPageState extends State<MyPage> {
             style: mainButtonStyle(),
             onPressed: () {
               Navigator.of(allContext!)
-                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                  .push(CupertinoPageRoute(builder: (BuildContext context) {
                 return CupertinoPageScaffold(
                   child: Container(),
                 );
@@ -279,7 +278,7 @@ class _MyPageState extends State<MyPage> {
             style: mainButtonStyle(),
             onPressed: () {
               Navigator.of(allContext!)
-                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                  .push(CupertinoPageRoute(builder: (BuildContext context) {
                 return CupertinoPageScaffold(
                   child: Container(),
                 );
@@ -298,10 +297,8 @@ class _MyPageState extends State<MyPage> {
             style: mainButtonStyle(),
             onPressed: () {
               Navigator.of(allContext!)
-                  .push(MaterialPageRoute(builder: (BuildContext context) {
-                return CupertinoPageScaffold(
-                  child: Container(),
-                );
+                  .push(CupertinoPageRoute(builder: (BuildContext context) {
+                return SharePage();
               }));
             },
             child: ListTile(
@@ -320,7 +317,7 @@ class _MyPageState extends State<MyPage> {
             style: mainButtonStyle(),
             onPressed: () {
               Navigator.of(allContext!)
-                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                  .push(CupertinoPageRoute(builder: (BuildContext context) {
                 return CupertinoPageScaffold(
                   child: Container(),
                 );
@@ -339,7 +336,7 @@ class _MyPageState extends State<MyPage> {
             style: mainButtonStyle(),
             onPressed: () {
               Navigator.of(allContext!)
-                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                  .push(CupertinoPageRoute(builder: (BuildContext context) {
                 return CupertinoPageScaffold(
                   child: Container(),
                 );

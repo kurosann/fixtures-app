@@ -12,7 +12,7 @@ class _WorkerInfoState extends State<WorkerInfo> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-
+        CupertinoTextFormFieldRow()
       ],
     );
   }

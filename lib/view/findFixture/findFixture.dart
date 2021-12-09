@@ -23,8 +23,8 @@ class _FindFixtureState extends State<FindFixturePage> {
             ),
             SliverFixedExtentList(
                 itemExtent: 50,
-                delegate: SliverChildBuilderDelegate((context, index) {
-                  return Container(
+                delegate: SliverChildListDelegate([
+                  Container(
                     margin: const EdgeInsets.all(4.0),
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: CupertinoSearchTextField(
@@ -32,8 +32,8 @@ class _FindFixtureState extends State<FindFixturePage> {
                       placeholder: "搜索",
                       suffixMode: OverlayVisibilityMode.editing,
                     ),
-                  );
-                }, childCount: 1)),
+                  )
+                ])),
             SliverGrid(
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 150.0,

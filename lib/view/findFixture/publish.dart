@@ -1,4 +1,5 @@
 import 'package:fixtures/model/Publish.dart';
+import 'package:fixtures/utils/util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -33,19 +34,20 @@ class PublishState extends State<PublishPage> {
           child: CustomScrollView(
             slivers: [
               CupertinoSliverRefreshControl(
-                onRefresh: () async {
-
-                },
+                onRefresh: () async {},
               ),
               SliverList(
                 delegate: SliverChildBuilderDelegate((context, i) {
                   if (i == 0)
-                    return Center(
-                      child: CupertinoButton(
-                          child: Text('当前地区：$position'),
-                          onPressed: () {
-                            _showLocalPick(context);
-                          }),
+                    return Column(
+                      children: [
+                        emptyAppBar(context),
+                        CupertinoButton(
+                            child: Text('当前地区：$position'),
+                            onPressed: () {
+                              _showLocalPick(context);
+                            })
+                      ],
                     );
                   if (i.isEven) return Divider();
                   final index = i ~/ 2;

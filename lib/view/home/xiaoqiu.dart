@@ -1,6 +1,6 @@
 import 'package:fixtures/utils/util.dart';
 import 'package:fixtures/view/findFixture/findFixture.dart';
-import 'package:fixtures/view/getWork/GetWork.dart';
+import 'package:fixtures/view/getWork/getWork.dart';
 import 'package:fixtures/view/home/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
