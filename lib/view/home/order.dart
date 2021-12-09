@@ -1,7 +1,9 @@
 import 'package:fixtures/model/Order.dart';
-import 'package:fixtures/view/handlingOrder.dart';
+import 'package:fixtures/utils/util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../handlingOrder/handlingOrder.dart';
 
 class OrderPage extends StatefulWidget {
   static OrderPage? _instance;
@@ -19,23 +21,30 @@ class OrderPage extends StatefulWidget {
 
 class _OrderPageState extends State<OrderPage> {
   /// 订单数据
-  var orderList = <Order>[Order()];
+  var orderList = <Order>[Order(),Order(),Order(),];
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       child: CustomScrollView(
         slivers: <Widget>[
+          CupertinoSliverRefreshControl(
+            onRefresh: () async {
+
+            },
+          ),
           CupertinoSliverNavigationBar(
             stretch: true,
             largeTitle: Text("订单"),
           ),
           SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
-            if (index.isOdd) return Divider();
+            if (index.isOdd)
+              return Divider(
+                height: 1,
+              );
             final i = index ~/ 2;
-
-            return _itemCell();
+            return _itemCell(i);
           }, childCount: orderList.length * 2)),
         ],
       ),
@@ -43,12 +52,17 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   /// 列表子布局
-  Widget _itemCell() {
-    return GestureDetector(
-      onTap: (){
-        Navigator.of(context).push(CupertinoPageRoute(builder: (context) {
-          return HandlingOrderPage(id: "1",);
-        },));
+  Widget _itemCell(index) {
+    return TextButton(
+      style: mainButtonStyle(),
+      onPressed: () {
+        Navigator.of(context).push(CupertinoPageRoute(
+          builder: (context) {
+            return HandlingOrderPage(
+              id: "1",
+            );
+          },
+        ));
       },
       child: Container(
         padding: EdgeInsets.all(18),
@@ -58,7 +72,7 @@ class _OrderPageState extends State<OrderPage> {
             Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.all(10),
+                  padding: EdgeInsets.all(5),
                   child: Row(
                     children: [
                       Text("工程编号："),
@@ -66,11 +80,14 @@ class _OrderPageState extends State<OrderPage> {
                     ],
                   ),
                 ),
-                Row(
-                  children: [
-                    Text("开始时间："),
-                    Text("000000000"),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.all(5),
+                  child: Row(
+                    children: [
+                      Text("开始时间："),
+                      Text("000000000"),
+                    ],
+                  ),
                 )
               ],
             ),

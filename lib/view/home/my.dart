@@ -1,3 +1,4 @@
+import 'package:fixtures/utils/util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -13,6 +14,7 @@ class MyPage extends StatefulWidget {
     }
     return _instance!;
   }
+
   @override
   State<StatefulWidget> createState() => _MyPageState();
 }
@@ -21,14 +23,21 @@ class _MyPageState extends State<MyPage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      child: ListView(
-        children: [
+      child: CustomScrollView(
+        slivers: [
+          CupertinoSliverRefreshControl(
+            onRefresh: () async {
+
+            },
+          ),
+          SliverList(delegate: SliverChildListDelegate([
 //          _role(),
-          _profile(),
-          _score(),
-          _infoGrid(),
-          _actionList(),
-        ],
+            _profile(),
+            _score(),
+            _infoGrid(),
+            _actionList(),
+          ]))
+        ]
       ),
     );
   }
@@ -246,12 +255,9 @@ class _MyPageState extends State<MyPage> {
           )),
       child: Column(
         children: [
-          ListTile(
-            leading: Icon(Icons.person),
-            title: Text("我的会员"),
-            subtitle: Text("黄金会员"),
-            trailing: Text("去升级"),
-            onTap: () {
+          TextButton(
+            style: mainButtonStyle(),
+            onPressed: () {
               Navigator.of(allContext!)
                   .push(MaterialPageRoute(builder: (BuildContext context) {
                 return CupertinoPageScaffold(
@@ -259,34 +265,19 @@ class _MyPageState extends State<MyPage> {
                 );
               }));
             },
-          ),
-          Divider(
-            height: 1.0,
-          ),
-          ListTile(
-            leading: Icon(Icons.file_upload),
-            title: Text("余额提现"),
-            trailing: Text("提现"),
-            onTap: () {
-              Navigator.of(allContext!)
-                  .push(MaterialPageRoute(builder: (BuildContext context) {
-                return CupertinoPageScaffold(
-                  child: Container(),
-                );
-              }));
-            },
-          ),
-          Divider(
-            height: 1.0,
-          ),
-          ListTile(
-            leading: Icon(Icons.share),
-            title: Text("邀请二维码"),
-            trailing: Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
+            child: ListTile(
+              leading: Icon(Icons.person),
+              title: Text("我的会员"),
+              subtitle: Text("黄金会员"),
+              trailing: Text("去升级"),
             ),
-            onTap: () {
+          ),
+          Divider(
+            height: 1.0,
+          ),
+          TextButton(
+            style: mainButtonStyle(),
+            onPressed: () {
               Navigator.of(allContext!)
                   .push(MaterialPageRoute(builder: (BuildContext context) {
                 return CupertinoPageScaffold(
@@ -294,34 +285,18 @@ class _MyPageState extends State<MyPage> {
                 );
               }));
             },
-          ),
-          Divider(
-            height: 1.0,
-          ),
-          ListTile(
-            leading: Icon(Icons.record_voice_over),
-            title: Text("我的邀请码"),
-            trailing: Text("336402"),
-            onTap: () {
-              Navigator.of(allContext!)
-                  .push(MaterialPageRoute(builder: (BuildContext context) {
-                return CupertinoPageScaffold(
-                  child: Container(),
-                );
-              }));
-            },
-          ),
-          Divider(
-            height: 1.0,
-          ),
-          ListTile(
-            leading: Icon(Icons.description),
-            title: Text("填写资料"),
-            trailing: Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
+            child: ListTile(
+              leading: Icon(Icons.file_upload),
+              title: Text("余额提现"),
+              trailing: Text("提现"),
             ),
-            onTap: () {
+          ),
+          Divider(
+            height: 1.0,
+          ),
+          TextButton(
+            style: mainButtonStyle(),
+            onPressed: () {
               Navigator.of(allContext!)
                   .push(MaterialPageRoute(builder: (BuildContext context) {
                 return CupertinoPageScaffold(
@@ -329,20 +304,72 @@ class _MyPageState extends State<MyPage> {
                 );
               }));
             },
+            child: ListTile(
+              leading: Icon(Icons.share),
+              title: Text("邀请二维码"),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+              ),
+            ),
           ),
           Divider(
             height: 1.0,
           ),
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text("设置"),
-            trailing: Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
+          TextButton(
+            style: mainButtonStyle(),
+            onPressed: () {
+              Navigator.of(allContext!)
+                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                return CupertinoPageScaffold(
+                  child: Container(),
+                );
+              }));
+            },
+            child: ListTile(
+              leading: Icon(Icons.record_voice_over),
+              title: Text("我的邀请码"),
+              trailing: Text("336402"),
             ),
-            onTap: () {
+          ),
+          Divider(
+            height: 1.0,
+          ),
+          TextButton(
+            style: mainButtonStyle(),
+            onPressed: () {
+              Navigator.of(allContext!)
+                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                return CupertinoPageScaffold(
+                  child: Container(),
+                );
+              }));
+            },
+            child: ListTile(
+              leading: Icon(Icons.description),
+              title: Text("填写资料"),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+              ),
+            ),
+          ),
+          Divider(
+            height: 1.0,
+          ),
+          TextButton(
+            style: mainButtonStyle(),
+            onPressed: () {
               Navigator.pushNamed(allContext!, "/setting");
             },
+            child: ListTile(
+              leading: Icon(Icons.settings),
+              title: Text("设置"),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+              ),
+            ),
           ),
         ],
       ),

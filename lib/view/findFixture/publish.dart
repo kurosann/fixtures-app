@@ -3,9 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PublishPage extends StatefulWidget {
-  final String? id;
+  final String id;
 
-  PublishPage({@required this.id});
+  PublishPage({required this.id});
 
   @override
   State<StatefulWidget> createState() => PublishState(id: id);
@@ -30,27 +30,28 @@ class PublishState extends State<PublishPage> {
             previousPageTitle: '找装修',
             middle: Text("发布需求"),
           ),
-          child: Column(
-            children: [
-              Center(
-                child: CupertinoButton(
-                    child: Text('当前地区：$position'),
-                    onPressed: () {
-                      _showLocalPick(context);
-                    }),
+          child: CustomScrollView(
+            slivers: [
+              CupertinoSliverRefreshControl(
+                onRefresh: () async {
+
+                },
               ),
-              Container(
-                child: Expanded(
-                  child: ListView.builder(
-                    itemCount: publishList.length * 2,
-                    itemBuilder: (context, i) {
-                      if (i.isOdd) return Divider();
-                      final index = i ~/ 2;
-                      var publish = publishList[index];
-                      return _itemCell("陈师傅", "玻璃", "20mm");
-                    },
-                  ),
-                ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate((context, i) {
+                  if (i == 0)
+                    return Center(
+                      child: CupertinoButton(
+                          child: Text('当前地区：$position'),
+                          onPressed: () {
+                            _showLocalPick(context);
+                          }),
+                    );
+                  if (i.isEven) return Divider();
+                  final index = i ~/ 2;
+                  var publish = publishList[index];
+                  return _itemCell("陈师傅", "玻璃", "20mm");
+                }, childCount: publishList.length * 2 + 1),
               )
             ],
           )),
@@ -89,12 +90,15 @@ class PublishState extends State<PublishPage> {
   }
 
   Widget _itemCell(String name, String fixture, String size) {
-    return ListTile(
-      title: Text(name),
-      subtitle: Text(fixture + "    " + size),
-      trailing: Icon(
-        Icons.arrow_forward_ios,
-        size: 16,
+    return GestureDetector(
+      onTap: () {},
+      child: ListTile(
+        title: Text(name),
+        subtitle: Text(fixture + "    " + size),
+        trailing: Icon(
+          Icons.arrow_forward_ios,
+          size: 16,
+        ),
       ),
     );
   }

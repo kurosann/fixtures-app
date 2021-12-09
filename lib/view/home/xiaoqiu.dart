@@ -1,4 +1,6 @@
+import 'package:fixtures/utils/util.dart';
 import 'package:fixtures/view/findFixture/findFixture.dart';
+import 'package:fixtures/view/getWork/GetWork.dart';
 import 'package:fixtures/view/home/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -77,7 +79,7 @@ class XiaoqiuPage extends StatelessWidget {
             Navigator.of(allContext!).push(CupertinoPageRoute(builder: (context) {
               return FindFixturePage();
             },));
-            Navigator.pushNamed(allContext!, '/findFixture');
+//            Navigator.pushNamed(allContext!, '/findFixture');
           },
         ),
         CupertinoButton(
@@ -90,7 +92,11 @@ class XiaoqiuPage extends StatelessWidget {
               Text("接活")
             ],
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(allContext!).push(CupertinoPageRoute(builder: (context) {
+              return GetWorkPage();
+            },));
+          },
         )
       ],
     );

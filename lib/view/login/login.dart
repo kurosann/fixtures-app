@@ -1,4 +1,3 @@
-
 import 'package:fixtures/view/login/phoneLogin.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -267,9 +266,6 @@ class _Login extends State<Login> {
           ],
         ),
       ),
-    );
+      );
   }
 }
-
-
-

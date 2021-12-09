@@ -1,4 +1,3 @@
-import 'package:fixtures/model/Publish.dart';
 import 'package:fixtures/utils/util.dart';
 import 'package:fixtures/view/findFixture/publish.dart';
 import 'package:flutter/cupertino.dart';
@@ -43,15 +42,11 @@ class _FindFixtureState extends State<FindFixturePage> {
                 childAspectRatio: 1.4,
               ),
               delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                  return GestureDetector(
-                    child: _itemCell("门窗",
-                        "https://img2.baidu.com/it/u=2548989639,546384781&fm=15&fmt=auto"),
-                    onTap: () {
-                      Navigator.of(context).push(CupertinoPageRoute(builder: (context) => PublishPage(id: "1",),));
-//                      Navigator.pushNamed(context, '/findFixture/publish');
-                    },
-                  );
+                (BuildContext context, int index) {
+                  return _itemCell(
+                      "门窗",
+                      "https://img2.baidu.com/it/u=2548989639,546384781&fm=15&fmt=auto",
+                      "1");
                 },
                 childCount: 12,
               ),
@@ -62,17 +57,27 @@ class _FindFixtureState extends State<FindFixturePage> {
     );
   }
 
-  Widget _itemCell(label, imageUrl) {
+  Widget _itemCell(label, imageUrl, id) {
     return Card(
-      child: Column(
-        children: [
-          Image(
-            image: NetworkImage(imageUrl),
-            width: 50,
-            height: 50,
-          ),
-          Text(label),
-        ],
+      child: TextButton(
+        style: mainButtonStyle(),
+        child: Column(
+          children: [
+            Image(
+              image: NetworkImage(imageUrl),
+              width: 50,
+              height: 50,
+            ),
+            Text(label),
+          ],
+        ),
+        onPressed: () {
+          Navigator.of(context).push(CupertinoPageRoute(
+            builder: (context) => PublishPage(
+              id: id,
+            ),
+          ));
+        },
       ),
     );
   }
