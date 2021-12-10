@@ -16,6 +16,10 @@ class _Login extends State<Login> {
   final password = TextEditingController();
   bool isShowPassWord = false;
 
+  var isValid = false;
+
+  var isLogging = true;
+
   void login() {
     print('userName: ' + phoneText.text + ' password: ' + password.text);
   }
@@ -27,81 +31,87 @@ class _Login extends State<Login> {
       child: ListView(
         physics: NeverScrollableScrollPhysics(),
         children: <Widget>[
-          ImageLogin(),
+          ImageLogin(context),
           Form(
             onChanged: () {
               Form.of(primaryFocus!.context!)?.save();
             },
-            child: CupertinoFormSection.insetGrouped(
-              margin: EdgeInsets.all(20),
-              header: LoginHeard(),
-              footer: UserInfo(context, CodeLogin(context)),
-              children: <Widget>[
-                CupertinoTextField(
-                  controller: phoneText,
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  placeholderStyle: PhoneTextStyle(),
-                  decoration: TextFieldBoxStyle(),
-                  prefix: Padding(
-                    padding: EdgeInsets.all(11),
-                    child: new Icon(
-                      Icons.person,
-                      size: 26,
-                      color: Color.fromARGB(255, 126, 126, 126),
+            child: Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: CupertinoFormSection.insetGrouped(
+                margin: EdgeInsets.all(20),
+                header: LoginHeard(),
+                footer: UserInfo(context, CodeLogin(context)),
+                children: <Widget>[
+                  CupertinoTextField(
+                    controller: phoneText,
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    placeholderStyle: PhoneTextStyle(),
+                    decoration: TextFieldBoxStyle(),
+                    prefix: Padding(
+                      padding: EdgeInsets.all(11),
+                      child: new Icon(
+                        Icons.person,
+                        size: 26,
+                        color: Color.fromARGB(255, 126, 126, 126),
+                      ),
+                    ),
+                    prefixMode: OverlayVisibilityMode.always,
+                    placeholder: '请输入手机号',
+                    cursorColor: Color.fromARGB(255, 126, 126, 126),
+                    keyboardType: TextInputType.phone,
+                    suffixMode: OverlayVisibilityMode.editing,
+                    suffix: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Center(
+                        child: new GestureDetector(
+                          child: UserClose(),
+                          onTap: () {
+                            phoneText.clear();
+                          },
+                        ),
+                      ),
                     ),
                   ),
-                  prefixMode: OverlayVisibilityMode.always,
-                  placeholder: '请输入手机号',
-                  cursorColor: Color.fromARGB(255, 126, 126, 126),
-                  keyboardType: TextInputType.phone,
-                  suffixMode: OverlayVisibilityMode.editing,
-                  suffix: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Center(
+                  CupertinoTextField(
+                    controller: password,
+                    placeholderStyle: PhoneTextStyle(),
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    decoration: TextFieldBoxStyle(),
+                    prefix: Padding(
+                      padding: EdgeInsets.all(12),
+                      child: new Icon(
+                        Icons.lock,
+                        color: Color.fromARGB(255, 126, 126, 126),
+                      ),
+                    ),
+                    placeholder: '请输入密码',
+                    cursorColor: Color.fromARGB(255, 126, 126, 126),
+                    keyboardType: TextInputType.visiblePassword,
+                    suffixMode: OverlayVisibilityMode.editing,
+                    suffix: Padding(
+                      padding: const EdgeInsets.all(12),
                       child: new GestureDetector(
-                        child: UserClose(),
+                        child: new Icon(
+                          isShowPassWord
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Color.fromARGB(255, 126, 126, 126),
+                        ),
                         onTap: () {
-                          phoneText.clear();
+                          setState(() {
+                            isShowPassWord = !isShowPassWord;
+                          });
                         },
                       ),
                     ),
+                    obscureText: !isShowPassWord,
                   ),
-                ),
-                CupertinoTextField(
-                  controller: password,
-                  placeholderStyle: PhoneTextStyle(),
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  decoration: TextFieldBoxStyle(),
-                  prefix: Padding(
-                    padding: EdgeInsets.all(12),
-                    child: new Icon(
-                      Icons.lock,
-                      color: Color.fromARGB(255, 126, 126, 126),
-                    ),
-                  ),
-                  placeholder: '请输入密码',
-                  cursorColor: Color.fromARGB(255, 126, 126, 126),
-                  keyboardType: TextInputType.visiblePassword,
-                  suffixMode: OverlayVisibilityMode.editing,
-                  suffix: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: new GestureDetector(
-                      child: new Icon(
-                        isShowPassWord
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                        color: Color.fromARGB(255, 126, 126, 126),
-                      ),
-                      onTap: () {
-                        setState(() {
-                          isShowPassWord = !isShowPassWord;
-                        });
-                      },
-                    ),
-                  ),
-                  obscureText: !isShowPassWord,
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           Container(
@@ -124,20 +134,23 @@ class _Login extends State<Login> {
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(100),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Color.fromARGB(255, 200, 200, 200),
-                                  blurRadius: 2.0,
-                                  offset: Offset(1, 1),
-                                  spreadRadius: 2.0)
-                            ]),
+                            boxShadow: isValid
+                                ? [
+                                    BoxShadow(
+                                        color:
+                                            Color.fromARGB(255, 200, 200, 200),
+                                        blurRadius: 2.0,
+                                        offset: Offset(1, 1),
+                                        spreadRadius: 2.0)
+                                  ]
+                                : []),
                         child: CupertinoButton(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 30, vertical: 30),
                             borderRadius: BorderRadius.circular(100),
                             color: CupertinoTheme.of(context).primaryColor,
-                            child: Icon(Icons.arrow_forward),
-                            onPressed: login),
+                            child: isLogging?CupertinoActivityIndicator():Icon(Icons.arrow_forward),
+                            onPressed: isValid ? login : null),
                       ),
                       Expanded(child: Container())
                     ],

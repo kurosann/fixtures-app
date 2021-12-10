@@ -144,7 +144,7 @@ Widget WeixinLogin() {
   );
 }
 
-Widget ImageLogin() {
+Widget ImageLogin(context) {
   return Container(
     child: Row(
       mainAxisSize: MainAxisSize.min,
@@ -152,9 +152,9 @@ Widget ImageLogin() {
         Expanded(
           child: Image.asset(
             "assets/images/ss.png",
-            width: 90,
-            height: 100,
-            fit: BoxFit.fitWidth,
+            width: MediaQuery.of(context).size.width,
+            height: 200,
+            fit: BoxFit.fitHeight,
           ),
         ),
       ],
