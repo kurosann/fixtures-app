@@ -36,82 +36,76 @@ class _Login extends State<Login> {
             onChanged: () {
               Form.of(primaryFocus!.context!)?.save();
             },
-            child: Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: CupertinoFormSection.insetGrouped(
-                margin: EdgeInsets.all(20),
-                header: LoginHeard(),
-                footer: UserInfo(context, CodeLogin(context)),
-                children: <Widget>[
-                  CupertinoTextField(
-                    controller: phoneText,
-                    padding: EdgeInsets.symmetric(vertical: 12),
-                    placeholderStyle: PhoneTextStyle(),
-                    decoration: TextFieldBoxStyle(),
-                    prefix: Padding(
-                      padding: EdgeInsets.all(11),
-                      child: new Icon(
-                        Icons.person,
-                        size: 26,
-                        color: Color.fromARGB(255, 126, 126, 126),
-                      ),
-                    ),
-                    prefixMode: OverlayVisibilityMode.always,
-                    placeholder: '请输入手机号',
-                    cursorColor: Color.fromARGB(255, 126, 126, 126),
-                    keyboardType: TextInputType.phone,
-                    suffixMode: OverlayVisibilityMode.editing,
-                    suffix: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Center(
-                        child: new GestureDetector(
-                          child: UserClose(),
-                          onTap: () {
-                            phoneText.clear();
-                          },
-                        ),
-                      ),
+            child: CupertinoFormSection.insetGrouped(
+              margin: EdgeInsets.all(20),
+              header: LoginHeard(),
+              footer: UserInfo(context, CodeLogin(context)),
+              children: <Widget>[
+                CupertinoTextField(
+                  controller: phoneText,
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  placeholderStyle: PhoneTextStyle(),
+                  decoration: TextFieldBoxStyle(),
+                  prefix: Padding(
+                    padding: EdgeInsets.all(11),
+                    child: new Icon(
+                      Icons.person,
+                      size: 26,
+                      color: Color.fromARGB(255, 126, 126, 126),
                     ),
                   ),
-                  CupertinoTextField(
-                    controller: password,
-                    placeholderStyle: PhoneTextStyle(),
-                    padding: EdgeInsets.symmetric(vertical: 12),
-                    decoration: TextFieldBoxStyle(),
-                    prefix: Padding(
-                      padding: EdgeInsets.all(12),
-                      child: new Icon(
-                        Icons.lock,
-                        color: Color.fromARGB(255, 126, 126, 126),
-                      ),
-                    ),
-                    placeholder: '请输入密码',
-                    cursorColor: Color.fromARGB(255, 126, 126, 126),
-                    keyboardType: TextInputType.visiblePassword,
-                    suffixMode: OverlayVisibilityMode.editing,
-                    suffix: Padding(
-                      padding: const EdgeInsets.all(12),
+                  prefixMode: OverlayVisibilityMode.always,
+                  placeholder: '请输入手机号',
+                  cursorColor: Color.fromARGB(255, 126, 126, 126),
+                  keyboardType: TextInputType.phone,
+                  suffixMode: OverlayVisibilityMode.editing,
+                  suffix: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Center(
                       child: new GestureDetector(
-                        child: new Icon(
-                          isShowPassWord
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: Color.fromARGB(255, 126, 126, 126),
-                        ),
+                        child: UserClose(),
                         onTap: () {
-                          setState(() {
-                            isShowPassWord = !isShowPassWord;
-                          });
+                          phoneText.clear();
                         },
                       ),
                     ),
-                    obscureText: !isShowPassWord,
                   ),
-                ],
-              ),
+                ),
+                CupertinoTextField(
+                  controller: password,
+                  placeholderStyle: PhoneTextStyle(),
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                  decoration: TextFieldBoxStyle(),
+                  prefix: Padding(
+                    padding: EdgeInsets.all(12),
+                    child: new Icon(
+                      Icons.lock,
+                      color: Color.fromARGB(255, 126, 126, 126),
+                    ),
+                  ),
+                  placeholder: '请输入密码',
+                  cursorColor: Color.fromARGB(255, 126, 126, 126),
+                  keyboardType: TextInputType.visiblePassword,
+                  suffixMode: OverlayVisibilityMode.editing,
+                  suffix: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: new GestureDetector(
+                      child: new Icon(
+                        isShowPassWord
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Color.fromARGB(255, 126, 126, 126),
+                      ),
+                      onTap: () {
+                        setState(() {
+                          isShowPassWord = !isShowPassWord;
+                        });
+                      },
+                    ),
+                  ),
+                  obscureText: !isShowPassWord,
+                ),
+              ],
             ),
           ),
           Container(
