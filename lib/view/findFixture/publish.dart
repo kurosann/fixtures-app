@@ -33,22 +33,24 @@ class PublishState extends State<PublishPage> {
           ),
           child: CustomScrollView(
             slivers: [
-              CupertinoSliverRefreshControl(
-                onRefresh: () async {},
+              SliverSafeArea(
+                sliver: CupertinoSliverRefreshControl(
+                  onRefresh: () async {},
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    CupertinoButton(
+                        child: Text('当前地区：$position'),
+                        onPressed: () {
+                          _showLocalPick(context);
+                        })
+                  ],
+                ),
               ),
               SliverList(
                 delegate: SliverChildBuilderDelegate((context, i) {
-                  if (i == 0)
-                    return Column(
-                      children: [
-                        emptyAppBar(context),
-                        CupertinoButton(
-                            child: Text('当前地区：$position'),
-                            onPressed: () {
-                              _showLocalPick(context);
-                            })
-                      ],
-                    );
                   if (i.isEven) return Divider();
                   final index = i ~/ 2;
                   var publish = publishList[index];

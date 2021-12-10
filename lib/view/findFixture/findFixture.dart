@@ -4,6 +4,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class FindFixturePage extends StatefulWidget {
+
+  static FindFixturePage? _instance;
+
+  static FindFixturePage get instance {
+    if (_instance == null) {
+      _instance = FindFixturePage();
+    }
+    return _instance!;
+  }
+
   @override
   State<StatefulWidget> createState() => _FindFixtureState();
 }
@@ -21,19 +31,17 @@ class _FindFixtureState extends State<FindFixturePage> {
               previousPageTitle: "小求",
               largeTitle: Text("找装修"),
             ),
-            SliverFixedExtentList(
-                itemExtent: 50,
-                delegate: SliverChildListDelegate([
-                  Container(
-                    margin: const EdgeInsets.all(4.0),
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: CupertinoSearchTextField(
-                      prefixIcon: Icon(CupertinoIcons.search),
-                      placeholder: "搜索",
-                      suffixMode: OverlayVisibilityMode.editing,
-                    ),
-                  )
-                ])),
+            SliverToBoxAdapter(
+              child: Container(
+                margin: const EdgeInsets.all(4.0),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: CupertinoSearchTextField(
+                  prefixIcon: Icon(CupertinoIcons.search),
+                  placeholder: "搜索",
+                  suffixMode: OverlayVisibilityMode.editing,
+                ),
+              ),
+            ),
             SliverGrid(
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 150.0,

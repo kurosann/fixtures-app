@@ -11,7 +11,8 @@ class HandlingOrderPage extends StatefulWidget {
   State<StatefulWidget> createState() => _HandlerOrderState(id: id);
 }
 
-class _HandlerOrderState extends State<HandlingOrderPage> {
+class _HandlerOrderState extends State<HandlingOrderPage>
+    with SingleTickerProviderStateMixin {
   final String id;
   int currentStep = 0;
   int currentRealStep = 2;
@@ -20,63 +21,89 @@ class _HandlerOrderState extends State<HandlingOrderPage> {
     currentStep = currentRealStep;
   }
 
+  AnimationController? controller;
+
+  var isRefresh = false;
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         middle: Text("您正在处理的订单"),
+        trailing: isRefresh
+            ? CupertinoActivityIndicator()
+            : GestureDetector(
+                onTap: () {
+                  setState(() {
+                    isRefresh = true;
+                  });
+                },
+                child: Icon(
+                  Icons.refresh,
+                  size: 26,
+                ),
+              ),
       ),
-      child: CupertinoStepper(
-        controlsBuilder: (context, details) {
-          return ButtonBar(
-            children: [
-              CupertinoButton.filled(
-                  child: Text("去付款"),
-                  padding: EdgeInsets.symmetric(horizontal: 14, vertical: 4),
-                  onPressed: () {}),
-              CupertinoButton.filled(
-                child: Text("确认完成"),
-                padding: EdgeInsets.symmetric(horizontal: 14, vertical: 4),
-                onPressed: null,
-              )
-            ],
-          );
-        },
-        type: StepperType.vertical,
-        currentStep: currentStep,
-        onStepTapped: (step) => setState(() => currentStep = step),
-        steps: [
-          _buildStep(
-            title: Text('现场勘察'),
-            Subtitle: Text(DateTime.now().toString()),
-            currentIndex: 0,
-            realIndex: 0,
-            price: 40,
-            percent: 0.1,
-          ),
-          _buildStep(
-            title: Text('材料准备'),
-            Subtitle: Text(DateTime.now().toString()),
-            currentIndex: 1,
-            realIndex: 1,
-            price: 120,
-            percent: 0.4,
-          ),
-          _buildStep(
-            title: Text('材料到位'),
-            Subtitle: Text(DateTime.now().toString()),
-            currentIndex: 2,
-            realIndex: 2,
-            price: 160,
-            percent: 0.8,
-          ),
-          _buildStep(
-            title: Text('完工'),
-            Subtitle: Text(DateTime.now().toString()),
-            currentIndex: 3,
-            realIndex: 3,
-            price: 40,
-            percent: 1,
+      child: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: CupertinoStepper(
+              physics: NeverScrollableScrollPhysics(),
+              controlsBuilder: (context, details) {
+                return ButtonBar(
+                  children: [
+                    CupertinoButton.filled(
+                        child: Text("去付款"),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                        onPressed: () {}),
+                    CupertinoButton.filled(
+                      child: Text("确认完成"),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                      onPressed: null,
+                    )
+                  ],
+                );
+              },
+              type: StepperType.vertical,
+              currentStep: currentStep,
+              onStepTapped: (step) => setState(() => currentStep = step),
+              steps: [
+                _buildStep(
+                  title: Text('现场勘察'),
+                  Subtitle: Text(DateTime.now().toString()),
+                  currentIndex: 0,
+                  realIndex: 0,
+                  price: 40,
+                  percent: 0.1,
+                ),
+                _buildStep(
+                  title: Text('材料准备'),
+                  Subtitle: Text(DateTime.now().toString()),
+                  currentIndex: 1,
+                  realIndex: 1,
+                  price: 120,
+                  percent: 0.4,
+                ),
+                _buildStep(
+                  title: Text('材料到位'),
+                  Subtitle: Text(DateTime.now().toString()),
+                  currentIndex: 2,
+                  realIndex: 2,
+                  price: 160,
+                  percent: 0.8,
+                ),
+                _buildStep(
+                  title: Text('完工'),
+                  Subtitle: Text(DateTime.now().toString()),
+                  currentIndex: 3,
+                  realIndex: 3,
+                  price: 40,
+                  percent: 1,
+                )
+              ],
+            ),
           )
         ],
       ),
@@ -113,7 +140,7 @@ class _HandlerOrderState extends State<HandlingOrderPage> {
                 children: [
                   Text("费用"),
                   Text("${price}元"),
-                  Text("(总额${percent*100}%)"),
+                  Text("(总额${percent * 100}%)"),
                 ],
               ),
               Row(

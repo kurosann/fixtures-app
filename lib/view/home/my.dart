@@ -1,5 +1,5 @@
 import 'package:fixtures/utils/util.dart';
-import 'package:fixtures/view/share.dart';
+import '../share/share.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -28,15 +28,16 @@ class _MyPageState extends State<MyPage> {
         CupertinoSliverRefreshControl(
           onRefresh: () async {},
         ),
-        SliverList(
-            delegate: SliverChildListDelegate([
+        SliverSafeArea(
+          sliver: SliverList(
+              delegate: SliverChildListDelegate([
 //          _role(),
-          _profile(),
-          _score(),
-          _infoGrid(),
-          _actionList(),
-          emptyAppBar(context)
-        ]))
+            _profile(),
+            _score(),
+            _infoGrid(),
+            _actionList(),
+          ])),
+        )
       ]),
     );
   }

@@ -56,7 +56,7 @@ class GetWorkState extends State<GetWorkPage> {
               CupertinoButton.filled(
                   minSize: 0,
                   padding: EdgeInsets.symmetric(horizontal: 14, vertical: 0),
-                  borderRadius: const BorderRadius.all(Radius.circular(16.0)),
+                  borderRadius: BorderRadius.circular(16),
                   child: Text(
                     "联系客人",
                     style: TextStyle(fontWeight: FontWeight.bold),

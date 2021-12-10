@@ -2,15 +2,15 @@
 
 小求装修平台
 
-## Getting Started
+# 项目结构
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```text
+lib-|----api         接口封装
+    |----model       实体类
+    |----utils       工具类集合
+    |----view        UI
+    |----widget      组件
+```
+# 运行
+1. 启动模拟器
+2. 执行 `flutter run`

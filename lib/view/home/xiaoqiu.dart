@@ -77,7 +77,7 @@ class XiaoqiuPage extends StatelessWidget {
           ),
           onPressed: () {
             Navigator.of(allContext!).push(CupertinoPageRoute(builder: (context) {
-              return FindFixturePage();
+              return FindFixturePage.instance;
             },));
 //            Navigator.pushNamed(allContext!, '/findFixture');
           },

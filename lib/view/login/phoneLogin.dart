@@ -73,6 +73,7 @@ class _PhoneLogin extends State<PhoneLogin> {
                           decoration: TextFieldBoxStyle(),
                           prefix: new Icon(
                             Icons.perm_identity,
+                            size: 26,
                             color: Color.fromARGB(255, 126, 126, 126),
                           ),
                           placeholder: '请输入手机号',
@@ -121,7 +122,7 @@ class _PhoneLogin extends State<PhoneLogin> {
                 ),
                 UserInfo(context, PassworLogin(context)),
                 CupertinoButton(
-                    borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+                    borderRadius: BorderRadius.circular(12),
                     color: Color(0xFFF16F15),
                     child: TextBtnStyle(),
                     onPressed: login),

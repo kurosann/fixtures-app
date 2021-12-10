@@ -1,7 +1,7 @@
 import 'package:fixtures/routes.dart';
 import 'package:fixtures/view/home/home.dart';
 import 'package:fixtures/view/login/login.dart';
-import 'package:fixtures/view/login/phoneLogin.dart';
+import 'package:fixtures/widget/baseStatefulPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
           primaryColor: Colors.orange,
           brightness: Brightness.light
       ),
-      home: HomePage(),
+      home: Login(),
     );
   }
 }

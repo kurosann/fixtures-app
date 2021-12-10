@@ -15,11 +15,12 @@ class _ShareState extends State<SharePage> {
         navigationBar: CupertinoNavigationBar(
           backgroundColor: Color.fromARGB(0, 0, 0, 0),
           previousPageTitle: '返回',
+          middle: Text("邀请有奖"),
         ),
         child: Stack(
           children: [
             LimitedBox(
-              maxHeight: 2000,
+              maxHeight: MediaQuery.of(context).size.height,
               child: Container(
                 color: Colors.grey,
               ),
@@ -85,51 +86,80 @@ class _ShareState extends State<SharePage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Container(
-                              width: 80,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    FontAwesomeIcons.weixin,
-                                    size: 40,
-                                  ),
-                                  Text("微信好友", style: TextStyle(fontSize: 12))
-                                ],
+                            GestureDetector(
+                              child: Container(
+                                width: 80,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      FontAwesomeIcons.weixin,
+                                      size: 40,
+                                    ),
+                                    Container(
+                                        padding: EdgeInsets.symmetric(vertical: 10),
+                                        child: Text("微信好友", style: TextStyle(fontSize: 12)))
+                                  ],
+                                ),
                               ),
+                              onTap: (){
+
+                              },
                             ),
-                            Container(
-                              width: 80,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(FontAwesomeIcons.alipay, size: 40),
-                                  Text("支付宝好友", style: TextStyle(fontSize: 12))
-                                ],
+                            GestureDetector(
+                              child: Container(
+                                width: 80,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(FontAwesomeIcons.alipay, size: 40),
+                                    Container(
+                                        padding: EdgeInsets.symmetric(vertical: 10),
+                                        child: Text("支付宝好友", style: TextStyle(fontSize: 12)))
+                                  ],
+                                ),
                               ),
+                              onTap: (){
+
+                              },
                             ),
-                            Container(
-                              width: 80,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(FontAwesomeIcons.qrcode, size: 40),
-                                  Text(
-                                    "二维码",
-                                    style: TextStyle(fontSize: 12),
-                                  )
-                                ],
+                            GestureDetector(
+                              child: Container(
+                                width: 80,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(FontAwesomeIcons.qrcode, size: 40),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(vertical: 10),
+                                      child: Text(
+                                        "二维码",
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
+                              onTap: (){
+
+                              },
                             ),
-                            Container(
-                              width: 80,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(FontAwesomeIcons.copy, size: 40),
-                                  Text("复制", style: TextStyle(fontSize: 12))
-                                ],
+                            GestureDetector(
+                              child: Container(
+                                width: 80,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(FontAwesomeIcons.copy, size: 40),
+                                    Container(
+                                        padding: EdgeInsets.symmetric(vertical: 10),
+                                        child: Text("复制", style: TextStyle(fontSize: 12)))
+                                  ],
+                                ),
                               ),
+                              onTap: (){
+
+                              },
                             ),
                           ],
                         ),

@@ -1,5 +1,6 @@
 import 'package:fixtures/model/Order.dart';
 import 'package:fixtures/utils/util.dart';
+import 'package:fixtures/widget/baseStatefulPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -26,33 +27,38 @@ class _OrderPageState extends State<OrderPage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      child: CustomScrollView(
-        slivers: <Widget>[
-          CupertinoSliverRefreshControl(
-            onRefresh: () async {
+      child: NetServiceFreshPanel(
+        child: CustomScrollView(
+          slivers: <Widget>[
+            CupertinoSliverRefreshControl(
+              onRefresh: () async {
 
-            },
-          ),
-          CupertinoSliverNavigationBar(
-            stretch: true,
-            largeTitle: Text("订单"),
-          ),
-          SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-            if (index.isOdd)
-              return Divider(
-                height: 1,
-              );
-            final i = index ~/ 2;
-            return _itemCell(i);
-          }, childCount: orderList.length * 2)),
-        ],
+              },
+            ),
+            CupertinoSliverNavigationBar(
+              stretch: true,
+              largeTitle: Text("订单"),
+            ),
+            SliverSafeArea(
+              sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                if (index.isOdd)
+                  return Divider(
+                    height: 1,
+                  );
+                final i = index ~/ 2;
+                return _itemCell(i);
+              }, childCount: orderList.length * 2)),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   /// 列表子布局
   Widget _itemCell(index) {
+    Order order = orderList[index];
     return TextButton(
       style: mainButtonStyle(),
       onPressed: () {

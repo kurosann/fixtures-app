@@ -22,7 +22,7 @@ class SettingPage extends StatelessWidget {
                 ),
                 onTap: () {
                   Navigator.of(allContext!)
-                      .push(MaterialPageRoute(builder: (BuildContext context) {
+                      .push(CupertinoPageRoute(builder: (BuildContext context) {
                     return CupertinoPageScaffold(
                       child: Container(),
                     );
@@ -40,7 +40,7 @@ class SettingPage extends StatelessWidget {
                 ),
                 onTap: () {
                   Navigator.of(allContext!)
-                      .push(MaterialPageRoute(builder: (BuildContext context) {
+                      .push(CupertinoPageRoute(builder: (BuildContext context) {
                     return CupertinoPageScaffold(
                       child: Container(),
                     );
@@ -58,7 +58,7 @@ class SettingPage extends StatelessWidget {
                 ),
                 onTap: () {
                   Navigator.of(allContext!)
-                      .push(MaterialPageRoute(builder: (BuildContext context) {
+                      .push(CupertinoPageRoute(builder: (BuildContext context) {
                     return CupertinoPageScaffold(
                       child: Container(),
                     );

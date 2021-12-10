@@ -35,9 +35,9 @@ ButtonStyle LoginBtnStyle() {
 }
 
 Text TextBtnStyle() {
-  return new Text(
-    '登 录',
-    style: TextStyle(fontWeight: FontWeight.w800,fontSize: 14.0, color: Color.fromARGB(255, 255, 255, 255)),
+  return Text(
+    '登录',
+    style: TextStyle(fontWeight: FontWeight.w800,fontSize: 24.0,),
   );
 }
 
@@ -67,12 +67,13 @@ BoxDecoration TextFieldBoxStyle() {
 Icon UserClose() {
   return Icon(
     Icons.close_rounded,
+    size: 24,
     color: Color.fromARGB(255, 82, 81, 81),
   );
 }
 
 Text LoginHeard() {
-  return const Text('请输入您的手机号码,登录或注册您的小求账号',
+  return const Text('请输入您的手机号码，登录或注册您的小求账号',
       style: TextStyle(
           fontWeight: FontWeight.w500,
           fontSize: 14.0,
