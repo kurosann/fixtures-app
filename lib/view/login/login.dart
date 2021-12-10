@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:fixtures/utils/util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -14,149 +17,202 @@ class _Login extends State<Login> {
   GlobalKey<FormState> loginKey = new GlobalKey<FormState>();
   final phoneText = TextEditingController();
   final password = TextEditingController();
-  bool isShowPassWord = false;
-
-  var isValid = false;
-
-  var isLogging = true;
+  final phoneCode = TextEditingController();
+  bool _isShowPassWord = false;
+  late Timer _timer;
+  int _countdownTime = 0;
+  var _isPhone = false;
+  var isValid = true;
+  var isLogging = false;
 
   void login() {
+    setState(() {
+      if (isValid) {
+        isLogging = true;
+      }
+    });
     print('userName: ' + phoneText.text + ' password: ' + password.text);
+  }
+
+  void startCountdownTimer() {
+    const oneSec = const Duration(seconds: 1);
+    var callback = (timer) => {
+          setState(() {
+            if (_countdownTime < 1) {
+              _timer.cancel();
+            } else {
+              _countdownTime = _countdownTime - 1;
+            }
+          })
+        };
+    _timer = Timer.periodic(oneSec, callback);
+  }
+
+  void startSendSms() {
+    if (_countdownTime == 0 && validateMobile(phoneText.text)) {
+      //Http请求发送验证码
+      setState(() {
+        _countdownTime = 60;
+      });
+      //开始倒计时
+      startCountdownTimer();
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (_timer != null) {
+      _timer.cancel();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-        child: SafeArea(
-      child: ListView(
-        physics: NeverScrollableScrollPhysics(),
-        children: <Widget>[
-          ImageLogin(context),
-          Form(
-            onChanged: () {
-              Form.of(primaryFocus!.context!)?.save();
+    /// 用户手机短信验证码输入框
+    var _codeTextField = new CupertinoTextField(
+      controller: phoneCode,
+      placeholderStyle: PhoneTextStyle(),
+      decoration: TextFieldBoxStyle(),
+      padding: EdgeInsets.symmetric(vertical: 12),
+      prefix: mypaddingIcon(2),
+      placeholder: '请输入验证码',
+      cursorColor: Color.fromARGB(255, 126, 126, 126),
+      keyboardType: TextInputType.number,
+      suffix: new TextButton(
+        onPressed: startSendSms,
+        child: Text(
+          _countdownTime > 0 ? '$_countdownTime后重新获取' : '获取验证码',
+          style: TextStyle(color: Colors.lightBlue),
+        ),
+      ),
+    );
+
+    /// 密码输入框
+    var _passwordTextField = new CupertinoTextField(
+      controller: password,
+      placeholderStyle: PhoneTextStyle(),
+      padding: EdgeInsets.symmetric(vertical: 12),
+      decoration: TextFieldBoxStyle(),
+      prefix: mypaddingIcon(3),
+      placeholder: '请输入密码',
+      cursorColor: Color.fromARGB(255, 126, 126, 126),
+      keyboardType: TextInputType.visiblePassword,
+      suffixMode: OverlayVisibilityMode.editing,
+      suffix: Padding(
+        padding: const EdgeInsets.all(12),
+        child: new GestureDetector(
+          child: passwordEyeIcon(_isShowPassWord),
+          onTap: () {
+            setState(() {
+              _isShowPassWord = !_isShowPassWord;
+            });
+          },
+        ),
+      ),
+      obscureText: !_isShowPassWord,
+    );
+
+    /// 用户手机账号输入框
+    var _phoneTextField = CupertinoTextField(
+      controller: phoneText,
+      padding: EdgeInsets.symmetric(vertical: 12),
+      placeholderStyle: PhoneTextStyle(),
+      decoration: TextFieldBoxStyle(),
+      prefix: mypaddingIcon(1),
+      prefixMode: OverlayVisibilityMode.always,
+      placeholder: '请输入手机号',
+      cursorColor: Color.fromARGB(255, 126, 126, 126),
+      keyboardType: TextInputType.phone,
+      suffixMode: OverlayVisibilityMode.editing,
+      suffix: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Center(
+          child: new GestureDetector(
+            child: UserClose(),
+            onTap: () {
+              phoneText.clear();
             },
-            child: CupertinoFormSection.insetGrouped(
-              margin: EdgeInsets.all(20),
-              header: LoginHeard(),
-              footer: UserInfo(context, CodeLogin(context)),
-              children: <Widget>[
-                CupertinoTextField(
-                  controller: phoneText,
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  placeholderStyle: PhoneTextStyle(),
-                  decoration: TextFieldBoxStyle(),
-                  prefix: Padding(
-                    padding: EdgeInsets.all(11),
-                    child: new Icon(
-                      Icons.person,
-                      size: 26,
-                      color: Color.fromARGB(255, 126, 126, 126),
-                    ),
-                  ),
-                  prefixMode: OverlayVisibilityMode.always,
-                  placeholder: '请输入手机号',
-                  cursorColor: Color.fromARGB(255, 126, 126, 126),
-                  keyboardType: TextInputType.phone,
-                  suffixMode: OverlayVisibilityMode.editing,
-                  suffix: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Center(
-                      child: new GestureDetector(
-                        child: UserClose(),
-                        onTap: () {
-                          phoneText.clear();
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-                CupertinoTextField(
-                  controller: password,
-                  placeholderStyle: PhoneTextStyle(),
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  decoration: TextFieldBoxStyle(),
-                  prefix: Padding(
-                    padding: EdgeInsets.all(12),
-                    child: new Icon(
-                      Icons.lock,
-                      color: Color.fromARGB(255, 126, 126, 126),
-                    ),
-                  ),
-                  placeholder: '请输入密码',
-                  cursorColor: Color.fromARGB(255, 126, 126, 126),
-                  keyboardType: TextInputType.visiblePassword,
-                  suffixMode: OverlayVisibilityMode.editing,
-                  suffix: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: new GestureDetector(
-                      child: new Icon(
-                        isShowPassWord
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                        color: Color.fromARGB(255, 126, 126, 126),
-                      ),
-                      onTap: () {
-                        setState(() {
-                          isShowPassWord = !isShowPassWord;
-                        });
-                      },
-                    ),
-                  ),
-                  obscureText: !isShowPassWord,
-                ),
-              ],
-            ),
           ),
+        ),
+      ),
+    );
+
+    /// 手机号
+    var _phoneContainer = Container(
+      margin: const EdgeInsets.all(18.0),
+      child: _phoneTextField,
+    );
+
+    /// 密码或者验证码
+    var _passwordOrCode = Container(
+      margin: const EdgeInsets.only(left: 18.0, right: 18, bottom: 18),
+      child: _isPhone ? _codeTextField : _passwordTextField,
+    );
+
+    /// 登录方式
+    var _selectWay = Container(
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Container(
+                child: TextButton(
+                  child: mySelectLoginWay(_isPhone),
+                  onPressed: () {
+                    setState(() {
+                      _isPhone = !_isPhone;
+                    });
+                  },
+                ),
+              ),
+            ]));
+
+    /// 登录按钮部分
+    var _loginBtn = Container(
+      padding: EdgeInsets.all(30),
+      child: Row(
+        children: [
+          Expanded(child: Container()),
           Container(
-            height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(color: Colors.white, boxShadow: [
-              BoxShadow(
-                  color: Color.fromARGB(255, 200, 200, 200),
-                  blurRadius: 2.0,
-                  offset: Offset(1, 1),
-                  spreadRadius: 2.0)
-            ]),
-            child: Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(30),
-                  child: Row(
-                    children: [
-                      Expanded(child: Container()),
-                      Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(100),
-                            boxShadow: isValid
-                                ? [
-                                    BoxShadow(
-                                        color:
-                                            Color.fromARGB(255, 200, 200, 200),
-                                        blurRadius: 2.0,
-                                        offset: Offset(1, 1),
-                                        spreadRadius: 2.0)
-                                  ]
-                                : []),
-                        child: CupertinoButton(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 30, vertical: 30),
-                            borderRadius: BorderRadius.circular(100),
-                            color: CupertinoTheme.of(context).primaryColor,
-                            child: isLogging?CupertinoActivityIndicator():Icon(Icons.arrow_forward),
-                            onPressed: isValid ? login : null),
-                      ),
-                      Expanded(child: Container())
-                    ],
-                  ),
-                ),
-                OtherLogin(),
-                WeixinLogin(),
-              ],
-            ),
+            decoration: myBoxDecoration(isValid),
+            child: CupertinoButton(
+                padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+                borderRadius: BorderRadius.circular(100),
+                color: CupertinoTheme.of(context).primaryColor,
+                child: myCupertinoAndIcon(isLogging),
+                onPressed: isValid ? login : null),
           ),
+          Expanded(child: Container())
         ],
       ),
+    );
+
+    /// 输入框下面的ui
+    var _underContainer = Container(
+      height: MediaQuery.of(context).size.height,
+      child: Column(
+        children: [
+          _selectWay,
+          _loginBtn,
+          OtherLogin(),
+          WeixinLogin(),
+        ],
+      ),
+    );
+
+    return CupertinoPageScaffold(
+        child: SafeArea(
+          child: ListView(
+            physics: NeverScrollableScrollPhysics(),
+            children: <Widget>[
+              ImageLogin(context),
+              LoginHeard(),
+              _phoneContainer,
+              _passwordOrCode,
+              _underContainer,
+            ],
+          ),
     ));
   }
 }

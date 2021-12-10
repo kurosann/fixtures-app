@@ -55,9 +55,10 @@ BoxDecoration OtherBox() {
 
 BoxDecoration TextFieldBoxStyle() {
   return BoxDecoration(
-    borderRadius: BorderRadius.circular(5.0),
+    borderRadius: BorderRadius.circular(17.0),
+    color: Color.fromARGB(255, 242, 242, 243),
     border: Border.all(
-      color: Color.fromARGB(255, 126, 126, 126),
+      color:  Color.fromARGB(255, 242, 242, 243),
       style: BorderStyle.none,
       width: 1,
     ),
@@ -72,10 +73,48 @@ Icon UserClose() {
   );
 }
 
-Text LoginHeard() {
-  return const Text('请输入您的手机号码，登录或注册您的小求账号',
-      style: TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 14.0,
-          color: Color.fromARGB(255, 12, 12, 12)));
+Padding mypaddingIcon(int type){
+
+
+  return Padding(
+    padding: EdgeInsets.all(12),
+    child: new Icon(
+      type == 1 ? Icons.person : (type == 2 ?  Icons.email:Icons.lock),
+      color: Color.fromARGB(255, 126, 126, 126),
+    ),
+  );
 }
+
+Icon passwordEyeIcon(bool isShowPassWord){
+  return new Icon(
+    isShowPassWord
+        ? Icons.visibility
+        : Icons.visibility_off,
+    color: Color.fromARGB(255, 126, 126, 126),
+  );
+}
+
+
+BoxShadow myBoxShadow(){
+  return new BoxShadow(
+      color:
+      Color.fromARGB(255, 200, 200, 200),
+      blurRadius: 2.0,
+      offset: Offset(1, 1),
+      spreadRadius: 2.0);
+}
+
+Text mySelectLoginWay(bool _isPhone){
+  return Text(
+    _isPhone ? '用账号密码登录' : '短信验证码登录',
+    style: TextStyle(fontSize: 12),
+  );
+}
+BoxDecoration myBoxDecoration(bool isValid){
+  return BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(100),
+      boxShadow: isValid ? [myBoxShadow()] : []);
+}
+
+

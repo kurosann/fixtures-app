@@ -1,42 +1,9 @@
-import 'package:fixtures/view/login/phoneLogin.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-/// 短信验证登录
-Widget CodeLogin(BuildContext context) {
-  return new Container(
-    child: CupertinoButton(
-      padding: EdgeInsets.all(0),
-      child: Text(
-        '短信验证码登录',
-        style: TextStyle(fontSize: 12),
-      ),
-      onPressed: () {
-        Navigator.of(context).push(CupertinoPageRoute(
-          builder: (context) {
-            return PhoneLogin();
-          },
-        ));
-      },
-    ),
-  );
-}
 
-/// 密码登录
-Widget PassworLogin(BuildContext context) {
-  return new Container(
-    child: TextButton(
-      child: Text(
-        '用账号密码登录',
-        style: TextStyle(fontSize: 12),
-      ),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-    ),
-  );
-}
+
 
 void _showInfoDialog(context, String content) {
   showCupertinoDialog(
@@ -92,7 +59,7 @@ Widget OtherLogin() {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Expanded(
-          child: Divider(height: 1),
+          child: Divider(height: 1,color:Colors.grey),
         ),
         new Padding(
           padding: EdgeInsets.only(left: 15, right: 15),
@@ -104,7 +71,7 @@ Widget OtherLogin() {
           ),
         ),
         Expanded(
-          child: Divider(height: 1),
+          child: Divider(height: 1,color:Colors.grey),
         ),
       ],
     ),
@@ -160,4 +127,19 @@ Widget ImageLogin(context) {
       ],
     ),
   );
+}
+
+Widget myCupertinoAndIcon(bool isLogging){
+  return isLogging ? CupertinoActivityIndicator() : Icon(Icons.arrow_forward);
+}
+
+Widget LoginHeard() {
+  return Container(
+      margin: const EdgeInsets.only(left: 18.0,top: 18),
+      child: Text('请输入您的手机号码，登录或注册您的小求账号',
+          style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 14.0,
+              color: Color.fromARGB(255, 12, 12, 12)))
+  ) ;
 }
