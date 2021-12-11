@@ -2,19 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class NetServiceFreshPanel extends StatefulWidget {
-  Widget? child;
+  Widget child;
 
   Function? onNetData;
 
-  NetServiceState state;
+  NetServiceState? state;
 
   NetServiceFreshPanel(
-      {this.state = NetServiceState.STATE_ING, this.child, this.onNetData})
-      : assert(child != null);
+      {this.state = NetServiceState.STATE_ING,
+      required this.child,
+      this.onNetData})
+      : assert(onNetData != null || state != null);
 
   @override
   State<StatefulWidget> createState() =>
-      _NetServiceRefresh(state, child!, onNetData);
+      _NetServiceRefresh(state!, child, onNetData);
 }
 
 class _NetServiceRefresh extends State<NetServiceFreshPanel> {

@@ -1,19 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class WorkerInfo extends StatefulWidget {
+class WorkerInfoPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _WorkerInfoState();
+  State<StatefulWidget> createState() => _WorkerInfoPageState();
 
 }
 
-class _WorkerInfoState extends State<WorkerInfo> {
+class _WorkerInfoPageState extends State<WorkerInfoPage> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        CupertinoTextFormFieldRow()
-      ],
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        backgroundColor: Color.fromARGB(0, 0, 0, 0),
+      ),
+      child: ListView(
+        children: [
+          _head(),
+        ],
+      ),
     );
   }
 

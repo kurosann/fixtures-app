@@ -1,7 +1,7 @@
 import 'package:fixtures/routes.dart';
 import 'package:fixtures/view/home/home.dart';
 import 'package:fixtures/view/login/login.dart';
-import 'package:fixtures/widget/baseStatefulPage.dart';
+import 'package:fixtures/widget/NetServiceFreshPanel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -19,8 +19,7 @@ class MyApp extends StatelessWidget {
       theme: CupertinoThemeData(
           barBackgroundColor: Color.fromARGB(150, 255, 255, 255),
           primaryColor: Colors.orange,
-          brightness: Brightness.light
-      ),
+          brightness: Brightness.light),
       home: Login(),
     );
   }
