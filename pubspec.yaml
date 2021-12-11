@@ -39,6 +39,8 @@ dependencies:
   font_awesome_flutter: any
   toast: ^0.1.4
   flutter_spinkit: "^4.1.2"
+  flutter_picker: ^1.1.5 #https://pub.dev/packages/flutter_picker
+  date_format: ^1.0.8 #https://pub.dev/packages/date_format
 dev_dependencies:
   flutter_test:
     sdk: flutter

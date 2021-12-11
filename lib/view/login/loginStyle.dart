@@ -74,8 +74,6 @@ Icon UserClose() {
 }
 
 Padding mypaddingIcon(int type){
-
-
   return Padding(
     padding: EdgeInsets.all(12),
     child: new Icon(
