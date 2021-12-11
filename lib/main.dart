@@ -1,4 +1,5 @@
 import 'package:fixtures/routes.dart';
+import 'package:fixtures/view/costNeed/costNeed.dart';
 import 'package:fixtures/view/home/home.dart';
 import 'package:fixtures/view/order/orderDetail.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
           barBackgroundColor: Color.fromARGB(150, 255, 255, 255),
           primaryColor: Colors.orange,
           brightness: Brightness.light),
-      home: OrderDetailPage(),
+      home: CostNeedPage(),
     );
   }
 }

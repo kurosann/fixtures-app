@@ -1,5 +1,5 @@
-import 'package:fixtures/view/personal/styles/myStyle.dart';
-import 'package:fixtures/widget/stepper.dart';
+
+import 'package:fixtures/utils/styles/myStyle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

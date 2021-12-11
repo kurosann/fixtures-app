@@ -1,8 +1,7 @@
+import 'package:fixtures/utils/styles/myStyle.dart';
 import 'package:fixtures/utils/util.dart';
-import 'package:fixtures/view/order/styles/myStart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class OrderDetailPage extends StatefulWidget {
@@ -26,6 +25,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        previousPageTitle: '订单支付',
+        middle: Text("订单支付",style: TextStyle(fontSize: 21.0, color: Colors.black)),
+      ),
       backgroundColor: Color.fromARGB(245, 245, 245, 245),
       child: CustomScrollView(slivers: [
         CupertinoSliverRefreshControl(
