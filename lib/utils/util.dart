@@ -21,8 +21,12 @@ ButtonStyle mainButtonStyle() {
       foregroundColor: MaterialStateProperty.all(Colors.black87));
 }
 
-String dataFormat(date) {
+String dataGetWorkFormat(date) {
   return "${date.year.toString()}-${date.month.toString().padLeft(2,'0')}-${date.day.toString().padLeft(2,'0')} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
+}
+
+String dataBirthFormat(date) {
+  return "${date.year.toString()}-${date.month.toString().padLeft(2,'0')}-${date.day.toString().padLeft(2,'0')}";
 }
 
 

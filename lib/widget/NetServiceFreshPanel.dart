@@ -40,7 +40,10 @@ class _NetServiceRefresh extends State<NetServiceFreshPanel> {
 
   @override
   void initState() {
-    if (getData != null) _refresh();
+    if (getData != null)
+      _refresh();
+//    else
+//      state = NetServiceState.STATE_SUCCESS;
   }
 
   @override
@@ -54,7 +57,7 @@ class _NetServiceRefresh extends State<NetServiceFreshPanel> {
           _child,
           state == NetServiceState.STATE_ING
               ? Container(
-                  color: Color.fromARGB(50, 255, 255, 255),
+                  color: Color.fromARGB(200, 255, 255, 255),
                   alignment: Alignment.center,
                   child: CupertinoActivityIndicator(),
                 )

@@ -32,8 +32,10 @@ class _HandlerOrderState extends State<HandlingOrderPage>
         middle: Text("您正在处理的订单"),
         trailing: isRefresh
             ? CupertinoActivityIndicator()
-            : GestureDetector(
-                onTap: () {
+            : CupertinoButton(
+          padding: EdgeInsets.all(0),
+                alignment: Alignment.centerRight,
+                onPressed: () {
                   setState(() {
                     isRefresh = true;
                   });

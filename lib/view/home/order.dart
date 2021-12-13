@@ -22,18 +22,17 @@ class OrderPage extends StatefulWidget {
 
 class _OrderPageState extends State<OrderPage> {
   /// 订单数据
-  var orderList = <Order>[Order(),Order(),Order(),];
+  var orderList = <Order>[];
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       child: NetServiceFreshPanel(
+        state: NetServiceState.STATE_SUCCESS,
         child: CustomScrollView(
           slivers: <Widget>[
             CupertinoSliverRefreshControl(
-              onRefresh: () async {
-
-              },
+              onRefresh: () async {},
             ),
             CupertinoSliverNavigationBar(
               stretch: true,
@@ -47,9 +46,84 @@ class _OrderPageState extends State<OrderPage> {
                     height: 1,
                   );
                 final i = index ~/ 2;
-                return _itemCell(i);
-              }, childCount: orderList.length * 2)),
+                return orderList.length == 0
+                    ? _skeletonItemCell()
+                    : _itemCell(i);
+              }, childCount: orderList.length == 0 ? 6 : orderList.length * 2)),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _skeletonItemCell() {
+    return TextButton(
+      style: mainButtonStyle(),
+      onPressed: () {
+        Navigator.of(context).push(CupertinoPageRoute(
+          builder: (context) {
+            return HandlingOrderPage(
+              id: "1",
+            );
+          },
+        ));
+      },
+      child: Container(
+        padding: EdgeInsets.all(18),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween, // 左右对齐
+          children: [
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(7),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 100,
+                        height: 16,
+                        decoration: BoxDecoration(
+                            color: Colors.black12,
+                            borderRadius: BorderRadius.circular(8)),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(7),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 100,
+                        height: 16,
+                        decoration: BoxDecoration(
+                            color: Colors.black12,
+                            borderRadius: BorderRadius.circular(8)),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+            Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.all(7),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 100,
+                        height: 16,
+                        decoration: BoxDecoration(
+                            color: Colors.black12,
+                            borderRadius: BorderRadius.circular(8)),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            )
           ],
         ),
       ),
@@ -99,17 +173,11 @@ class _OrderPageState extends State<OrderPage> {
             ),
             Column(
               children: [
-                Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(4),
-                      child: Text("工单状态"),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(4),
-                      child: Text("000分"),
-                    ),
-                  ],
+                Container(
+                  margin: EdgeInsets.all(7),
+                  child: Row(
+                    children: [Text("工单状态"), Text("000分")],
+                  ),
                 )
               ],
             )

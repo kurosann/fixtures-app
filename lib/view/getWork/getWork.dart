@@ -41,7 +41,7 @@ class GetWorkState extends State<GetWorkPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("姓名"),
-              Text(dataFormat(DateTime.now()).toString()),
+              Text(dataGetWorkFormat(DateTime.now()).toString()),
             ],
           ),
           Row(

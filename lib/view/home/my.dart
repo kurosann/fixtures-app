@@ -1,4 +1,5 @@
 import 'package:fixtures/utils/util.dart';
+import 'package:fixtures/view/editPersonal/editPersonal.dart';
 import '../share/share.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -338,9 +339,7 @@ class _MyPageState extends State<MyPage> {
             onPressed: () {
               Navigator.of(allContext!)
                   .push(CupertinoPageRoute(builder: (BuildContext context) {
-                return CupertinoPageScaffold(
-                  child: Container(),
-                );
+                return EditPersonalPage();
               }));
             },
             child: ListTile(

@@ -1,5 +1,3 @@
-import 'package:fixtures/view/login/loginWidget.dart';
-import 'package:fixtures/widget/baseStatefulPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -18,8 +16,9 @@ class EditPhonePage extends StatefulWidget {
 }
 
 class _EditPhonePageState extends State<EditPhonePage> {
-  String _phoneMenber ="1345****111";
+  String _phoneMenber = "1345****111";
   bool _isNext = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,11 +73,12 @@ class _EditPhonePageState extends State<EditPhonePage> {
                     Container(
                       padding: EdgeInsets.only(top: 50),
                       child: CupertinoButton(
-                          padding: EdgeInsets.symmetric(horizontal: 100, vertical: 10),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 100, vertical: 10),
                           borderRadius: BorderRadius.circular(100),
                           color: Colors.blue,
                           child: Text("立即修改"),
-                          onPressed: (){}),
+                          onPressed: () {}),
                     )
                   ],
                 ),
@@ -88,4 +88,3 @@ class _EditPhonePageState extends State<EditPhonePage> {
     );
   }
 }
-
