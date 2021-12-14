@@ -1,11 +1,8 @@
 import 'package:fixtures/utils/styles/myStyle.dart';
 import 'package:fixtures/utils/util.dart';
-import 'package:fixtures/view/faces/faceCamera.dart';
-import 'package:fixtures/view/home/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 
 class OrderDetailPage extends StatefulWidget {
   static OrderDetailPage? _instance;
@@ -22,10 +19,8 @@ class OrderDetailPage extends StatefulWidget {
 }
 
 class _OrderDetailPageState extends State<OrderDetailPage> {
-
   bool _checkboxAliPay = false;
   bool _checkBoxWeiXin = false;
-
 
   @override
   Widget build(BuildContext context) {
@@ -234,17 +229,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           borderRadius: BorderRadius.circular(12),
           color: Colors.deepOrange,
           child: Text("提交"),
-          onPressed: () {
-            Navigator.of(context).push(CupertinoPageRoute(
-              builder: (context) => FaceCameraPage(title: 'Flutter Demo Home Page'),
-            ));
-            Navigator.of(allContext!)
-                .push(CupertinoPageRoute(builder: (BuildContext context) {
-              return CupertinoPageScaffold(
-                child: Container(),
-              );
-            }));
-          }),
+          onPressed: () {}),
     );
   }
 }
