@@ -48,7 +48,8 @@ class _ScanCamerasPageState extends State<ScanCamerasPage> {
                       path: null,
                       faceScanCallBack: (path) {
                         /// 在这里将本地图片上传
-                        if (FaceScan.controller!.value.isIng) {
+                        if (FaceScan.controller!.value.isSuccess) {
+                          FaceScan.controller!.value.isSuccess = false;
                           print("返回图片文件路径：" + path);
                           // ///通知图形界面识别失败
                           // FaceScan.ScanFail();

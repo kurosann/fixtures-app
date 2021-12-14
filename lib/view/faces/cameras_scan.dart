@@ -153,6 +153,7 @@ class _CameraScanState extends State<CameraScan> {
                               onPressed: () {
                                 ///通知图形界面在识别中
                                 FaceScan.Scaning();
+                                FaceScan.controller!.value.isSuccess = true;
                               },
                               child: Text("开始上传"),
                             ),
