@@ -43,7 +43,8 @@ class _CameraScanState extends State<CameraScan> {
     });
     FaceScan.controller!.addListener(() {
       print("捕获值变化inIng的值为：" + FaceScan.controller!.value.isIng.toString());
-      setState(() {});
+      print("捕获值变化isSuccess的值为：" + FaceScan.controller!.value.isSuccess.toString());
+      if (mounted) setState(() {});
     });
     timer = Timer.periodic(Duration(milliseconds: 2000), (_) {
       takePhoto();
@@ -95,6 +96,7 @@ class _CameraScanState extends State<CameraScan> {
                                 : Border.all(
                                 width: 0, color: Theme.of(context).primaryColor),
                             borderRadius: BorderRadius.circular(100)),
+
                         child: FaceScan.controller!.value.isIng
                             ? Stack(
                           children: <Widget>[
@@ -105,7 +107,7 @@ class _CameraScanState extends State<CameraScan> {
                             ),
                             Center(
                               child: Text(
-                                "识别中...",
+                                "上传中，请勿乱动...",
                                 style: TextStyle(
                                     color: Theme.of(context).canvasColor),
                               ),
@@ -142,6 +144,18 @@ class _CameraScanState extends State<CameraScan> {
                           Container(
                             margin: EdgeInsets.only(top: 16),
                             child: Text("请抬起手机，面向屏幕"),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 16),
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.only(right: 10),
+                            child: TextButton(
+                              onPressed: () {
+                                ///通知图形界面在识别中
+                                FaceScan.Scaning();
+                              },
+                              child: Text("开始上传"),
+                            ),
                           ),
                         ],
                       )
