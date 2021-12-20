@@ -18,17 +18,18 @@ class _Login extends State<Login> {
   final phoneText = TextEditingController();
   final password = TextEditingController();
   final phoneCode = TextEditingController();
+  final invitation = TextEditingController();
   bool _isShowPassWord = false;
   late Timer _timer;
   int _countdownTime = 0;
   var _isPhone = false;
   var isValid = true;
-  var isLogging = false;
-
+  var isLogin = false;
+  var isRegister = false;
   void login() {
     setState(() {
       if (isValid) {
-        isLogging = true;
+        isLogin = true;
       }
     });
     print('userName: ' + phoneText.text + ' password: ' + password.text);
@@ -138,6 +139,31 @@ class _Login extends State<Login> {
       ),
     );
 
+    /// 邀请码输入框
+    var _invitationField = CupertinoTextField(
+      controller: invitation,
+      padding: EdgeInsets.symmetric(vertical: 12),
+      placeholderStyle: PhoneTextStyle(),
+      decoration: TextFieldBoxStyle(),
+      prefix: mypaddingIcon(1),
+      prefixMode: OverlayVisibilityMode.always,
+      placeholder: '邀请码',
+      cursorColor: Color.fromARGB(255, 126, 126, 126),
+      keyboardType: TextInputType.phone,
+      suffixMode: OverlayVisibilityMode.editing,
+      suffix: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Center(
+          child: new GestureDetector(
+            child: UserClose(),
+            onTap: () {
+              invitation.clear();
+            },
+          ),
+        ),
+      ),
+    );
+
     /// 手机号
     var _phoneContainer = Container(
       margin: const EdgeInsets.all(18.0),
@@ -148,6 +174,12 @@ class _Login extends State<Login> {
     var _passwordOrCode = Container(
       margin: const EdgeInsets.only(left: 18.0, right: 18, bottom: 18),
       child: _isPhone ? _codeTextField : _passwordTextField,
+    );
+
+    /// 密码或者验证码
+    var _invitationContainer = Container(
+      margin: const EdgeInsets.only(left: 18.0, right: 18, bottom: 18),
+      child: isRegister ? _invitationField : null,
     );
 
     /// 登录方式
@@ -161,11 +193,29 @@ class _Login extends State<Login> {
                   child: mySelectLoginWay(_isPhone),
                   onPressed: () {
                     setState(() {
+                      isRegister = false;
                       _isPhone = !_isPhone;
+                      invitation.clear();
+                      password.clear();
                     });
                   },
                 ),
               ),
+              Container(
+                child:  !isRegister ? TextButton(
+                  child: Text(
+                    '注册账号',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isPhone = true;
+                      isRegister = true;
+                      invitation.clear();
+                    });
+                  },
+                ): null,
+              )
             ]));
 
     /// 登录按钮部分
@@ -180,7 +230,7 @@ class _Login extends State<Login> {
                 padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
                 borderRadius: BorderRadius.circular(100),
                 color: CupertinoTheme.of(context).primaryColor,
-                child: myCupertinoAndIcon(isLogging),
+                child: myCupertinoAndIcon(isLogin),
                 onPressed: isValid ? login : null),
           ),
           Expanded(child: Container())
@@ -210,6 +260,7 @@ class _Login extends State<Login> {
               LoginHeard(),
               _phoneContainer,
               _passwordOrCode,
+              _invitationContainer,
               _underContainer,
             ],
           ),
