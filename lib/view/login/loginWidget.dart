@@ -53,28 +53,28 @@ Widget UserInfo(BuildContext context, Widget widget) {
 
 /// 第三方登录
 Widget OtherLogin() {
-  return new Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: <Widget>[
-      Expanded(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+  return Padding(
+    padding: EdgeInsets.only(top: 50),
+    child: new Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Expanded(
           child: Divider(height: 1,color:Colors.grey),
         ),
-      ),
-      new Text(
-        "第三方登录",
-        style: new TextStyle(
-            fontSize: 12,
-            color: Colors.black54),
-      ),
-      Expanded(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+        new Padding(
+          padding: EdgeInsets.only(left: 15, right: 15),
+          child: new Text(
+            "第三方登录",
+            style: new TextStyle(
+                fontSize: 12,
+                color: Colors.black54),
+          ),
+        ),
+        Expanded(
           child: Divider(height: 1,color:Colors.grey),
         ),
-      ),
-    ],
+      ],
+    ),
   );
 }
 
@@ -86,17 +86,25 @@ Widget WeixinLogin() {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         new Container(
+          height: 50,
+          width: 100,
+        ),
+        new Container(
           padding: EdgeInsets.all(20),
           child: new GestureDetector(
             child: Icon(
               FontAwesomeIcons.weixin,
               size: 30,
-              color: Colors.green,
+              color: Color(0xff0e9324),
             ),
             onTap: () {
               // 填写方法
             },
           ),
+        ),
+        new Container(
+          height: 50,
+          width: 100,
         ),
       ],
     ),

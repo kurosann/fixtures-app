@@ -7,7 +7,7 @@ packages:
       name: archive
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "3.1.8"
+    version: "3.1.6"
   async:
     dependency: transitive
     description:
@@ -35,7 +35,7 @@ packages:
       name: camera_platform_interface
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.1.3"
+    version: "2.1.1"
   characters:
     dependency: transitive
     description:
@@ -258,7 +258,7 @@ packages:
       name: image_picker_platform_interface
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.4.2"
+    version: "2.4.1"
   intl:
     dependency: transitive
     description:
@@ -314,7 +314,7 @@ packages:
       name: path_provider_android
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.0.11"
+    version: "2.0.9"
   path_provider_ios:
     dependency: transitive
     description:
@@ -342,7 +342,7 @@ packages:
       name: path_provider_platform_interface
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.0.2"
+    version: "2.0.1"
   path_provider_windows:
     dependency: transitive
     description:
@@ -377,7 +377,7 @@ packages:
       name: plugin_platform_interface
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.1.0"
+    version: "2.0.2"
   process:
     dependency: transitive
     description:
@@ -509,13 +509,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.8.0"
-  tobias:
-    dependency: "direct main"
-    description:
-      name: tobias
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "2.1.2+1"
   typed_data:
     dependency: transitive
     description:
@@ -564,7 +557,7 @@ packages:
       name: url_launcher_platform_interface
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.0.5"
+    version: "2.0.4"
   url_launcher_web:
     dependency: transitive
     description:
@@ -592,7 +585,7 @@ packages:
       name: win32
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.3.3"
+    version: "2.3.1"
   xdg_directories:
     dependency: transitive
     description:

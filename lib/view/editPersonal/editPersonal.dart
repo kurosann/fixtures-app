@@ -263,6 +263,8 @@ class _EditPersonalPageState extends State<EditPersonalPage> {
                                 subLocalName =
                                     locals[localIndex].children![value].name!;
 
+                                print(subLocalName);
+
                                 subLocalIndex = value;
                                 _localTextController.text =
                                     locals[localIndex].name! + subLocalName;
