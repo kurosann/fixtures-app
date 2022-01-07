@@ -22,61 +22,69 @@ class _FindFixtureState extends State<FindFixturePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: emptyAppBar(context),
       body: CupertinoPageScaffold(
-        child: CustomScrollView(
-          slivers: <Widget>[
-            CupertinoSliverNavigationBar(
-              stretch: true,
-              previousPageTitle: "小求",
-              largeTitle: Text("找装修"),
-            ),
-            SliverToBoxAdapter(
-              child: Container(
-                margin: const EdgeInsets.all(4.0),
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: CupertinoSearchTextField(
-                  prefixIcon: Icon(CupertinoIcons.search),
-                  placeholder: "搜索",
-                  suffixMode: OverlayVisibilityMode.editing,
+        backgroundColor: Color.fromARGB(255, 250, 250, 250),
+        child: SafeArea(
+          child: CustomScrollView(
+            slivers: <Widget>[
+              CupertinoSliverNavigationBar(
+                stretch: true,
+                previousPageTitle: "小求",
+                largeTitle: Text("找装修"),
+              ),
+              SliverToBoxAdapter(
+                child: Container(
+                  margin: const EdgeInsets.all(4.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: CupertinoSearchTextField(
+                    prefixIcon: Icon(CupertinoIcons.search),
+                    placeholder: "搜索",
+                    suffixMode: OverlayVisibilityMode.editing,
+                  ),
                 ),
               ),
-            ),
-            SliverGrid(
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 150.0,
-                mainAxisSpacing: 30.0,
-                crossAxisSpacing: 4.0,
-                childAspectRatio: 1.4,
-              ),
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return _itemCell(
-                      "门窗",
-                      "https://img2.baidu.com/it/u=2548989639,546384781&fm=15&fmt=auto",
-                      "1");
-                },
-                childCount: 12,
-              ),
-            )
-          ],
+              SliverGrid(
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 150.0,
+                  mainAxisSpacing: 30.0,
+                  crossAxisSpacing: 4.0,
+                  childAspectRatio: 1.4,
+                ),
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    return _itemCell(
+                        "门窗",
+                        "https://img2.baidu.com/it/u=2548989639,546384781&fm=15&fmt=auto",
+                        "1");
+                  },
+                  childCount: 12,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _itemCell(label, imageUrl, id) {
-    return Card(
+    return Container(
+      color: Colors.white,
       child: TextButton(
         style: mainButtonStyle(),
         child: Column(
           children: [
-            Image(
-              image: NetworkImage(imageUrl),
-              width: 50,
-              height: 50,
+            Expanded(
+              child: Image(
+                image: NetworkImage(imageUrl),
+                width: 50,
+                height: 50,
+              ),
             ),
-            Text(label),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(label),
+            ),
           ],
         ),
         onPressed: () {

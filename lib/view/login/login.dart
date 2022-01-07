@@ -26,6 +26,7 @@ class _Login extends State<Login> {
   var isValid = true;
   var isLogin = false;
   var isRegister = false;
+
   void login() {
     setState(() {
       if (isValid) {
@@ -80,11 +81,11 @@ class _Login extends State<Login> {
       placeholder: '请输入验证码',
       cursorColor: Color.fromARGB(255, 126, 126, 126),
       keyboardType: TextInputType.number,
-      suffix: new TextButton(
+      suffix: CupertinoButton(
         onPressed: startSendSms,
         child: Text(
           _countdownTime > 0 ? '$_countdownTime后重新获取' : '获取验证码',
-          style: TextStyle(color: Colors.lightBlue),
+          style: TextStyle(fontSize: 11),
         ),
       ),
     );
@@ -166,30 +167,32 @@ class _Login extends State<Login> {
 
     /// 手机号
     var _phoneContainer = Container(
-      margin: const EdgeInsets.all(18.0),
+      margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6),
       child: _phoneTextField,
     );
 
     /// 密码或者验证码
     var _passwordOrCode = Container(
-      margin: const EdgeInsets.only(left: 18.0, right: 18, bottom: 18),
+      margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6),
       child: _isPhone ? _codeTextField : _passwordTextField,
     );
 
     /// 密码或者验证码
     var _invitationContainer = Container(
-      margin: const EdgeInsets.only(left: 18.0, right: 18, bottom: 18),
+      margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6),
       child: isRegister ? _invitationField : null,
     );
 
     /// 登录方式
     var _selectWay = Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
         child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Container(
-                child: TextButton(
+                child: CupertinoButton(
+                  minSize: 0,
+                  padding: EdgeInsets.symmetric(horizontal: 14, vertical: 0),
                   child: mySelectLoginWay(_isPhone),
                   onPressed: () {
                     setState(() {
@@ -202,19 +205,24 @@ class _Login extends State<Login> {
                 ),
               ),
               Container(
-                child:  !isRegister ? TextButton(
-                  child: Text(
-                    '注册账号',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _isPhone = true;
-                      isRegister = true;
-                      invitation.clear();
-                    });
-                  },
-                ): null,
+                child: !isRegister
+                    ? CupertinoButton(
+                        minSize: 0,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 14, vertical: 0),
+                        child: Text(
+                          '注册账号',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isPhone = true;
+                            isRegister = true;
+                            invitation.clear();
+                          });
+                        },
+                      )
+                    : null,
               )
             ]));
 
@@ -241,10 +249,10 @@ class _Login extends State<Login> {
     /// 输入框下面的ui
     var _underContainer = Container(
       height: MediaQuery.of(context).size.height,
-      child: Column(
+      child: ListView(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
         children: [
-          _selectWay,
-          _loginBtn,
           OtherLogin(),
           WeixinLogin(),
         ],
@@ -261,6 +269,8 @@ class _Login extends State<Login> {
               _phoneContainer,
               _passwordOrCode,
               _invitationContainer,
+              _selectWay,
+              _loginBtn,
               _underContainer,
             ],
           ),

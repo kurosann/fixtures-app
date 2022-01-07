@@ -3,7 +3,7 @@ import 'package:fixtures/view/home/xiaoqiu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'my.dart';
+import 'my/my.dart';
 import 'order.dart';
 
 BuildContext? allContext;
