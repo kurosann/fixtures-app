@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:fixtures/service/api/LoginApi.dart';
 import 'package:fixtures/utils/util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 import 'loginStyle.dart';
 import 'loginWidget.dart';
@@ -12,7 +14,7 @@ class Login extends StatefulWidget {
   _Login createState() => new _Login();
 }
 
-class _Login extends State<Login> {
+class _Login extends State<Login> with LoginMixin {
   //获取Key用来获取Form表单组件
   GlobalKey<FormState> loginKey = new GlobalKey<FormState>();
   final phoneText = TextEditingController();
@@ -26,6 +28,7 @@ class _Login extends State<Login> {
   var isValid = true;
   var isLogin = false;
   var isRegister = false;
+
   void login() {
     setState(() {
       if (isValid) {
@@ -33,6 +36,12 @@ class _Login extends State<Login> {
       }
     });
     print('userName: ' + phoneText.text + ' password: ' + password.text);
+
+    userLogin(
+        params: LoginModel(username: phoneText.text, password: password.text),
+        successCallBack: (data) {
+          print("1111" + data.toString());
+        });
   }
 
   void startCountdownTimer() {
@@ -202,19 +211,21 @@ class _Login extends State<Login> {
                 ),
               ),
               Container(
-                child:  !isRegister ? TextButton(
-                  child: Text(
-                    '注册账号',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _isPhone = true;
-                      isRegister = true;
-                      invitation.clear();
-                    });
-                  },
-                ): null,
+                child: !isRegister
+                    ? TextButton(
+                        child: Text(
+                          '注册账号',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isPhone = true;
+                            isRegister = true;
+                            invitation.clear();
+                          });
+                        },
+                      )
+                    : null,
               )
             ]));
 
@@ -253,17 +264,17 @@ class _Login extends State<Login> {
 
     return CupertinoPageScaffold(
         child: SafeArea(
-          child: ListView(
-            physics: NeverScrollableScrollPhysics(),
-            children: <Widget>[
-              ImageLogin(context),
-              LoginHeard(),
-              _phoneContainer,
-              _passwordOrCode,
-              _invitationContainer,
-              _underContainer,
-            ],
-          ),
+      child: ListView(
+        physics: NeverScrollableScrollPhysics(),
+        children: <Widget>[
+          ImageLogin(context),
+          LoginHeard(),
+          _phoneContainer,
+          _passwordOrCode,
+          _invitationContainer,
+          _underContainer,
+        ],
+      ),
     ));
   }
 }

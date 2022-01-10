@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
           barBackgroundColor: Color.fromARGB(150, 255, 255, 255),
           primaryColor: Colors.orange,
           brightness: Brightness.light),
-      home: HomePage(),
+      home: Login(),
     );
   }
 }
