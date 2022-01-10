@@ -63,7 +63,7 @@ class BaseNet {
   _requestHttp<T>(String url, SuccessCallBack<T> successCallBack,
       {String? method, params, ErrorCallBack? errorCallBack}) async {
     Response? response;
-    if (params != null && params.length > 0) {
+    if (params == null && params.length < 0) {
       params = {};
     }
     var dio = this.dio!;
@@ -83,11 +83,11 @@ class BaseNet {
             Response(requestOptions: response!.requestOptions, statusCode: 500);
       }
       // 请求超时
-      if (error.type == ResultCode.CONNECT_TIMEOUT) {
+      if (error.type == DioErrorType.connectTimeout) {
         errorResponse.statusCode = ResultCode.CONNECT_TIMEOUT;
       }
       // 一般服务器错误
-      else if (error.type == ResultCode.RECEIVE_TIMEOUT) {
+      else if (error.type == DioErrorType.receiveTimeout) {
         errorResponse.statusCode = ResultCode.RECEIVE_TIMEOUT;
       }
 
