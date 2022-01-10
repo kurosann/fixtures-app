@@ -39,25 +39,27 @@ class BaseNet {
   }
 
   //get请求
-  get(
+  get<T>(
       {required String url,
       params,
-      required Function successCallBack,
+      required Function(T data) successCallBack,
       Function? errorCallBack}) async {
-    _requestHttp(url, successCallBack, 'get', params, errorCallBack);
+    _requestHttp<T>(url, successCallBack,
+        method: 'get', params: params, errorCallBack: errorCallBack);
   }
 
   //post请求
-  post(
+  post<T>(
       {required String url,
       params,
-      required Function successCallBack,
+      required Function(T data) successCallBack,
       Function? errorCallBack}) async {
-    _requestHttp(url, successCallBack, "post", params, errorCallBack);
+    _requestHttp<T>(url, successCallBack,
+        method: "post", params: params, errorCallBack: errorCallBack);
   }
 
-  _requestHttp(String url, Function successCallBack,
-      [String? method, params, Function? errorCallBack]) async {
+  _requestHttp<T>(String url, Function(T data) successCallBack,
+      {String? method, params, Function? errorCallBack}) async {
     Response? response;
     if (params != null && params.length > 0) {
       params = {};
@@ -109,22 +111,29 @@ class BaseNet {
       }
     }
     String dataStr = json.encode(response!.data);
-    Map<String, dynamic> dataMap = json.decode(dataStr);
-    if (dataMap == null || dataMap['state'] == 0) {
-      _error(
-          errorCallBack,
-          '错误码：' +
-              dataMap['errorCode'].toString() +
-              '，' +
-              response.data.toString());
+    Result<T> dataMap = json.decode(dataStr);
+    if (dataMap.state == 0) {
+      _error(errorCallBack, response.data.toString());
     } else
-      successCallBack(dataMap);
+      successCallBack(dataMap.data!);
   }
 
   _error(Function? errorCallBack, String error) {
     if (errorCallBack != null) {
       errorCallBack(error);
     }
+  }
+}
+
+class Result<T> {
+  int? state;
+  int? errorCode;
+  T? data;
+
+  Result.fromJson(Map<String, dynamic> json) {
+    state = json["state"];
+    errorCode = json["errorCode"];
+    data = json["data"];
   }
 }
 
