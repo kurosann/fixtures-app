@@ -1,6 +1,9 @@
 import 'package:fixtures/service/base/HttpManager.dart';
 
+
+/// 此部分为模板 复制粘贴即可 使用with实现该mixin即可调用接口
 mixin DemoMixin {
+  /// get1
   void demo1(
       {required DemoModel params,
       required SuccessCallBack successCallBack,
@@ -12,7 +15,7 @@ mixin DemoMixin {
         successCallBack: successCallBack,
         errorCallBack: errorCallBack);
   }
-
+  /// get2
   void demo2(
       {Map? params,
       required SuccessCallBack successCallBack,
@@ -23,25 +26,28 @@ mixin DemoMixin {
         successCallBack: successCallBack,
         errorCallBack: errorCallBack);
   }
-
-  void testCall() {
-    demo1(
-      params: DemoModel(username: "admin", password: "123456"),
-      successCallBack: (data) {
-        print(data.username);
-        print(data.password);
-      },
-      errorCallBack: (code, err) {},
-    );
+  /// post
+  void demo3(
+      {required DemoModel params,
+      required SuccessCallBack successCallBack,
+      ErrorCallBack? errorCallBack}) async {
+    BaseNet.instance.post(
+        url: '/goods/category',
+        // 不是map需序列化为map
+        params: params.toJson(),
+        successCallBack: successCallBack,
+        errorCallBack: errorCallBack);
   }
 }
 
+/// demo 实体
 class DemoModel {
   String? username;
   String? password;
 
   DemoModel({this.username, this.password});
 
+  /// 调用该工厂可生成从json转化Model
   factory DemoModel.fromJson(Map<String, dynamic> json) => _fromJson(json);
 
   static DemoModel _fromJson(Map<String, dynamic> json) {
@@ -50,12 +56,13 @@ class DemoModel {
       ..password = json["password"];
   }
 
+  /// 调用该函数可从实体转化为json
   Map<String, dynamic> toJson() => {
         'username': username,
         'password': password,
       };
 }
-
+/// 序列化解析list
 List<DemoModel> getEntityList(List<dynamic> list) {
   List<DemoModel> result = [];
   list.forEach((item) {
