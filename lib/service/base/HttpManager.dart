@@ -7,6 +7,9 @@ import 'package:http/http.dart';
 typedef ErrorCallBack = Function(int code, String msg);
 typedef SuccessCallBack = Function(dynamic data);
 
+typedef AuthInterceptor = Map<String, String>? Function(
+    Map<String, String> header);
+
 class BaseNet {
   factory BaseNet() => _getInstance();
 
@@ -20,8 +23,13 @@ class BaseNet {
     }
     return _instance!;
   }
+  /// 鉴权拦截器 返回null终止请求
+  AuthInterceptor? authInterceptor;
 
-  var headers = {"Content-Type": "application/json"};
+  Map<String, String> headers = {
+    "Content-Type": "application/json",
+    ApiConfig.ACCESS_TOKEN: ""
+  };
 
   BaseNet._internal();
 
@@ -50,6 +58,11 @@ class BaseNet {
       {String? method, Map? params, ErrorCallBack? errorCallBack}) async {
     Response? response;
     String uriParams = "";
+    if (authInterceptor != null) {
+      Map<String, String>? t = authInterceptor!(headers);
+      if (t == null) return;
+      headers = t;
+    }
     try {
       if (method == 'get') {
         if (params == null && params!.keys.length == 0) {
