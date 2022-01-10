@@ -356,7 +356,9 @@ class _CupertinoStepperState extends State<CupertinoStepper>
   Widget _buildVerticalControls() {
     if (widget.controlsBuilder != null)
       return widget.controlsBuilder!(context,
-          ControlsDetails(onStepContinue: widget.onStepContinue,
+          ControlsDetails(
+              currentStep: widget.currentStep,
+              onStepContinue: widget.onStepContinue,
               onStepCancel: widget.onStepCancel)
           );
 

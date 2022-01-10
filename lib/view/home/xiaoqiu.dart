@@ -1,4 +1,3 @@
-import 'package:fixtures/utils/util.dart';
 import 'package:fixtures/view/findFixture/findFixture.dart';
 import 'package:fixtures/view/getWork/getWork.dart';
 import 'package:fixtures/view/home/home.dart';
@@ -72,7 +71,7 @@ class XiaoqiuPage extends StatelessWidget {
                 Icons.search,
                 size: 60,
               ),
-              Text("找装修")
+              Hero(tag: "找装修", child: Text("找装修"))
             ],
           ),
           onPressed: () {
@@ -93,9 +92,11 @@ class XiaoqiuPage extends StatelessWidget {
             ],
           ),
           onPressed: () {
-            Navigator.of(allContext!).push(CupertinoPageRoute(builder: (context) {
-              return GetWorkPage();
-            },));
+            Navigator.of(allContext!).push(CupertinoPageRoute(
+              builder: (context) {
+                return GetWorkPage();
+              },
+            ));
           },
         )
       ],

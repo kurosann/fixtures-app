@@ -18,17 +18,17 @@ class FaceNetService {
   // singleton boilerplate
   FaceNetService._internal();
   DataBaseService _dataBaseService = DataBaseService();
-  Interpreter _interpreter;
+  Interpreter? _interpreter;
   double threshold = 1.0;
 
-  List _predictedData;
-  List get predictedData => this._predictedData;
+  List? _predictedData;
+  List get predictedData => this._predictedData!;
 
   //  saved users data
   dynamic data = {};
 
   Future loadModel() async {
-    Delegate delegate;
+    Delegate? delegate;
     try {
       if (Platform.isAndroid) {
         delegate = GpuDelegateV2(
@@ -44,7 +44,7 @@ class FaceNetService {
           options: GpuDelegateOptions(true, TFLGpuDelegateWaitType.active),
         );
       }
-      var interpreterOptions = InterpreterOptions()..addDelegate(delegate);
+      var interpreterOptions = InterpreterOptions()..addDelegate(delegate!);
 
       this._interpreter = await Interpreter.fromAsset('mobilefacenet.tflite',
           options: interpreterOptions);
@@ -65,7 +65,7 @@ class FaceNetService {
     List output = List.generate(1, (index) => List.filled(192, 0));
 
     /// 运行并转换数据 🤖
-    this._interpreter.run(input, output);
+    this._interpreter!.run(input, output);
     output = output.reshape([192]);
 
     this._predictedData = List.from(output);
@@ -74,7 +74,7 @@ class FaceNetService {
   /// takes the predicted data previously saved and do inference
   String predict() {
     /// search closer user prediction if exists
-    return _searchResult(this._predictedData);
+    return _searchResult(this._predictedData!)!;
   }
 
   /// _preProess: crops the image to be more easy
@@ -108,7 +108,7 @@ class FaceNetService {
   /// [image]: 要转换的图像
   imglib.Image _convertCameraImage(CameraImage image) {
     var img = convertToImage(image);
-    var img1 = imglib.copyRotate(img, -90);
+    var img1 = imglib.copyRotate(img!, -90);
     return img1;
   }
 
@@ -134,14 +134,14 @@ class FaceNetService {
 
   /// searchs the result in the DDBB (this function should be performed by Backend)
   /// [predictedData]: Array that represents the face by the MobileFaceNet model
-  String _searchResult(List predictedData) {
+  String? _searchResult(List predictedData) {
     Map<String, dynamic> data = _dataBaseService.db;
 
     /// if no faces saved
-    if (data?.length == 0) return null;
+    if (data.length == 0) return null;
     double minDist = 999;
     double currDist = 0.0;
-    String predRes;
+    String? predRes;
 
     /// search the closest result 👓
     for (String label in data.keys) {

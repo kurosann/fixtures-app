@@ -9,7 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key}) : super(key: key);
+  MyHomePage({Key? key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -21,7 +21,7 @@ class _MyHomePageState extends State<MyHomePage> {
   MLKitService _mlKitService = MLKitService();
   DataBaseService _dataBaseService = DataBaseService();
 
-  CameraDescription cameraDescription;
+  CameraDescription? cameraDescription;
   bool loading = false;
 
   String githubURL =
@@ -79,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               MaterialPageRoute(
                                 builder: (BuildContext context) =>
                                     OpenCameraScan(
-                                  cameraDescription: cameraDescription,
+                                  cameraDescription: cameraDescription!,
                                 ),
                               ),
                             );

@@ -1,3 +1,4 @@
+import 'package:fixtures/view/home/home.dart';
 import 'package:fixtures/widget/stepper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,10 @@ class _HandlerOrderState extends State<HandlingOrderPage>
   int currentStep = 0;
   int currentRealStep = 2;
 
+  var sizeFieldController = TextEditingController();
+
+  String sizeInput = "";
+
   _HandlerOrderState({required this.id}) {
     currentStep = currentRealStep;
   }
@@ -33,7 +38,7 @@ class _HandlerOrderState extends State<HandlingOrderPage>
         trailing: isRefresh
             ? CupertinoActivityIndicator()
             : CupertinoButton(
-          padding: EdgeInsets.all(0),
+                padding: EdgeInsets.all(0),
                 alignment: Alignment.centerRight,
                 onPressed: () {
                   setState(() {
@@ -54,8 +59,21 @@ class _HandlerOrderState extends State<HandlingOrderPage>
               controlsBuilder: (context, details) {
                 return ButtonBar(
                   children: [
-                    CupertinoButton.filled(
+                    details.currentStep! == 0
+                        ? CupertinoButton(
+                            child: Text(
+                              "修改尺寸",
+                              style: TextStyle(fontSize: 14),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
+                            onPressed: () {
+                              showEditSizeModel();
+                            })
+                        : Container(),
+                    CupertinoButton(
                         child: Text("去付款"),
+                        color: Colors.greenAccent,
                         padding:
                             EdgeInsets.symmetric(horizontal: 14, vertical: 4),
                         onPressed: () {}),
@@ -74,7 +92,7 @@ class _HandlerOrderState extends State<HandlingOrderPage>
               steps: [
                 _buildStep(
                   title: Text('现场勘察'),
-                  Subtitle: Text(DateTime.now().toString()),
+                  subtitle: Text(DateTime.now().toString()),
                   currentIndex: 0,
                   realIndex: 0,
                   price: 40,
@@ -82,7 +100,7 @@ class _HandlerOrderState extends State<HandlingOrderPage>
                 ),
                 _buildStep(
                   title: Text('材料准备'),
-                  Subtitle: Text(DateTime.now().toString()),
+                  subtitle: Text(DateTime.now().toString()),
                   currentIndex: 1,
                   realIndex: 1,
                   price: 120,
@@ -90,7 +108,7 @@ class _HandlerOrderState extends State<HandlingOrderPage>
                 ),
                 _buildStep(
                   title: Text('材料到位'),
-                  Subtitle: Text(DateTime.now().toString()),
+                  subtitle: Text(DateTime.now().toString()),
                   currentIndex: 2,
                   realIndex: 2,
                   price: 160,
@@ -98,7 +116,7 @@ class _HandlerOrderState extends State<HandlingOrderPage>
                 ),
                 _buildStep(
                   title: Text('完工'),
-                  Subtitle: Text(DateTime.now().toString()),
+                  subtitle: Text(DateTime.now().toString()),
                   currentIndex: 3,
                   realIndex: 3,
                   price: 40,
@@ -114,7 +132,7 @@ class _HandlerOrderState extends State<HandlingOrderPage>
 
   Step _buildStep({
     required Widget title,
-    required Widget Subtitle,
+    required Widget subtitle,
     required double price,
     required double percent,
     required int currentIndex,
@@ -127,7 +145,7 @@ class _HandlerOrderState extends State<HandlingOrderPage>
           Text(currentRealStep == realIndex ? ' (进行中)' : ''),
         ],
       ),
-      subtitle: Subtitle,
+      subtitle: subtitle,
       state:
           currentStep == currentIndex ? StepState.editing : StepState.indexed,
       isActive: currentStep == currentIndex,
@@ -155,6 +173,44 @@ class _HandlerOrderState extends State<HandlingOrderPage>
           ),
         ),
       ),
+    );
+  }
+
+  showEditSizeModel() {
+    showCupertinoDialog(
+      context: allContext!,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          title: Text("输入尺寸"),
+          content: CupertinoTextField(
+            style: TextStyle(height: 1.4),
+            controller: sizeFieldController,
+            textInputAction: TextInputAction.done,
+            keyboardType: TextInputType.number,
+            placeholder: "请重新输入尺寸",
+            clearButtonMode: OverlayVisibilityMode.editing,
+            autofocus: true,
+            onTap: () {
+              HomePage.instance.tabController.index = 1;
+            },
+          ),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              child: Text("取消"),
+              isDestructiveAction: true,
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            CupertinoDialogAction(
+              child: Text("确定"),
+              isDefaultAction: true,
+              onPressed: () {
+                sizeInput = sizeFieldController.text;
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
     );
   }
 }

@@ -9,6 +9,20 @@ import 'order.dart';
 BuildContext? allContext;
 
 class HomePage extends StatelessWidget {
+
+  static HomePage? _instance;
+
+  static HomePage get instance {
+    if (_instance == null) {
+      _instance = HomePage();
+    }
+    return _instance!;
+  }
+
+  var tabController = CupertinoTabController(
+    initialIndex: 0,
+  );
+
   @override
   Widget build(BuildContext context) {
     allContext = context;
@@ -24,9 +38,7 @@ class HomePage extends StatelessWidget {
     return CupertinoTabScaffold(
       tabBar: _tabBar(),
       tabBuilder: (context, index) => _tabBuilder(context, index),
-      controller: CupertinoTabController(
-        initialIndex: 0,
-      ),
+      controller: tabController,
     );
   }
 
@@ -48,7 +60,7 @@ class HomePage extends StatelessWidget {
     return CupertinoTabView(
       routes: {
         '/home/xiaoqiu': (context) => XiaoqiuPage.instance,
-        '/home/order': (context) => XiaoqiuPage.instance,
+        '/home/order': (context) => OrderPage.instance,
         '/home/my': (context) => MyPage.instance,
       },
       builder: (context) {

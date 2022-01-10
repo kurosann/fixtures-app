@@ -14,21 +14,21 @@ import 'package:flutter/material.dart';
 class OpenCameraScan extends StatefulWidget {
   final CameraDescription cameraDescription;
 
-  const OpenCameraScan({Key key, @required this.cameraDescription}) : super(key: key);
+  const OpenCameraScan({Key? key, required this.cameraDescription}) : super(key: key);
 
   @override
   OpenCameraScanState createState() => OpenCameraScanState();
 }
 
 class OpenCameraScanState extends State<OpenCameraScan> {
-  String imagePath;
-  Face faceDetected;
-  Size imageSize;
+  String? imagePath;
+  Face? faceDetected;
+  Size? imageSize;
 
   bool _detectingFaces = false;
   bool pictureTaked = false;
 
-  Future _initializeControllerFuture;
+  Future? _initializeControllerFuture;
   bool cameraInitializated = false;
 
   // switchs when the user press the camera
@@ -69,7 +69,7 @@ class OpenCameraScanState extends State<OpenCameraScan> {
   }
 
   /// handles the button pressed event
-  Future<void> onShot() async {
+  Future<bool> onShot() async {
     if (faceDetected == null) {
       showDialog(
         context: context,
@@ -91,7 +91,7 @@ class OpenCameraScanState extends State<OpenCameraScan> {
       setState(() {
         _bottomSheetVisible = true;
         pictureTaked = true;
-        print("上传："+imagePath);
+        print("上传："+imagePath!);
       });
       return true;
     }
@@ -115,7 +115,7 @@ class OpenCameraScanState extends State<OpenCameraScan> {
               faceDetected = faces[0];
             });
             if (_saving) {
-              _faceNetService.setCurrentPrediction(image, faceDetected);
+              _faceNetService.setCurrentPrediction(image, faceDetected!);
               setState(() {
                 _saving = false;
               });
@@ -169,7 +169,7 @@ class OpenCameraScanState extends State<OpenCameraScan> {
                           alignment: Alignment.center,
                           child: FittedBox(
                             fit: BoxFit.cover,
-                            child: Image.file(File(imagePath)),
+                            child: Image.file(File(imagePath!)),
                           ),
                           transform: Matrix4.rotationY(mirror)),
                     );
@@ -194,8 +194,8 @@ class OpenCameraScanState extends State<OpenCameraScan> {
                                       _cameraService.cameraController),
                                   CustomPaint(
                                     painter: FacePainter(
-                                        face: faceDetected,
-                                        imageSize: imageSize),
+                                        face: faceDetected!,
+                                        imageSize: imageSize!),
                                   ),
                                 ],
                               ),
@@ -219,7 +219,7 @@ class OpenCameraScanState extends State<OpenCameraScan> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: !_bottomSheetVisible
             ? AuthActionButton(
-                _initializeControllerFuture,
+                _initializeControllerFuture!,
                 onPressed: onShot,
                 reload: _reload,
               )

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:fixtures/api/base/BaseHttp.dart';
-import 'package:fixtures/api/interceptor/AuthInterceptor.dart';
+import 'package:fixtures/service/base/DioManager.dart';
+import 'package:fixtures/service/interceptor/AuthInterceptor.dart';
 
 class ErrorInterceptor extends Interceptor {
 
@@ -33,7 +33,7 @@ class ErrorInterceptor extends Interceptor {
     String refreshToken =
     await SharedPreferencesUtil.getData(Constants.REFRESH_TOKEN);
     //因为App单例的Dio对象已被锁定，所以需要创建新的Dio实例
-    Dio tokenDio = new Dio(BaseHttp.instance.dio!.options);
+    Dio tokenDio = new Dio(BaseNet.instance.dio!.options);
     Map<String, String> map = {
       "rft": refreshToken,
     }; //设置当前的refreshToken

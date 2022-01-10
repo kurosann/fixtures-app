@@ -1,16 +1,16 @@
 import 'package:image/image.dart' as imglib;
 import 'package:camera/camera.dart';
 
-imglib.Image convertToImage(CameraImage image) {
+imglib.Image? convertToImage(CameraImage image) {
   try {
-    imglib.Image img;
+    imglib.Image? img;
     if (image.format.group == ImageFormatGroup.yuv420) {
       img = _convertYUV420(image);
     } else if (image.format.group == ImageFormatGroup.bgra8888) {
       img = _convertBGRA8888(image);
     }
 
-    return img;
+    return img!;
   } catch (e) {
     print(">>>>>>>>>>>> ERROR:" + e.toString());
   }
@@ -32,7 +32,7 @@ imglib.Image _convertYUV420(CameraImage image) {
   var img = imglib.Image(width, height);
   const int hexFF = 0xFF000000;
   final int uvyButtonStride = image.planes[1].bytesPerRow;
-  final int uvPixelStride = image.planes[1].bytesPerPixel;
+  final int uvPixelStride = image.planes[1].bytesPerPixel!;
   for (int x = 0; x < width; x++) {
     for (int y = 0; y < height; y++) {
       final int uvIndex =

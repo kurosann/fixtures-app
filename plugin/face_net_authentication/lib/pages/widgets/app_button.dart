@@ -9,10 +9,10 @@ class AppButton extends StatelessWidget {
         Icons.add,
         color: Colors.white,
       )});
-  final Function onPressed;
-  final String text;
-  final Icon icon;
-  final Color color;
+  final void Function()? onPressed;
+  final String? text;
+  final Icon? icon;
+  final Color? color;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -36,13 +36,13 @@ class AppButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              text,
+              text!,
               style: TextStyle(color: Colors.white),
             ),
             SizedBox(
               width: 10,
             ),
-            icon
+            icon!
           ],
         ),
       ),

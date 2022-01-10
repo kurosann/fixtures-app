@@ -1,5 +1,6 @@
 import 'package:fixtures/model/Order.dart';
 import 'package:fixtures/utils/util.dart';
+import 'package:fixtures/view/home/home.dart';
 import 'package:fixtures/widget/NetServiceFreshPanel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -136,7 +137,7 @@ class _OrderPageState extends State<OrderPage> {
     return TextButton(
       style: mainButtonStyle(),
       onPressed: () {
-        Navigator.of(context).push(CupertinoPageRoute(
+        Navigator.of(allContext!).push(CupertinoPageRoute(
           builder: (context) {
             return HandlingOrderPage(
               id: "1",

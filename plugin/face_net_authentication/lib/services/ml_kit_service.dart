@@ -16,8 +16,8 @@ class MLKitService {
   // service injection
   CameraService _cameraService = CameraService();
 
-  FaceDetector _faceDetector;
-  FaceDetector get faceDetector => this._faceDetector;
+  FaceDetector? _faceDetector;
+  FaceDetector get faceDetector => this._faceDetector!;
 
   void initialize() {
     this._faceDetector = GoogleMlKit.vision.faceDetector(
@@ -31,7 +31,7 @@ class MLKitService {
     /// 预处理图像  🧑🏻‍🔧
     InputImageData _firebaseImageMetadata = InputImageData(
       imageRotation: _cameraService.cameraRotation,
-      inputImageFormat: InputImageFormatMethods.fromRawValue(image.format.raw),
+      inputImageFormat: InputImageFormatMethods.fromRawValue(image.format.raw)!,
       size: Size(image.width.toDouble(), image.height.toDouble()),
       planeData: image.planes.map(
         (Plane plane) {
@@ -52,7 +52,7 @@ class MLKitService {
 
     /// proces the image and makes inference 🤖
     List<Face> faces =
-        await this._faceDetector.processImage(_firebaseVisionImage);
+        await this._faceDetector!.processImage(_firebaseVisionImage);
     return faces;
   }
 }

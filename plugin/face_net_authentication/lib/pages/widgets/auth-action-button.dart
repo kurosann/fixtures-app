@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 class AuthActionButton extends StatefulWidget {
   AuthActionButton(this._initializeControllerFuture,
-      {Key key, @required this.onPressed, this.reload});
+      {Key? key, required this.onPressed, this.reload});
   final Future _initializeControllerFuture;
-  final Function onPressed;
-  final Function reload;
+  final Function? onPressed;
+  final Function? reload;
   @override
   _AuthActionButtonState createState() => _AuthActionButtonState();
 }
@@ -18,7 +18,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
   String _predictUser() {
     String userAndPass = _faceNetService.predict();
 
-    return userAndPass ?? null;
+    return userAndPass;
   }
 
   @override
@@ -29,7 +29,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
           // Ensure that the camera is initialized.
           await widget._initializeControllerFuture;
           // onShot 事件（获取图像并预测输出）
-          await widget.onPressed();
+          await widget.onPressed!();
 
         } catch (e) {
           // If an error occurs, log the error to the console.
