@@ -42,8 +42,8 @@ class BaseNet {
   get<T>(
       {required String url,
       params,
-      required Function(T data) successCallBack,
-      Function? errorCallBack}) async {
+      required SuccessCallBack<T> successCallBack,
+      ErrorCallBack? errorCallBack}) async {
     _requestHttp<T>(url, successCallBack,
         method: 'get', params: params, errorCallBack: errorCallBack);
   }
@@ -52,14 +52,14 @@ class BaseNet {
   post<T>(
       {required String url,
       params,
-      required Function(T data) successCallBack,
-      Function? errorCallBack}) async {
+      required SuccessCallBack<T> successCallBack,
+      ErrorCallBack? errorCallBack}) async {
     _requestHttp<T>(url, successCallBack,
         method: "post", params: params, errorCallBack: errorCallBack);
   }
 
-  _requestHttp<T>(String url, Function(T data) successCallBack,
-      {String? method, params, Function? errorCallBack}) async {
+  _requestHttp<T>(String url, SuccessCallBack<T> successCallBack,
+      {String? method, params, ErrorCallBack? errorCallBack}) async {
     Response? response;
     if (params != null && params.length > 0) {
       params = {};
@@ -96,7 +96,7 @@ class BaseNet {
         print('请求头: ' + dio.options.headers.toString());
         print('method: ' + dio.options.method);
       }
-      _error(errorCallBack, error.message);
+      _error(errorCallBack, error.message, 500);
       return '';
     }
     // debug模式打印相关数据
@@ -113,26 +113,27 @@ class BaseNet {
     String dataStr = json.encode(response!.data);
     Result<T> dataMap = json.decode(dataStr);
     if (dataMap.state == 0) {
-      _error(errorCallBack, response.data.toString());
+      _error(errorCallBack, dataMap.data.toString(), dataMap.state!);
     } else
       successCallBack(dataMap.data!);
   }
 
-  _error(Function? errorCallBack, String error) {
+  _error(Function? errorCallBack, String error, int code) {
     if (errorCallBack != null) {
-      errorCallBack(error);
+      errorCallBack(error, code);
     }
   }
 }
 
+typedef ErrorCallBack = Function(int code, String err);
+typedef SuccessCallBack<T> = Function(T data);
+
 class Result<T> {
   int? state;
-  int? errorCode;
   T? data;
 
   Result.fromJson(Map<String, dynamic> json) {
     state = json["state"];
-    errorCode = json["errorCode"];
     data = json["data"];
   }
 }
