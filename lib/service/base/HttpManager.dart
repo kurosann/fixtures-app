@@ -1,13 +1,14 @@
 import 'dart:convert';
 
 import 'package:fixtures/ApiConfig.dart';
+import 'package:fixtures/utils/SharedPreferencesUtil.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
 typedef ErrorCallBack = Function(int code, String msg);
 typedef SuccessCallBack = Function(dynamic data);
 
-typedef AuthInterceptor = Map<String, String>? Function(
+typedef AuthInterceptor = Future<Map<String, String>>? Function(
     Map<String, String> header);
 
 class BaseNet {
@@ -24,14 +25,24 @@ class BaseNet {
     return _instance!;
   }
   /// 鉴权拦截器 返回null终止请求
-  AuthInterceptor? authInterceptor;
+  AuthInterceptor? _authInterceptor;
 
   Map<String, String> headers = {
     "Content-Type": "application/json",
     ApiConfig.ACCESS_TOKEN: ""
   };
 
-  BaseNet._internal();
+  BaseNet._internal() {
+    _authInterceptor = (Map<String, String> header) async {
+      String? accessToken = await SharedPreferencesUtil.getData(ApiConfig.ACCESS_TOKEN);
+      if (accessToken != null && accessToken != '') {
+        headers['content-type'] = 'application/json;charset=utf-8';
+        headers[ApiConfig.ACCESS_TOKEN] = 'JWT $accessToken';
+      }
+      /// 拦截内容
+      return header;
+    };
+  }
 
   //get请求
   get(
@@ -58,8 +69,8 @@ class BaseNet {
       {String? method, Map? params, ErrorCallBack? errorCallBack}) async {
     Response? response;
     String uriParams = "";
-    if (authInterceptor != null) {
-      Map<String, String>? t = authInterceptor!(headers);
+    if (_authInterceptor != null) {
+      Map<String, String>? t = await _authInterceptor!(headers);
       if (t == null) return;
       headers = t;
     }
