@@ -41,7 +41,7 @@ class BaseNet {
   //get请求
   get(
       {required String url,
-      Map? params,
+      params,
       required Function successCallBack,
       Function? errorCallBack}) async {
     _requestHttp(url, successCallBack, 'get', params, errorCallBack);
@@ -50,7 +50,7 @@ class BaseNet {
   //post请求
   post(
       {required String url,
-      Map? params,
+      params,
       required Function successCallBack,
       Function? errorCallBack}) async {
     _requestHttp(url, successCallBack, "post", params, errorCallBack);

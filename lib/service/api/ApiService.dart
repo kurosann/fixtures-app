@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:fixtures/service/base/DioManager.dart';
 
 mixin DemoMixin {
@@ -7,7 +9,7 @@ mixin DemoMixin {
       Function? errorCallBack}) async {
     BaseNet.instance.get(
         url: '/xxx/xxx/xxx',
-        params: {},
+        params: params,
         successCallBack: successCallBack,
         errorCallBack: errorCallBack);
   }
@@ -18,7 +20,7 @@ mixin DemoMixin {
       Function? errorCallBack}) async {
     BaseNet.instance.get(
         url: '/xxx/xxx/xxx',
-        params: {},
+        params: params,
         successCallBack: successCallBack,
         errorCallBack: errorCallBack);
   }
