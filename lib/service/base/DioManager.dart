@@ -5,7 +5,9 @@ import 'package:fixtures/ApiConfig.dart';
 import 'package:fixtures/service/interceptor/AuthInterceptor.dart';
 import 'package:fixtures/service/interceptor/ErrorInterceptor.dart';
 import 'package:fixtures/service/interceptor/HttpLog.dart';
-import 'package:flutter/material.dart';
+
+typedef ErrorCallBack = Function(int code, String msg);
+typedef SuccessCallBack<T> = Function(T data);
 
 class BaseNet {
   factory BaseNet() => _getInstance();
@@ -55,7 +57,7 @@ class BaseNet {
       required SuccessCallBack<T> successCallBack,
       ErrorCallBack? errorCallBack}) async {
     _requestHttp<T>(url, successCallBack,
-        method: "post", params: params, errorCallBack: errorCallBack);
+        method: 'post', params: params, errorCallBack: errorCallBack);
   }
 
   _requestHttp<T>(String url, SuccessCallBack<T> successCallBack,
@@ -90,7 +92,7 @@ class BaseNet {
       }
 
       // debug模式才打印
-      if (GlobalConfig.isDebug) {
+      if (ApiConfig.isDebug) {
         print('请求异常: ' + error.toString());
         print('请求异常url: ' + url);
         print('请求头: ' + dio.options.headers.toString());
@@ -100,7 +102,7 @@ class BaseNet {
       return '';
     }
     // debug模式打印相关数据
-    if (GlobalConfig.isDebug) {
+    if (ApiConfig.isDebug) {
       print('请求url: ' + url);
       print('请求头: ' + dio.options.headers.toString());
       if (params != null) {
@@ -112,36 +114,30 @@ class BaseNet {
     }
     String dataStr = json.encode(response!.data);
     Result<T> dataMap = json.decode(dataStr);
-    if (dataMap.state == 0) {
-      _error(errorCallBack, dataMap.data.toString(), dataMap.state!);
-    } else
+    if (dataMap.status == 200) {
       successCallBack(dataMap.data!);
+    } else {
+      _error(errorCallBack, dataMap.msg.toString(), dataMap.status!);
+    }
   }
 
-  _error(Function? errorCallBack, String error, int code) {
+  _error(ErrorCallBack? errorCallBack, String msg, int code) {
     if (errorCallBack != null) {
-      errorCallBack(error, code);
+      errorCallBack(code, msg);
     }
   }
 }
 
-typedef ErrorCallBack = Function(int code, String err);
-typedef SuccessCallBack<T> = Function(T data);
-
 class Result<T> {
-  int? state;
+  int? status;
+  String? msg;
   T? data;
 
   Result.fromJson(Map<String, dynamic> json) {
-    state = json["state"];
+    status = json["state"];
+    msg = json["msg"];
     data = json["data"];
   }
-}
-
-class GlobalConfig {
-  static bool isDebug = true; //是否是调试模式
-  static bool dark = false;
-  static Color fontColor = Colors.black54;
 }
 
 class ResultCode {

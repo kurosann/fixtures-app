@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:fixtures/ApiConfig.dart';
 import 'package:fixtures/service/base/DioManager.dart';
 import 'package:fixtures/service/interceptor/AuthInterceptor.dart';
 
@@ -31,7 +32,7 @@ class ErrorInterceptor extends Interceptor {
   Future<String> getToken() async {
     //获取当前的refreshToken，一般后台会在登录后附带一个刷新Token用的reToken
     String refreshToken =
-    await SharedPreferencesUtil.getData(Constants.REFRESH_TOKEN);
+    await SharedPreferencesUtil.getData(ApiConfig.REFRESH_TOKEN);
     //因为App单例的Dio对象已被锁定，所以需要创建新的Dio实例
     Dio tokenDio = new Dio(BaseNet.instance.dio!.options);
     Map<String, String> map = {
@@ -51,8 +52,8 @@ class ErrorInterceptor extends Interceptor {
       return '';
     } on DioError catch (e) {
       print("Token刷新失败:$e");
-      SharedPreferencesUtil.putData(Constants.ACCESS_TOKEN, '');
-      SharedPreferencesUtil.putData(Constants.REFRESH_TOKEN, '');
+      SharedPreferencesUtil.putData(ApiConfig.ACCESS_TOKEN, '');
+      SharedPreferencesUtil.putData(ApiConfig.REFRESH_TOKEN, '');
       return '';
     }
   }
