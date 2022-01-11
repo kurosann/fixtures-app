@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:fixtures/ApiConfig.dart';
+import 'package:fixtures/config.dart';
 import 'package:fixtures/utils/SharedPreferencesUtil.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
@@ -28,16 +28,15 @@ class BaseNet {
   AuthInterceptor? _authInterceptor;
 
   Map<String, String> headers = {
-    "Content-Type": "application/json",
-    ApiConfig.ACCESS_TOKEN: ""
+    "Content-Type": "application/json"
   };
 
   BaseNet._internal() {
     _authInterceptor = (Map<String, String> header) async {
-      String? accessToken = await SharedPreferencesUtil.getData(ApiConfig.ACCESS_TOKEN);
+      String? accessToken = await SharedPreferencesUtil.getData(Config.ACCESS_TOKEN);
       if (accessToken != null && accessToken != '') {
         headers['content-type'] = 'application/json;charset=utf-8';
-        headers[ApiConfig.ACCESS_TOKEN] = 'JWT $accessToken';
+        headers[Config.ACCESS_TOKEN] = 'JWT $accessToken';
       }
       /// 拦截内容
       return header;
@@ -60,13 +59,12 @@ class BaseNet {
       params,
       required SuccessCallBack successCallBack,
       ErrorCallBack? errorCallBack}) async {
-    params = json.encode(params);
     _requestHttp(url, successCallBack,
         method: 'post', params: params, errorCallBack: errorCallBack);
   }
 
   _requestHttp(String url, SuccessCallBack successCallBack,
-      {String? method, Map? params, ErrorCallBack? errorCallBack}) async {
+      {String? method, Map<String, dynamic>? params, ErrorCallBack? errorCallBack}) async {
     Response? response;
     String uriParams = "";
     if (_authInterceptor != null) {
@@ -85,37 +83,38 @@ class BaseNet {
           });
           uriParams = uriParams.substring(0, uriParams.length - 1);
         }
-        var uri = Uri.parse(ApiConfig.BASE_URL + url + uriParams);
+        var uri = Uri.parse(Config.BASE_URL + url + uriParams);
         print(uri.toString());
         response = await http.get(uri, headers: headers);
       } else if (method == 'post') {
-        var uri = Uri.parse(ApiConfig.BASE_URL + url + uriParams);
+        var uri = Uri.parse(Config.BASE_URL + url);
         if (params == null && params!.keys.length == 0) {
           params = {};
         }
         response = await http.post(uri,
-            headers: headers, body: params, encoding: Utf8Codec());
+            headers: headers, body: json.encode(params), encoding: Utf8Codec());
       }
     } catch (error) {
       // debug模式才打印
-      if (ApiConfig.isDebug) {
-        print('请求异常: ' + error.toString());
-        print('请求异常url: ' + ApiConfig.BASE_URL + url + uriParams);
-        print('请求头: ' + headers.toString());
-        print('method: ' + method!);
+      if (Config.isDebug) {
+        print('请求异常:    \t' + error.toString());
+        print('请求异常url: \t' + Config.BASE_URL + url + uriParams);
+        print('请求头:      \t' + headers.toString());
+        print('请求方式:    \t' + method!);
       }
       _error(errorCallBack, error.toString(), 500);
       return '';
     }
     // debug模式打印相关数据
-    if (ApiConfig.isDebug) {
-      print('请求url: ' + url);
-      print('请求头: ' + headers.toString());
+    if (Config.isDebug) {
+      print('请求url:  \t' + url);
+      print('请求头:   \t' + headers.toString());
+      print('请求方式: \t' + method!);
       if (params != null) {
-        print('请求参数: ' + params.toString());
+        print('请求参数: \t' + params.toString());
       }
       if (response != null) {
-        print('返回参数: ' + json.decode(response.body).toString());
+        print('返回参数: \t' + json.decode(response.body).toString());
       }
     }
     if (response == null) {

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fixtures/service/api/Demo.dart';
 import 'package:fixtures/service/api/LoginApi.dart';
 import 'package:fixtures/utils/util.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,7 +15,7 @@ class Login extends StatefulWidget {
   _Login createState() => new _Login();
 }
 
-class _Login extends State<Login> with LoginMixin {
+class _Login extends State<Login> with DemoMixin {
   //获取Key用来获取Form表单组件
   GlobalKey<FormState> loginKey = new GlobalKey<FormState>();
   final phoneText = TextEditingController();
@@ -37,8 +38,8 @@ class _Login extends State<Login> with LoginMixin {
     });
     print('userName: ' + phoneText.text + ' password: ' + password.text);
 
-    userLogin(
-        params: LoginModel(username: phoneText.text, password: password.text),
+    demo3(
+        params: DemoModel(username: phoneText.text, password: password.text),
         successCallBack: (data) {
           print("1111" + data.toString());
         });

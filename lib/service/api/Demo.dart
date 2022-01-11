@@ -32,7 +32,7 @@ mixin DemoMixin {
       required SuccessCallBack successCallBack,
       ErrorCallBack? errorCallBack}) async {
     BaseNet.instance.post(
-        url: '/goods/category',
+        url: '/api/v1/app-login/login/sms',
         // 不是map需序列化为map
         params: params.toJson(),
         successCallBack: successCallBack,

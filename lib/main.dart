@@ -1,11 +1,15 @@
-import 'package:fixtures/Localizations/AppGlobalCupertinoLocalizationsDelegate.dart';
 import 'package:fixtures/routes.dart';
-import 'package:fixtures/view/home/home.dart';
 import 'package:fixtures/view/login/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:face_net_authentication/pages/home.dart';
+//import 'package:fluwx/fluwx.dart' as fluwx;
+
+import 'config.dart';
+
 void main() {
+//  fluwx.registerWxApi(
+//      appId: Config.WX_APP_ID,
+//      universalLink: Config.WX_UNIVERSAL_Link);
   runApp(MyApp());
   ///初始化
 }
@@ -29,16 +33,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       theme: ThemeData(
-//         primarySwatch: Colors.blue,
-//         visualDensity: VisualDensity.adaptivePlatformDensity,
-//       ),
-//       home: MyHomePage(),
-//     );
-//   }
-// }
