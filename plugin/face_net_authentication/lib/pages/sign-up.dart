@@ -14,7 +14,8 @@ import 'package:flutter/material.dart';
 class OpenCameraScan extends StatefulWidget {
   final CameraDescription cameraDescription;
 
-  const OpenCameraScan({Key? key, required this.cameraDescription}) : super(key: key);
+  const OpenCameraScan({Key? key, required this.cameraDescription})
+      : super(key: key);
 
   @override
   OpenCameraScanState createState() => OpenCameraScanState();
@@ -91,7 +92,7 @@ class OpenCameraScanState extends State<OpenCameraScan> {
       setState(() {
         _bottomSheetVisible = true;
         pictureTaked = true;
-        print("上传："+imagePath!);
+        print("上传：" + imagePath!);
       });
       return true;
     }
@@ -109,7 +110,6 @@ class OpenCameraScanState extends State<OpenCameraScan> {
 
         try {
           List<Face> faces = await _mlKitService.getFacesFromImage(image);
-
           if (faces.length > 0) {
             setState(() {
               faceDetected = faces[0];
@@ -121,9 +121,7 @@ class OpenCameraScanState extends State<OpenCameraScan> {
               });
             }
           } else {
-            setState(() {
-              faceDetected = null;
-            });
+            faceDetected = null;
           }
           _detectingFaces = false;
         } catch (e) {
@@ -162,43 +160,51 @@ class OpenCameraScanState extends State<OpenCameraScan> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (pictureTaked) {
-                    return Container(
-                      width: width,
-                      height: height,
-                      child: Transform(
+                    return Transform.scale(
+                        scale: 1.0,
+                        child: Container(
                           alignment: Alignment.center,
-                          child: FittedBox(
-                            fit: BoxFit.cover,
-                            child: Image.file(File(imagePath!)),
+                          child: ClipOval(
+                            child: Container(
+                                width: width / 1.2,
+                                height: width / 1.2,
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  children: <Widget>[
+                                    Transform(
+                                        alignment: Alignment.center,
+                                        child: FittedBox(
+                                          fit: BoxFit.cover,
+                                          child: Image.file(
+                                              File(imagePath!),
+                                              alignment:Alignment.bottomCenter
+                                          ),
+                                        ),
+                                        transform: Matrix4.rotationY(mirror))
+                                  ],
+                                )),
                           ),
-                          transform: Matrix4.rotationY(mirror)),
-                    );
+                        ));
                   } else {
                     return Transform.scale(
                       scale: 1.0,
-                      child: AspectRatio(
-                        aspectRatio: MediaQuery.of(context).size.aspectRatio,
-                        child: OverflowBox(
-                          alignment: Alignment.center,
-                          child: FittedBox(
-                            fit: BoxFit.fitHeight,
-                            child: Container(
-                              width: width,
-                              height: width *
-                                  _cameraService
-                                      .cameraController.value.aspectRatio,
-                              child: Stack(
-                                fit: StackFit.expand,
-                                children: <Widget>[
-                                  CameraPreview(
-                                      _cameraService.cameraController),
-                                  CustomPaint(
-                                    painter: FacePainter(
-                                        face: faceDetected!,
-                                        imageSize: imageSize!),
-                                  ),
-                                ],
-                              ),
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: ClipOval(
+                          child: Container(
+                            width: width / 1.2,
+                            height: width / 1.2,
+                            child: Stack(
+                              fit: StackFit.expand,
+                              children: <Widget>[
+                                CameraPreview(_cameraService.cameraController),
+                                CustomPaint(
+                                    painter: faceDetected != null
+                                        ? FacePainter(
+                                            face: faceDetected!,
+                                            imageSize: imageSize!)
+                                        : null),
+                              ],
                             ),
                           ),
                         ),

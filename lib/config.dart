@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class Config {
   /// 接口相关
-  static const BASE_URL = "http://22a8-113-90-238-115.ngrok.io";
+  static const BASE_URL = "http://83c2-113-110-166-213.ngrok.io";
 
 
   /// Token相关

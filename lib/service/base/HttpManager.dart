@@ -59,6 +59,8 @@ class BaseNet {
       params,
       required SuccessCallBack successCallBack,
       ErrorCallBack? errorCallBack}) async {
+    //params = json.encode(params);
+
     _requestHttp(url, successCallBack,
         method: 'post', params: params, errorCallBack: errorCallBack);
   }

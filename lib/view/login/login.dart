@@ -1,12 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
-import 'package:fixtures/service/api/Demo.dart';
-import 'package:fixtures/service/api/LoginApi.dart';
+import 'package:fixtures/model/LoginModel.dart';
 import 'package:fixtures/utils/util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:json_annotation/json_annotation.dart';
-
+import 'package:fixtures/service/api/LoginApi.dart';
+import 'package:http/http.dart' as http;
 import 'loginStyle.dart';
 import 'loginWidget.dart';
 
@@ -15,7 +15,7 @@ class Login extends StatefulWidget {
   _Login createState() => new _Login();
 }
 
-class _Login extends State<Login> with DemoMixin {
+class _Login extends State<Login> with LoginMixin {
   //获取Key用来获取Form表单组件
   GlobalKey<FormState> loginKey = new GlobalKey<FormState>();
   final phoneText = TextEditingController();
@@ -30,46 +30,6 @@ class _Login extends State<Login> with DemoMixin {
   var isLogin = false;
   var isRegister = false;
 
-  void login() {
-    setState(() {
-      if (isValid) {
-        isLogin = true;
-      }
-    });
-    print('userName: ' + phoneText.text + ' password: ' + password.text);
-
-    demo3(
-        params: DemoModel(username: phoneText.text, password: password.text),
-        successCallBack: (data) {
-          print("1111" + data.toString());
-        });
-  }
-
-  void startCountdownTimer() {
-    const oneSec = const Duration(seconds: 1);
-    var callback = (timer) => {
-          setState(() {
-            if (_countdownTime < 1) {
-              _timer.cancel();
-            } else {
-              _countdownTime = _countdownTime - 1;
-            }
-          })
-        };
-    _timer = Timer.periodic(oneSec, callback);
-  }
-
-  void startSendSms() {
-    if (_countdownTime == 0 && validateMobile(phoneText.text)) {
-      //Http请求发送验证码
-      setState(() {
-        _countdownTime = 60;
-      });
-      //开始倒计时
-      startCountdownTimer();
-    }
-  }
-
   @override
   void dispose() {
     super.dispose();
@@ -77,9 +37,134 @@ class _Login extends State<Login> with DemoMixin {
       _timer.cancel();
     }
   }
-
   @override
   Widget build(BuildContext context) {
+
+    void openMsg(String msg){
+      showCupertinoDialog(
+          context: context,
+          builder: (context) {
+            isLogin=false;
+            return CupertinoAlertDialog(
+              title: Text('提示'),
+              content: Text(msg),
+              actions: <Widget>[
+                CupertinoDialogAction(child: Text('确认'),onPressed: (){
+                  Navigator.of(context).pop('ok');
+                },),
+              ],
+            );
+          });
+    }
+
+    void SuccessFunc(dynamic data){
+      var code = data["code"];
+      if (code==200) {
+        isLogin = false;
+        var res = data["data"];
+        var securitykey = res["securitykey"];
+        var token = res["token"];
+        /// 存储securitykey、token
+        /// 登录并跳转
+      }
+    }
+
+    void login() {
+      setState(() {
+        if (isValid) {
+          isLogin = true;
+        }
+      });
+      var models = SmsLoginModel(phone: phoneText.text,smsCode: phoneCode.text, invitationCode: invitation.text);
+      if(isLogin){
+        if (_isPhone) {
+          /// 手机号
+          if(isRegister){
+            /// 注册按钮
+            RegisterSms(
+              params: models,
+              successCallBack: (data) {
+                SuccessFunc(data);
+              },
+              errorCallBack: (code, err) {
+                openMsg(err);
+              },
+            );
+          }else{
+            loginSms(
+              params: models,
+              successCallBack: (data) {
+                SuccessFunc(data);
+              },
+              errorCallBack: (code, err) {
+                openMsg(err);
+              },
+            );
+          }
+        }else{
+          /// 账号密码
+          loginPwd(
+            params: models,
+            successCallBack: (data) {
+              SuccessFunc(data);
+            },
+            errorCallBack: (code, err) {
+              openMsg(err);
+            },
+          );
+        }
+      }
+    }
+
+    void startCountdownTimer() {
+      const oneSec = const Duration(seconds: 1);
+      var callback = (timer) => {
+        setState(() {
+          if (_countdownTime < 1) {
+            _timer.cancel();
+          } else {
+            _countdownTime = _countdownTime - 1;
+          }
+        })
+      };
+      _timer = Timer.periodic(oneSec, callback);
+    }
+    /// 发送短信验证码
+    void startSendSms() async {
+      var models = SmsLoginModel(phone: phoneText.text,smsCode: phoneCode.text, invitationCode: invitation.text);
+      if (_countdownTime == 0 && validateMobile(phoneText.text)) {
+        if (isRegister) {
+          /// 注册验证码
+          sendRegisterSms(
+            params: models,
+            successCallBack: (data) {
+              SuccessFunc(data);
+            },
+            errorCallBack: (code, err) {
+              openMsg(err);
+            },
+          );
+        }else{
+          /// 登录验证码
+          sendLoginSms(
+            params: models,
+            successCallBack: (data) {
+              SuccessFunc(data);
+            },
+            errorCallBack: (code, err) {
+              openMsg(err);
+            },
+          );
+        }
+        /// Http请求发送验证码
+        setState(() {
+          _countdownTime = 60;
+        });
+        //开始倒计时
+        startCountdownTimer();
+      }
+    }
+
     /// 用户手机短信验证码输入框
     var _codeTextField = new CupertinoTextField(
       controller: phoneCode,
@@ -176,19 +261,19 @@ class _Login extends State<Login> with DemoMixin {
 
     /// 手机号
     var _phoneContainer = Container(
-      margin: const EdgeInsets.all(18.0),
+      margin: const EdgeInsets.all(15.0),
       child: _phoneTextField,
     );
 
     /// 密码或者验证码
     var _passwordOrCode = Container(
-      margin: const EdgeInsets.only(left: 18.0, right: 18, bottom: 18),
+      margin: const EdgeInsets.only(left: 15.0, right: 15, bottom: 15),
       child: _isPhone ? _codeTextField : _passwordTextField,
     );
 
     /// 密码或者验证码
     var _invitationContainer = Container(
-      margin: const EdgeInsets.only(left: 18.0, right: 18, bottom: 18),
+      margin: const EdgeInsets.only(left: 18.0, right: 18),
       child: isRegister ? _invitationField : null,
     );
 
@@ -232,7 +317,7 @@ class _Login extends State<Login> with DemoMixin {
 
     /// 登录按钮部分
     var _loginBtn = Container(
-      padding: EdgeInsets.all(30),
+      padding: EdgeInsets.all(20),
       child: Row(
         children: [
           Expanded(child: Container()),
@@ -251,7 +336,15 @@ class _Login extends State<Login> with DemoMixin {
     );
 
     /// 输入框下面的ui
-    var _underContainer = Container(
+    var _underContainer = isRegister? Container(
+      height: MediaQuery.of(context).size.height,
+      child: Column(
+        children: [
+          _selectWay,
+          _loginBtn,
+        ],
+      ),
+    ) : Container(
       height: MediaQuery.of(context).size.height,
       child: Column(
         children: [

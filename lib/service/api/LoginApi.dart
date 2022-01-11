@@ -1,39 +1,66 @@
+import 'package:fixtures/model/LoginModel.dart';
 import 'package:fixtures/service/base/HttpManager.dart';
 
 mixin LoginMixin {
-  // 入参为实体需要转json
-  void userLogin(
-      {required LoginModel params,
-      required SuccessCallBack successCallBack,
-      ErrorCallBack? errorCallBack}) async {
-    BaseNet.instance.get(
-        url: '/goods/category',
+
+  /// post
+  void loginPwd(
+      {required SmsLoginModel params,
+        required SuccessCallBack successCallBack,
+        ErrorCallBack? errorCallBack}) async {
+    BaseNet.instance.post(
+        url: '/api/v1/app-login',
         // 不是map需序列化为map
         params: params.toJson(),
         successCallBack: successCallBack,
         errorCallBack: errorCallBack);
   }
-
-  void register(
-      {Map? params,
-      required SuccessCallBack successCallBack,
-      ErrorCallBack? errorCallBack}) async {
+  /// post
+  void loginSms(
+      {required SmsLoginModel params,
+        required SuccessCallBack successCallBack,
+        ErrorCallBack? errorCallBack}) async {
     BaseNet.instance.post(
-        url: '/goods/category',
-        params: params,
+        url: '/api/v1/app-login/login/sms',
+        // 不是map需序列化为map
+        params: params.toJson(),
         successCallBack: successCallBack,
         errorCallBack: errorCallBack);
   }
-}
-
-class LoginModel {
-  String username;
-  String? password;
-
-  LoginModel({required this.username, this.password});
-
-  Map<String, dynamic> toJson() => {
-        'username': username,
-        'password': password,
-      };
+  /// post
+  void sendLoginSms(
+      {required SmsLoginModel params,
+        required SuccessCallBack successCallBack,
+        ErrorCallBack? errorCallBack}) async {
+    BaseNet.instance.post(
+        url: '/api/v1/app-login/login/send',
+        // 不是map需序列化为map
+        params: params.toJson(),
+        successCallBack: successCallBack,
+        errorCallBack: errorCallBack);
+  }
+  /// post
+  void RegisterSms(
+      {required SmsLoginModel params,
+        required SuccessCallBack successCallBack,
+        ErrorCallBack? errorCallBack}) async {
+    BaseNet.instance.post(
+        url: '/api/v1/app-login/register/sms',
+        // 不是map需序列化为map
+        params: params.toJson(),
+        successCallBack: successCallBack,
+        errorCallBack: errorCallBack);
+  }
+  /// post
+  void sendRegisterSms(
+      {required SmsLoginModel params,
+        required SuccessCallBack successCallBack,
+        ErrorCallBack? errorCallBack}) async {
+    BaseNet.instance.post(
+        url: '/api/v1/app-login/register/send',
+        // 不是map需序列化为map
+        params: params.toJson(),
+        successCallBack: successCallBack,
+        errorCallBack: errorCallBack);
+  }
 }

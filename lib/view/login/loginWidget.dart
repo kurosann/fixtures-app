@@ -54,7 +54,7 @@ Widget UserInfo(BuildContext context, Widget widget) {
 /// 第三方登录
 Widget OtherLogin() {
   return Padding(
-    padding: EdgeInsets.only(top: 50),
+    padding: EdgeInsets.only(top: 10),
     child: new Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
