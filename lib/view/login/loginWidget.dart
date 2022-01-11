@@ -120,7 +120,7 @@ Widget ImageLogin(context) {
           child: Image.asset(
             "assets/images/ss.png",
             width: MediaQuery.of(context).size.width,
-            height: 200,
+            height: 110,
             fit: BoxFit.fitHeight,
           ),
         ),
