@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Config {
   /// 接口相关
   static const BASE_URL = "http://83c2-113-110-166-213.ngrok.io";
-
+  static const AES_KEY ="65696a042e6551bb8a4a66b3aabaec9a";
 
   /// Token相关
   static const ACCESS_TOKEN = "Authorization";
