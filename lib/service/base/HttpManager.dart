@@ -105,6 +105,21 @@ class BaseNet {
       _error(errorCallBack, error.toString(), 500);
       return '';
     }
+    if (response == null) {
+      print('response:null');
+      return;
+    }
+    if (response.statusCode != 200) {
+      // debug模式才打印
+      if (Config.isDebug) {
+        print('请求异常:    \t' + response.reasonPhrase!);
+        print('请求异常url: \t' + Config.BASE_URL + url + uriParams);
+        print('请求头:      \t' + headers.toString());
+        print('请求方式:    \t' + method!);
+      }
+      _error(errorCallBack, response.reasonPhrase!, response.statusCode);
+      return;
+    }
     // debug模式打印相关数据
     if (Config.isDebug) {
       print('请求url:  \t' + url);
@@ -117,10 +132,7 @@ class BaseNet {
         print('返回参数: \t' + json.decode(response.body).toString());
       }
     }
-    if (response == null) {
-      print('response:null');
-    }
-    Result dataMap = Result.fromJson(json.decode(response!.body));
+    Result dataMap = Result.fromJson(json.decode(response.body));
     if (dataMap.status == 200) {
       successCallBack(dataMap.data!);
     } else {
