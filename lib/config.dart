@@ -11,7 +11,7 @@ class Config {
 
 
   /// 微信相关
-  static const WX_UNIVERSAL_Link = "wxd930ea5d5a228f5f";
+  static const WX_UNIVERSAL_LINK = "wxd930ea5d5a228f5f";
   static const WX_APP_ID = "https://your.univerallink.com/link/";
 
   /// 日志调试相关

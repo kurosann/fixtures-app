@@ -55,24 +55,29 @@ Widget UserInfo(BuildContext context, Widget widget) {
 Widget OtherLogin() {
   return Padding(
     padding: EdgeInsets.only(top: 10),
-    child: new Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Expanded(
-          child: Divider(height: 1,color:Colors.grey),
+    child: Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              child: Divider(height: 1,color:Colors.grey),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 15, right: 15),
+              child: new Text(
+                "第三方登录",
+                style: new TextStyle(
+                    fontSize: 12,
+                    color: Colors.black54),
+              ),
+            ),
+            Expanded(
+              child: Divider(height: 1,color:Colors.grey),
+            ),
+          ],
         ),
-        new Padding(
-          padding: EdgeInsets.only(left: 15, right: 15),
-          child: new Text(
-            "第三方登录",
-            style: new TextStyle(
-                fontSize: 12,
-                color: Colors.black54),
-          ),
-        ),
-        Expanded(
-          child: Divider(height: 1,color:Colors.grey),
-        ),
+        WeixinLogin()
       ],
     ),
   );

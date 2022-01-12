@@ -13,10 +13,10 @@ class CostNeedPage extends StatefulWidget {
   }
 
   @override
-  State<StatefulWidget> createState() => _costNeedPageState();
+  State<StatefulWidget> createState() => _CostNeedPageState();
 }
 
-class _costNeedPageState extends State<CostNeedPage> {
+class _CostNeedPageState extends State<CostNeedPage> {
   final divider = Divider(height: 1, indent: 20);
   final rightIcon = Icon(Icons.keyboard_arrow_right);
   final navTitle = ["10mm玻璃：27元", "不锈钢扶手：27元", "其他：27元"];
