@@ -135,10 +135,10 @@ class BaseNet {
       }
     }
     Result dataMap = Result.fromJson(json.decode(response.body));
-    if (dataMap.status == 200) {
+    if (dataMap.code == 200) {
       successCallBack(dataMap.data!);
     } else {
-      _error(errorCallBack, dataMap.msg.toString(), dataMap.status!);
+      _error(errorCallBack, dataMap.msg.toString(), dataMap.code!);
     }
   }
 
@@ -150,12 +150,12 @@ class BaseNet {
 }
 
 class Result {
-  int? status;
+  int? code;
   String? msg;
   dynamic data;
 
   Result.fromJson(Map<String, dynamic> json) {
-    status = json["state"] != null ? json["state"] : -1;
+    code = json["code"] != null ? json["code"] : -1;
     msg = json["msg"] != null ? json["msg"] : "";
     data = json["data"] != null ? json["data"] : "";
   }

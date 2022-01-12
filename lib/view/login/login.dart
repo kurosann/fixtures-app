@@ -1,9 +1,8 @@
 import 'dart:async';
-import 'dart:html';
-
 import 'package:fixtures/model/LoginModel.dart';
 import 'package:fixtures/service/api/LoginApi.dart';
 import 'package:fixtures/utils/SharedPreferencesUtil.dart';
+import 'package:fixtures/utils/encryptUtil.dart';
 import 'package:fixtures/utils/util.dart';
 import 'package:fixtures/view/home/home.dart';
 import 'package:flutter/cupertino.dart';
@@ -53,7 +52,7 @@ class _Login extends State<Login> with LoginMixin {
                   setState(() {
                     isLogin = false;
                   });
-                  Navigator.of(context).pop('ok');
+                  Navigator.of(context).pop("ok");
                 },
               ),
             ],
@@ -62,23 +61,20 @@ class _Login extends State<Login> with LoginMixin {
   }
 
   void SuccessFunc(dynamic data) {
-    var code = data["code"];
-    if (code == 200) {
-      setState(() {
-        isLogin = false;
-      });
-      var res = data["data"];
-      var securityKey = res["securitykey"];
-      var token = res["token"];
-
-      /// 存储securitykey、token
-      SharedPreferencesUtil.putData('token', token);
-      SharedPreferencesUtil.putData('securitykey', securityKey);
-      /// 登录并跳转
-      Navigator.of(context).push(CupertinoPageRoute(builder: (context) {
-        return HomePage();
-      },));
-    }
+    setState(() {
+      isLogin = false;
+    });
+    var securityKey = data["securitykey"];
+    var token = data["token"];
+    var aes = EncryptUtil.aesEncrypt(securityKey);
+    print("存储aes:"+aes);
+    /// 存储securitykey、token
+    SharedPreferencesUtil.putData('token', token);
+    SharedPreferencesUtil.putData('securitykey', aes);
+    /// 登录并跳转
+    Navigator.of(context).push(CupertinoPageRoute(builder: (context) {
+      return HomePage();
+    },));
   }
 
   void login() {
@@ -91,6 +87,7 @@ class _Login extends State<Login> with LoginMixin {
     }
     var models = SmsLoginModel(
         phone: phoneText.text,
+        password: password.text,
         smsCode: phoneCode.text,
         invitationCode: invitation.text);
     if (isLogin) {
@@ -104,7 +101,9 @@ class _Login extends State<Login> with LoginMixin {
               SuccessFunc(data);
             },
             errorCallBack: (code, err) {
-              openMsg(err);
+              if (code == 500){
+                openMsg(err);
+              }
             },
           );
         } else {
@@ -114,7 +113,9 @@ class _Login extends State<Login> with LoginMixin {
               SuccessFunc(data);
             },
             errorCallBack: (code, err) {
-              openMsg(err);
+              if (code == 500){
+                openMsg(err);
+              }
             },
           );
         }
@@ -123,10 +124,14 @@ class _Login extends State<Login> with LoginMixin {
         loginPwd(
           params: models,
           successCallBack: (data) {
+            print(data);
             SuccessFunc(data);
           },
           errorCallBack: (code, err) {
-            openMsg(err);
+            print(code);
+            if (code == 500){
+              openMsg(err);
+            }
           },
         );
       }
