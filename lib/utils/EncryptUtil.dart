@@ -8,16 +8,7 @@
 import 'dart:convert';
 import 'package:encrypt/encrypt.dart';
 import 'package:fixtures/config.dart';
-var _IV = "0000000000000000";
-
-//128的keysize=16，192keysize=24，256keysize=32
-/**
- *  jh_encrypt_utils.dart
- *
- *  Created by iotjin on 2020/08/18.
- *  description: base64 , aes加解密(CBC/PKCS7)
- */
-
+var _IV = "00000000000000000000000000000000";
 //128的keysize=16，192keysize=24，256keysize=32
 
 class EncryptUtil {

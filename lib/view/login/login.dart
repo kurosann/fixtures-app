@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:fixtures/model/LoginModel.dart';
 import 'package:fixtures/service/api/LoginApi.dart';
 import 'package:fixtures/utils/SharedPreferencesUtil.dart';
-import 'package:fixtures/utils/encryptUtil.dart';
+import 'package:fixtures/utils/EncryptUtil.dart';
 import 'package:fixtures/utils/util.dart';
 import 'package:fixtures/view/home/home.dart';
 import 'package:flutter/cupertino.dart';
@@ -80,17 +80,19 @@ class _Login extends State<Login> with LoginMixin {
   void login() {
     if (isValid) {
       setState(() {
-        isLogin = true;
+        isLogin = false;
       });
     } else {
       return;
     }
+    var pas = EncryptUtil.aesEncrypt(password.text);
+
     var models = SmsLoginModel(
         phone: phoneText.text,
-        password: password.text,
+        password: pas,
         smsCode: phoneCode.text,
         invitationCode: invitation.text);
-    if (isLogin) {
+    if (true) {
       if (_isPhone) {
         /// 手机号
         if (isRegister) {
