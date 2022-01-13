@@ -3,9 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BalancePage extends StatefulWidget {
-
   final double balance;
-
 
   BalancePage(this.balance);
 
@@ -52,11 +50,17 @@ class _BalancePageState extends State<BalancePage> {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    "$balance",
-                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.w500),
+                  Hero(
+                    tag: 'balance',
+                    child: Text(
+                      "$balance",
+                      style:
+                          TextStyle(fontSize: 40, fontWeight: FontWeight.w500),
+                    ),
                   ),
+                  Text("￥"),
                 ],
               ),
               Expanded(child: Container()),
@@ -77,15 +81,18 @@ class _BalancePageState extends State<BalancePage> {
                   Expanded(
                       child: Container(
                     margin: EdgeInsets.all(10),
-                    child: CupertinoButton.filled(
-                        child: Text("充值"),
-                        onPressed: () {
-                          Navigator.of(context).push(CupertinoPageRoute(
-                            builder: (context) {
-                              return TopUpPage(balance);
-                            },
-                          ));
-                        }),
+                    child: Hero(
+                      tag: 'TopUp',
+                      child: CupertinoButton.filled(
+                          child: Text("充值"),
+                          onPressed: () {
+                            Navigator.of(context).push(CupertinoPageRoute(
+                              builder: (context) {
+                                return TopUpPage(balance);
+                              },
+                            ));
+                          }),
+                    ),
                   )),
                 ],
               ),

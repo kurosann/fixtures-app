@@ -116,35 +116,23 @@ Widget WeixinLogin() {
   );
 }
 
-Widget ImageLogin(context) {
-  return Container(
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Expanded(
-          child: Image.asset(
-            "assets/images/ss.png",
-            width: MediaQuery.of(context).size.width,
-            height: 110,
-            fit: BoxFit.fitHeight,
-          ),
-        ),
-      ],
-    ),
-  );
-}
 
 Widget myCupertinoAndIcon(bool isLogging){
   return isLogging ? CupertinoActivityIndicator() : Icon(Icons.arrow_forward);
 }
 
 Widget LoginHeard() {
-  return Container(
-      margin: const EdgeInsets.only(left: 18.0,top: 18),
-      child: Text('请输入您的手机号码，登录或注册您的小求账号',
-          style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 14.0,
-              color: Color.fromARGB(255, 12, 12, 12)))
+  return Padding(
+    padding: const EdgeInsets.only(left: 18.0,top: 18),
+    child: Row(
+      children: [
+        Text('请输入您的手机号码，登录或注册您的小求账号',
+            style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 14.0,
+                color: Color.fromARGB(255, 12, 12, 12))),
+        Expanded(child: Container())
+      ],
+    ),
   ) ;
 }

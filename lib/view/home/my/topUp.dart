@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TopUpPage extends StatefulWidget {
-  final double balance;
+  double balance;
 
   TopUpPage(this.balance);
 
@@ -127,10 +127,22 @@ class _TopUpPageState extends State<TopUpPage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            "账户余额:$balance",
+                            "账户余额：",
                             style: TextStyle(fontSize: 14),
+                          ),
+                          Hero(
+                            tag: 'balance',
+                            child: Text(
+                              "$balance",
+                              style: TextStyle(fontSize: 14),
+                            ),
+                          ),
+                          Text(
+                            "￥",
+                            style: TextStyle(fontSize: 12),
                           ),
                         ],
                       ),
@@ -140,15 +152,18 @@ class _TopUpPageState extends State<TopUpPage> {
               ),
               Container(
                 padding: EdgeInsets.all(10),
-                child: CupertinoButton.filled(
-                    child: Row(
-                      children: [
-                        Expanded(child: Container()),
-                        Text("充值"),
-                        Expanded(child: Container()),
-                      ],
-                    ),
-                    onPressed: () {}),
+                child: Hero(
+                  tag: 'TopUp',
+                  child: CupertinoButton.filled(
+                      child: Row(
+                        children: [
+                          Expanded(child: Container()),
+                          Text("充值"),
+                          Expanded(child: Container()),
+                        ],
+                      ),
+                      onPressed: () {}),
+                ),
               )
             ],
           ),

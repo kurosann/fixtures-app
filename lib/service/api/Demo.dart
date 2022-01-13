@@ -17,7 +17,7 @@ mixin DemoMixin {
   }
   /// get2
   void demo2(
-      {Map? params,
+      {Map<String, dynamic>? params,
       required SuccessCallBack successCallBack,
       ErrorCallBack? errorCallBack}) async {
     BaseNet.instance.get(

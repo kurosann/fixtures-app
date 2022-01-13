@@ -1,5 +1,4 @@
-import 'package:fixtures/routes.dart';
-import 'package:fixtures/view/login/login.dart';
+import 'package:fixtures/view/home/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluwx/fluwx.dart' as fluwx;
@@ -9,8 +8,8 @@ import 'config.dart';
 void main() {
   runApp(MyApp());
   fluwx.registerWxApi(
-      appId: Config.WX_APP_ID,
-      universalLink: Config.WX_UNIVERSAL_LINK);
+      appId: Config.WX_APP_ID, universalLink: Config.WX_UNIVERSAL_LINK);
+
   ///初始化
 }
 
@@ -23,13 +22,12 @@ class MyApp extends StatelessWidget {
         DefaultCupertinoLocalizations.delegate,
       ],
       title: '小求',
-      routes: routes,
       debugShowCheckedModeBanner: false,
       theme: CupertinoThemeData(
           barBackgroundColor: Color.fromARGB(150, 255, 255, 255),
           primaryColor: Colors.orange,
           brightness: Brightness.light),
-      home: Login(),
+      home: HomePage(),
     );
   }
 }

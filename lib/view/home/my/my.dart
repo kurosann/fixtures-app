@@ -243,8 +243,14 @@ class _MyPageState extends State<MyPage> {
                       size: 60,
                       color: Colors.grey,
                     ),
-                    Text("钱包"),
-                    Text("$balance￥")
+                    Text("余额"),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Hero(tag: 'balance', child: Text("$balance")),
+                        Text("￥"),
+                      ],
+                    )
                   ],
                 )),
           ),

@@ -24,20 +24,21 @@ class BaseNet {
     }
     return _instance!;
   }
+
   /// 鉴权拦截器 返回null终止请求
   AuthInterceptor? _authInterceptor;
 
-  Map<String, String> headers = {
-    "Content-Type": "application/json"
-  };
+  Map<String, String> headers = {"Content-Type": "application/json"};
 
   BaseNet._internal() {
     _authInterceptor = (Map<String, String> header) async {
-      String? accessToken = await SharedPreferencesUtil.getData(Config.ACCESS_TOKEN);
+      String? accessToken =
+          await SharedPreferencesUtil.getData(Config.ACCESS_TOKEN);
       if (accessToken != null && accessToken != '') {
         headers['content-type'] = 'application/json;charset=utf-8';
         headers[Config.ACCESS_TOKEN] = 'JWT $accessToken';
       }
+
       /// 拦截内容
       return header;
     };
@@ -46,27 +47,34 @@ class BaseNet {
   //get请求
   get(
       {required String url,
-      params,
-      required SuccessCallBack successCallBack,
+      Map<String, dynamic>? params,
+      SuccessCallBack? successCallBack,
       ErrorCallBack? errorCallBack}) async {
-    _requestHttp(url, successCallBack,
-        method: 'get', params: params, errorCallBack: errorCallBack);
+    return _requestHttp(url,
+        successCallBack: successCallBack,
+        method: 'get',
+        params: params,
+        errorCallBack: errorCallBack);
   }
 
   //post请求
   post(
       {required String url,
-      params,
-      required SuccessCallBack successCallBack,
+      Map<String, dynamic>? params,
+      SuccessCallBack? successCallBack,
       ErrorCallBack? errorCallBack}) async {
-    //params = json.encode(params);
-
-    _requestHttp(url, successCallBack,
-        method: 'post', params: params, errorCallBack: errorCallBack);
+    return _requestHttp(url,
+        successCallBack: successCallBack,
+        method: 'post',
+        params: params,
+        errorCallBack: errorCallBack);
   }
 
-  _requestHttp(String url, SuccessCallBack successCallBack,
-      {String? method, Map<String, dynamic>? params, ErrorCallBack? errorCallBack}) async {
+  _requestHttp(String url,
+      {String? method,
+      Map<String, dynamic>? params,
+      SuccessCallBack? successCallBack,
+      ErrorCallBack? errorCallBack}) async {
     Response? response;
     String uriParams = "";
     if (_authInterceptor != null) {
@@ -105,7 +113,7 @@ class BaseNet {
         print('请求方式:    \t' + method!);
       }
       _error(errorCallBack, error.toString(), 500);
-      return '';
+      return;
     }
     if (response == null) {
       print('response:null');
@@ -136,10 +144,13 @@ class BaseNet {
     }
     Result dataMap = Result.fromJson(json.decode(response.body));
     if (dataMap.code == 200) {
-      successCallBack(dataMap.data!);
+      if (successCallBack != null) {
+        successCallBack(dataMap.data!);
+      }
     } else {
       _error(errorCallBack, dataMap.msg.toString(), dataMap.code!);
     }
+    return response;
   }
 
   _error(ErrorCallBack? errorCallBack, String msg, int code) {
