@@ -2,18 +2,10 @@ import 'package:fixtures/utils/styles/myStyle.dart';
 import 'package:fixtures/utils/util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class OrderDetailPage extends StatefulWidget {
-  static OrderDetailPage? _instance;
-
-  static OrderDetailPage get instance {
-    if (_instance == null) {
-      _instance = OrderDetailPage();
-    }
-    return _instance!;
-  }
-
   @override
   State<StatefulWidget> createState() => _OrderDetailPageState();
 }
@@ -26,10 +18,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        previousPageTitle: '订单支付',
-        middle: Text("订单支付",style: TextStyle(fontSize: 21.0, color: Colors.black)),
+        previousPageTitle: '返回',
+        middle: Text("订单支付"),
       ),
-      backgroundColor: Color.fromARGB(245, 245, 245, 245),
+      backgroundColor: CupertinoColors.lightBackgroundGray,
       child: CustomScrollView(slivers: [
         CupertinoSliverRefreshControl(
           onRefresh: () async {},
@@ -38,10 +30,19 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           sliver: SliverList(
               delegate: SliverChildListDelegate([
             _profile(),
-            _itemCard("价格", "100积分+10元"),
-            _itemCard("运费", "10元"),
-            _itemCard("优惠", "10元"),
-            _totalCard("应付款总额", "￥10元", "(含税费 ￥0.00)"),
+            Container(
+                margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: EdgeInsets.all(4),
+                decoration: orderCard(),
+                child: Column(children: [
+                  _itemCard("价格", "100积分+10元"),
+                  Divider(height: 1,),
+                  _itemCard("运费", "10元"),
+                  Divider(height: 1,),
+                  _itemCard("优惠", "10元"),
+                  Divider(height: 1,),
+                  _totalCard("应付款总额", "￥10元", "(含税费 ￥0.00)"),
+                ])),
             _actionList(),
             _submitOrder()
           ])),
@@ -54,46 +55,57 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   Widget _profile() {
     return Container(
       decoration: orderCard(),
-      padding: EdgeInsets.only(top: 10, bottom: 10),
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      height: 70,
       child: Row(
         children: [
-          Image(
-            alignment: Alignment(10, 0),
-            image: NetworkImage(
-                "https://img2.baidu.com/it/u=2548989639,546384781&fm=15&fmt=auto"),
-            width: 70,
-            height: 70,
+          ClipRRect(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(12), bottomLeft: Radius.circular(12)),
+            child: Image(
+              image: NetworkImage(
+                  "https://img2.baidu.com/it/u=2548989639,546384781&fm=15&fmt=auto"),
+              width: 70,
+              height: 70,
+            ),
           ),
-          Column(
-            children: [
-              Container(
-                margin: EdgeInsets.only(left: 10),
-                width: 100,
-                padding: EdgeInsets.only(left: 10, right: 10),
-                child: Text("扶手楼梯", style: TextStyle(fontSize: 14)),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 10),
-                width: 100,
-                padding: EdgeInsets.only(left: 10, right: 10),
-                child: Text("某某服务", style: TextStyle(fontSize: 12)),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 10),
-                padding: EdgeInsets.only(left: 10, right: 10),
-                child: Text("￥1000 CNY", style: TextStyle(fontSize: 13)),
-              ),
-            ],
+          Container(
+            height: double.maxFinite,
+            padding: EdgeInsets.all(8),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  child: Container(
+                      child: Text("扶手楼梯", style: TextStyle(fontSize: 14))),
+                ),
+                Container(
+                  child: Text("某某服务",
+                      style: TextStyle(
+                          fontSize: 10, color: CupertinoColors.inactiveGray)),
+                ),
+              ],
+            ),
           ),
           Container(
             child: Spacer(),
           ),
           Container(
-            alignment: Alignment.centerLeft,
-            padding: EdgeInsets.only(right: 10),
+            padding: EdgeInsets.all(8),
+            height: double.maxFinite,
             decoration: orderCard(),
-            child: Text("x${1}"),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Container(
+                  margin:EdgeInsets.symmetric(vertical: 2),
+                  child: Text("￥1000元", style: TextStyle(fontSize: 12)),
+                ),
+                Text("x${1}", style: TextStyle(fontSize: 10,color: CupertinoColors.inactiveGray)),
+              ],
+            ),
           )
         ],
       ),
@@ -102,14 +114,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
   Widget _itemCard(title, end) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-      padding: EdgeInsets.all(4),
-      decoration: orderCard(),
       child: Row(
         children: [
           Container(
-            margin: EdgeInsets.all(10),
-            padding: EdgeInsets.only(left: 10, right: 10),
+            margin: EdgeInsets.all(8),
+            padding: EdgeInsets.symmetric(horizontal: 8),
             child: Text(title, style: TextStyle(fontSize: 14)),
           ),
           Container(
@@ -127,14 +136,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
   Widget _totalCard(title, total, end) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-      padding: EdgeInsets.all(4),
-      decoration: orderCard(),
       child: Row(
         children: [
           Container(
-            margin: EdgeInsets.all(10),
-            padding: EdgeInsets.only(left: 10, right: 10),
+            margin: EdgeInsets.all(8),
+            padding: EdgeInsets.symmetric(horizontal: 8),
             child: Text(title, style: TextStyle(fontSize: 14)),
           ),
           Container(
@@ -144,15 +150,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             alignment: Alignment.centerRight,
             padding: EdgeInsets.only(right: 10),
             child: RichText(
-                text: TextSpan(
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: total,
-                          style: TextStyle(fontSize: 12, color: Colors.deepOrange)),
-                      TextSpan(
-                          text: end,
-                          style: TextStyle(fontSize: 8.0, color: Colors.black54)),
-                    ])),
+                text: TextSpan(children: <TextSpan>[
+              TextSpan(
+                  text: total,
+                  style: TextStyle(fontSize: 12, color: Colors.deepOrange)),
+              TextSpan(
+                  text: end,
+                  style: TextStyle(fontSize: 8.0, color: Colors.black54)),
+            ])),
           ),
         ],
       ),
@@ -161,8 +166,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
   Widget _actionList() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      padding: EdgeInsets.all(4),
+      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.all(8),
       decoration: orderCard(),
       child: Column(
         children: [
@@ -175,17 +180,20 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               });
             },
             child: ListTile(
+              selected: _checkboxAliPay,
+              selectedColor: aliPayActive,
+              minLeadingWidth: 10,
               leading: Icon(
                 FontAwesomeIcons.alipay,
-                size: 40,
-                color: Colors.blue,
+                color: aliPayColor,
               ),
               title: Text("支付宝支付"),
-              trailing: new Icon(
+              trailing: Icon(
                 _checkboxAliPay
                     ? FontAwesomeIcons.solidCircle
                     : FontAwesomeIcons.circle,
-                color: Colors.deepOrange,
+                size:16,
+                color: aliPayColor,
               ),
             ),
           ),
@@ -201,17 +209,21 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               });
             },
             child: ListTile(
+              autofocus: true,
+              minLeadingWidth: 10,
+              selected: _checkBoxWeiXin,
+              selectedColor: weixinSelectColor,
               leading: Icon(
                 FontAwesomeIcons.weixin,
-                size: 40,
-                color: Colors.green,
+                color: weixinColor,
               ),
               title: Text("微信支付"),
               trailing: new Icon(
                 _checkBoxWeiXin
                     ? FontAwesomeIcons.solidCircle
                     : FontAwesomeIcons.circle,
-                color: Colors.deepOrange,
+                size:16,
+                color: weixinColor,
               ),
             ),
           ),
@@ -220,14 +232,19 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     );
   }
 
+  Color aliPayColor = CupertinoColors.systemBlue;
+  Color aliPayActive = CupertinoColors.activeBlue;
+
+  Color weixinColor = CupertinoColors.systemGreen;
+  Color weixinSelectColor = CupertinoColors.activeGreen;
+
   Widget _submitOrder() {
     return Container(
-      padding: EdgeInsets.only(left: 50, right: 50, top: 20, bottom: 20),
-      width: 500,
+      padding: EdgeInsets.symmetric(horizontal: 8,vertical: 4),
       child: CupertinoButton(
-          padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+          padding: EdgeInsets.symmetric(vertical: 8),
           borderRadius: BorderRadius.circular(12),
-          color: Colors.deepOrange,
+          color: CupertinoTheme.of(context).primaryColor,
           child: Text("提交"),
           onPressed: () {}),
     );

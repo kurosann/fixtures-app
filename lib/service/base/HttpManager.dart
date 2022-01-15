@@ -82,6 +82,7 @@ class BaseNet {
       if (t == null) return;
       headers = t;
     }
+    Result dataMap = Result();
     try {
       if (method == 'get') {
         if (params == null && params!.keys.length == 0) {
@@ -112,12 +113,16 @@ class BaseNet {
         print('请求头:      \t' + headers.toString());
         print('请求方式:    \t' + method!);
       }
+      dataMap.msg = error.toString();
+      dataMap.code = 500;
       _error(errorCallBack, error.toString(), 500);
-      return;
+      return dataMap;
     }
     if (response == null) {
       print('response:null');
-      return;
+      dataMap.msg = 'response为null';
+      dataMap.code = 401;
+      return dataMap;
     }
     if (response.statusCode != 200) {
       // debug模式才打印
@@ -127,8 +132,10 @@ class BaseNet {
         print('请求头:      \t' + headers.toString());
         print('请求方式:    \t' + method!);
       }
+      dataMap.msg = response.reasonPhrase!;
+      dataMap.code = response.statusCode;
       _error(errorCallBack, response.reasonPhrase!, response.statusCode);
-      return;
+      return dataMap;
     }
     // debug模式打印相关数据
     if (Config.isDebug) {
@@ -138,11 +145,9 @@ class BaseNet {
       if (params != null) {
         print('请求参数: \t' + params.toString());
       }
-      if (response != null) {
-        print('返回参数: \t' + json.decode(response.body).toString());
-      }
+      print('返回参数: \t' + json.decode(response.body).toString());
     }
-    Result dataMap = Result.fromJson(json.decode(response.body));
+    dataMap = Result.fromJson(json.decode(response.body));
     if (dataMap.code == 200) {
       if (successCallBack != null) {
         successCallBack(dataMap.data!);
@@ -150,7 +155,7 @@ class BaseNet {
     } else {
       _error(errorCallBack, dataMap.msg.toString(), dataMap.code!);
     }
-    return response;
+    return dataMap;
   }
 
   _error(ErrorCallBack? errorCallBack, String msg, int code) {
@@ -164,6 +169,8 @@ class Result {
   int? code;
   String? msg;
   dynamic data;
+
+  Result();
 
   Result.fromJson(Map<String, dynamic> json) {
     code = json["code"] != null ? json["code"] : -1;

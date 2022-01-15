@@ -7,9 +7,24 @@ class SharePage extends StatefulWidget {
   State<StatefulWidget> createState() => _ShareState();
 }
 
+class Demo {
+  String? name;
+  int? cash;
+}
+
 class _ShareState extends State<SharePage> {
+  Demo demo = Demo();
+
+
+  @override
+  void initState() {
+    demo.name = '小小猪';
+    demo.cash = 111111;
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
@@ -44,7 +59,7 @@ class _ShareState extends State<SharePage> {
                         padding:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         margin: EdgeInsets.symmetric(vertical: 6),
-                        child: Text("${"小小猪"} 邀请了59个人, 获得现金${11111111}元")),
+                        child: Text("${demo.name} 邀请了59个人, 获得现金${demo.cash}元")),
                   ],
                 ),
                 Container(
@@ -60,8 +75,8 @@ class _ShareState extends State<SharePage> {
                       )),
                   child: Column(
                     children: [
-                      LimitedBox(
-                        maxHeight: 50,
+                      Container(
+                        height: 40,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -84,11 +99,10 @@ class _ShareState extends State<SharePage> {
                       LimitedBox(
                         maxHeight: 100,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             GestureDetector(
                               child: Container(
-                                width: 80,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -108,7 +122,6 @@ class _ShareState extends State<SharePage> {
                             ),
                             GestureDetector(
                               child: Container(
-                                width: 80,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -125,7 +138,6 @@ class _ShareState extends State<SharePage> {
                             ),
                             GestureDetector(
                               child: Container(
-                                width: 80,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -146,7 +158,6 @@ class _ShareState extends State<SharePage> {
                             ),
                             GestureDetector(
                               child: Container(
-                                width: 80,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -171,7 +182,7 @@ class _ShareState extends State<SharePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                                margin: EdgeInsets.symmetric(horizontal: 20),
+                                margin: EdgeInsets.symmetric(horizontal: 10),
                                 child: Icon(FontAwesomeIcons.moneyBillAlt)),
                             Text("赚钱攻略", style: TextStyle(fontSize: 12))
                           ],
@@ -193,9 +204,11 @@ class _ShareState extends State<SharePage> {
                       )),
                   child: Column(
                     children: [
-                      ListTile(
-                        title: Text("我的奖金"),
-                        trailing: Text("去提现"),
+                      Container(
+                        child: ListTile(
+                          title: Text("我的奖金"),
+                          trailing: Text("去提现"),
+                        ),
                       ),
                       Divider(
                         height: 1,
@@ -203,7 +216,7 @@ class _ShareState extends State<SharePage> {
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Column(
                               children: [
@@ -249,7 +262,7 @@ class _ShareState extends State<SharePage> {
                                     Text("人"),
                                   ],
                                 ),
-                                Text("已陈成功"),
+                                Text("已成功"),
                               ],
                             ),
                           ],

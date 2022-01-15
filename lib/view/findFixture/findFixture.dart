@@ -28,7 +28,7 @@ class _FindFixtureState extends State<FindFixturePage> {
             CupertinoSliverNavigationBar(
               stretch: true,
               previousPageTitle: "小求",
-              largeTitle: Text("找装修"),
+              largeTitle: Text("选择装修类型"),
             ),
             SliverToBoxAdapter(
               child: Container(

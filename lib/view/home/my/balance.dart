@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BalancePage extends StatefulWidget {
-  final double balance;
+  final String balance;
 
   BalancePage(this.balance);
 
@@ -12,7 +12,7 @@ class BalancePage extends StatefulWidget {
 }
 
 class _BalancePageState extends State<BalancePage> {
-  double balance;
+  String balance;
 
   _BalancePageState(this.balance);
 
@@ -21,84 +21,84 @@ class _BalancePageState extends State<BalancePage> {
     return CupertinoPageScaffold(
       backgroundColor: Color.fromARGB(255, 250, 250, 250),
       navigationBar: CupertinoNavigationBar(
-        middle: Text("余额"),
+        previousPageTitle: '返回',
+        middle: Text("余额")
       ),
       child: SafeArea(
-        child: Container(
-          height: 200,
-          margin: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: Color.fromARGB(255, 242, 242, 243),
+        child: ListView(children: [
+          Container(
+            height: 300,
+            margin: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: Color.fromARGB(255, 242, 242, 243),
+              ),
             ),
-          ),
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.all(14),
-                child: Row(
+            child: Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(26),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "可用余额(元)",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(
-                      "可用余额(元)",
-                      style: TextStyle(fontSize: 12),
+                    Hero(
+                      tag: 'balance',
+                      child: Text(
+                        balance,
+                        style: TextStyle(
+                            fontSize: 40, fontWeight: FontWeight.w500),
+                      ),
                     ),
+                    Text("￥"),
                   ],
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Hero(
-                    tag: 'balance',
-                    child: Text(
-                      "$balance",
-                      style:
-                          TextStyle(fontSize: 40, fontWeight: FontWeight.w500),
-                    ),
+                Expanded(child: Container()),
+                Container(
+                  height: 140,
+                  padding: EdgeInsets.all(8),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Hero(
+                        tag: 'TopUp',
+                        child: CupertinoButton.filled(
+                            child: Text("充值"),
+                            onPressed: () {
+                              Navigator.of(context).push(CupertinoPageRoute(
+                                builder: (context) {
+                                  return TopUpPage(balance);
+                                },
+                              ));
+                            }),
+                      ),
+                      Expanded(child: Container()),
+                      CupertinoButton(
+                          color: Colors.grey.shade200,
+                          child: Text(
+                            "提现",
+                            style: TextStyle(color: Colors.black87),
+                          ),
+                          onPressed: () {}),
+                    ],
                   ),
-                  Text("￥"),
-                ],
-              ),
-              Expanded(child: Container()),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                      child: Container(
-                    margin: EdgeInsets.all(10),
-                    child: CupertinoButton(
-                        color: Colors.grey.shade200,
-                        child: Text(
-                          "提现",
-                          style: TextStyle(color: Colors.black87),
-                        ),
-                        onPressed: () {}),
-                  )),
-                  Expanded(
-                      child: Container(
-                    margin: EdgeInsets.all(10),
-                    child: Hero(
-                      tag: 'TopUp',
-                      child: CupertinoButton.filled(
-                          child: Text("充值"),
-                          onPressed: () {
-                            Navigator.of(context).push(CupertinoPageRoute(
-                              builder: (context) {
-                                return TopUpPage(balance);
-                              },
-                            ));
-                          }),
-                    ),
-                  )),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
-        ),
+        ]),
       ),
     );
   }

@@ -1,11 +1,11 @@
 import 'package:fixtures/model/Order.dart';
+import 'package:fixtures/service/base/HttpManager.dart';
 import 'package:fixtures/utils/util.dart';
+import 'package:fixtures/view/handlingOrder/handlingOrder.dart';
 import 'package:fixtures/view/home/home.dart';
 import 'package:fixtures/widget/NetServiceFreshPanel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../handlingOrder/handlingOrder.dart';
 
 class OrderPage extends StatefulWidget {
   static OrderPage? _instance;
@@ -23,13 +23,17 @@ class OrderPage extends StatefulWidget {
 
 class _OrderPageState extends State<OrderPage> {
   /// 订单数据
-  var orderList = <Order>[];
+  var orderList = <Order>[Order()];
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       child: NetServiceFreshPanel(
         state: NetServiceState.STATE_SUCCESS,
+        onNetData: () async {
+          Result result = Result();
+          return result;
+        },
         child: CustomScrollView(
           slivers: <Widget>[
             CupertinoSliverRefreshControl(
@@ -146,14 +150,14 @@ class _OrderPageState extends State<OrderPage> {
         ));
       },
       child: Container(
-        padding: EdgeInsets.all(18),
+        padding: EdgeInsets.all(8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween, // 左右对齐
           children: [
             Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.all(5),
+                  padding: EdgeInsets.all(6),
                   child: Row(
                     children: [
                       Text("工程编号："),
@@ -162,7 +166,7 @@ class _OrderPageState extends State<OrderPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(6),
                   child: Row(
                     children: [
                       Text("开始时间："),
@@ -176,9 +180,7 @@ class _OrderPageState extends State<OrderPage> {
               children: [
                 Container(
                   margin: EdgeInsets.all(7),
-                  child: Row(
-                    children: [Text("工单状态"), Text("000分")],
-                  ),
+                  child: Text("工单状态${'000分'}"),
                 )
               ],
             )

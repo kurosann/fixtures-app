@@ -521,6 +521,7 @@ class _CupertinoStepperState extends State<CupertinoStepper>
 
   Widget _buildVertical() {
     return ListView(
+      padding: EdgeInsets.all(0),
       shrinkWrap: true,
       physics: widget.physics,
       children: <Widget>[

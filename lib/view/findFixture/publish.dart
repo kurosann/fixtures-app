@@ -1,5 +1,5 @@
 import 'package:fixtures/model/Publish.dart';
-import 'package:fixtures/utils/util.dart';
+import 'package:fixtures/view/home/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +28,7 @@ class PublishState extends State<PublishPage> {
     return Scaffold(
       body: CupertinoPageScaffold(
           navigationBar: CupertinoNavigationBar(
-            previousPageTitle: '找装修',
+              previousPageTitle: '选择装修类型',
             middle: Text("发布需求"),
           ),
           child: CustomScrollView(

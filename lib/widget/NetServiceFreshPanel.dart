@@ -1,12 +1,15 @@
+import 'package:fixtures/service/base/HttpManager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+typedef NetDateCallback = Future<Result> Function();
+
 class NetServiceFreshPanel extends StatefulWidget {
-  Widget child;
+  final Widget child;
 
-  Function? onNetData;
+  final NetDateCallback? onNetData;
 
-  NetServiceState? state;
+  final NetServiceState? state;
 
   NetServiceFreshPanel(
       {this.state = NetServiceState.STATE_ING,
@@ -24,7 +27,7 @@ class _NetServiceRefresh extends State<NetServiceFreshPanel> {
 
   Widget _child;
 
-  Function? getData;
+  NetDateCallback? getData;
 
   _NetServiceRefresh(this.state, this._child, this.getData);
 
@@ -32,16 +35,17 @@ class _NetServiceRefresh extends State<NetServiceFreshPanel> {
     setState(() {
       state = NetServiceState.STATE_ING;
     });
-    await getData!();
+    Result data = await getData!();
     setState(() {
-      state = NetServiceState.STATE_SUCCESS;
+      state = data.code == 200
+          ? NetServiceState.STATE_SUCCESS
+          : NetServiceState.STATE_ERROR;
     });
   }
 
   @override
   void initState() {
-    if (getData != null)
-      _refresh();
+    if (getData != null) _refresh();
 //    else
 //      state = NetServiceState.STATE_SUCCESS;
   }
@@ -68,4 +72,13 @@ class _NetServiceRefresh extends State<NetServiceFreshPanel> {
   }
 }
 
-enum NetServiceState { STATE_SUCCESS, STATE_ERROR, STATE_ING }
+enum NetServiceState {
+  /// 请求成功
+  STATE_SUCCESS,
+
+  ///请求失败
+  STATE_ERROR,
+
+  ///请求中
+  STATE_ING
+}

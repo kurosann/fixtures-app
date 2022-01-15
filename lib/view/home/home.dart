@@ -1,4 +1,3 @@
-import 'package:fixtures/utils/util.dart';
 import 'package:fixtures/view/home/xiaoqiu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,6 @@ import 'order.dart';
 BuildContext? allContext;
 
 class HomePage extends StatelessWidget {
-
   static HomePage? _instance;
 
   static HomePage get instance {
@@ -19,16 +17,17 @@ class HomePage extends StatelessWidget {
     return _instance!;
   }
 
-  var tabController = CupertinoTabController(
+  final tabController = CupertinoTabController(
     initialIndex: 0,
   );
 
   @override
   Widget build(BuildContext context) {
     allContext = context;
-    return Scaffold(
-      appBar: emptyAppBar(context),
-      body: _bottomNavigationBar(),
+    return CupertinoPageScaffold(
+      resizeToAvoidBottomInset: false,
+      child: SafeArea(
+          child: _bottomNavigationBar()),
 //        bottomNavigationBar: _bottomNavigationBar()
     );
   }

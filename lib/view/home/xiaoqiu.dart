@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:fixtures/view/findFixture/findFixture.dart';
 import 'package:fixtures/view/getWork/getWork.dart';
 import 'package:fixtures/view/home/home.dart';
+import 'package:fixtures/widget/StickyTabBarDelegate.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,18 +20,46 @@ class XiaoqiuPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      backgroundColor: Color.fromARGB(1, 240, 240, 240),
-      child: ListView(
+      child: Stack(
         children: [
-          _head(),
-          Divider(), // 分割线
-          _actionButton(),
-          Container(
-            margin: EdgeInsets.all(4),
-            padding: EdgeInsets.all(4),
-            alignment: Alignment.center,
-            child: Text("可以帮助您解决一切装修困难"),
+          Image.asset(
+            "assets/images/ss.png",
+            fit: BoxFit.fitHeight,
+            height: MediaQuery
+                .of(context)
+                .size
+                .height,
           ),
+          BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+            child: CustomScrollView(
+              slivers: [
+                SliverPersistentHeader(
+                  // 可以吸顶的TabBar
+                  pinned: true,
+                  delegate: StickyTabBarDelegate(
+                    header: _head(),
+                    pre: _head(),
+                    max: 50,
+                    min: 50,
+                  ),
+                ),
+                SliverSafeArea(
+                  sliver: SliverList(
+                      delegate: SliverChildListDelegate([
+                        Divider(), // 分割线
+                        _actionButton(),
+                        Container(
+                          margin: EdgeInsets.all(4),
+                          padding: EdgeInsets.all(4),
+                          alignment: Alignment.center,
+                          child: Text("可以帮助您解决一切装修困难"),
+                        ),
+                      ])),
+                )
+              ],
+            ),
+          )
         ],
       ),
     );
@@ -75,9 +106,11 @@ class XiaoqiuPage extends StatelessWidget {
             ],
           ),
           onPressed: () {
-            Navigator.of(allContext!).push(CupertinoPageRoute(builder: (context) {
-              return FindFixturePage.instance;
-            },));
+            Navigator.of(allContext!).push(CupertinoPageRoute(
+              builder: (context) {
+                return FindFixturePage.instance;
+              },
+            ));
 //            Navigator.pushNamed(allContext!, '/findFixture');
           },
         ),

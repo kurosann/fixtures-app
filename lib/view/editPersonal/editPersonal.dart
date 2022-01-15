@@ -136,7 +136,7 @@ class _EditPersonalPageState extends State<EditPersonalPage> {
         Form.of(primaryFocus!.context!)?.save();
       },
       child: CupertinoFormSection.insetGrouped(
-          margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          margin: EdgeInsets.symmetric(horizontal: gutter, vertical: gutterV),
           children: [
             CupertinoFormRow(
               child: Row(
@@ -209,6 +209,10 @@ class _EditPersonalPageState extends State<EditPersonalPage> {
           ]),
     );
   }
+
+  double get gutterV => 4;
+
+  static final double gutter = 8;
 
   void _showLocalPick(context) {
     var _localController = FixedExtentScrollController(initialItem: localIndex);
@@ -338,10 +342,10 @@ class _EditPersonalPageState extends State<EditPersonalPage> {
     double padding = 8;
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      margin: EdgeInsets.symmetric(horizontal: gutter, vertical: gutterV),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(gutter),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,

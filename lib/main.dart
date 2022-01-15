@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       title: '小求',
       debugShowCheckedModeBanner: false,
       theme: CupertinoThemeData(
-          barBackgroundColor: Color.fromARGB(150, 255, 255, 255),
+          barBackgroundColor: Color.fromARGB(100, 255, 255, 255),
           primaryColor: Colors.orange,
           brightness: Brightness.light),
       home: HomePage(),

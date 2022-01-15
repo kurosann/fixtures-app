@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TopUpPage extends StatefulWidget {
-  double balance;
+  final String balance;
 
   TopUpPage(this.balance);
 
@@ -12,7 +12,7 @@ class TopUpPage extends StatefulWidget {
 }
 
 class _TopUpPageState extends State<TopUpPage> {
-  double balance;
+  String balance;
 
   var way = 0;
 
@@ -28,7 +28,7 @@ class _TopUpPageState extends State<TopUpPage> {
           middle: Text("充值"),
         ),
         child: SafeArea(
-          child: Column(
+          child: ListView(
             children: [
               Container(
                 padding: EdgeInsets.all(24),
@@ -136,7 +136,7 @@ class _TopUpPageState extends State<TopUpPage> {
                           Hero(
                             tag: 'balance',
                             child: Text(
-                              "$balance",
+                              balance,
                               style: TextStyle(fontSize: 14),
                             ),
                           ),

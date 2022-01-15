@@ -1,4 +1,5 @@
 import 'package:fixtures/view/home/home.dart';
+import 'package:fixtures/view/order/orderDetail.dart';
 import 'package:fixtures/widget/stepper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,33 +27,32 @@ class _HandlerOrderState extends State<HandlingOrderPage>
     currentStep = currentRealStep;
   }
 
-  AnimationController? controller;
+  AnimationController? _animationController;
 
   var isRefresh = false;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 500),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text("您正在处理的订单"),
-        trailing: isRefresh
-            ? CupertinoActivityIndicator()
-            : CupertinoButton(
-                padding: EdgeInsets.all(0),
-                alignment: Alignment.centerRight,
-                onPressed: () {
-                  setState(() {
-                    isRefresh = true;
-                  });
-                },
-                child: Icon(
-                  Icons.refresh,
-                  size: 26,
-                ),
-              ),
+        previousPageTitle: "订单",
+        middle: Text("您正在处理的订单")
       ),
       child: CustomScrollView(
         slivers: [
+          SliverSafeArea(
+            sliver: CupertinoSliverRefreshControl(
+              onRefresh: () async {},
+            ),
+          ),
           SliverToBoxAdapter(
             child: CupertinoStepper(
               physics: NeverScrollableScrollPhysics(),
@@ -63,7 +63,7 @@ class _HandlerOrderState extends State<HandlingOrderPage>
                         ? CupertinoButton(
                             child: Text(
                               "修改尺寸",
-                              style: TextStyle(fontSize: 14),
+                              style: TextStyle(fontSize: 12),
                             ),
                             padding: EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 4),
@@ -72,15 +72,21 @@ class _HandlerOrderState extends State<HandlingOrderPage>
                             })
                         : Container(),
                     CupertinoButton(
-                        child: Text("去付款"),
+                        child: Text("去付款", style: TextStyle(fontSize: 14)),
                         color: Colors.greenAccent,
                         padding:
-                            EdgeInsets.symmetric(horizontal: 14, vertical: 4),
-                        onPressed: () {}),
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        onPressed: () {
+//                        _animationController!.forward();
+                          Navigator.of(allContext!).push(CupertinoPageRoute(
+                            builder: (context) {
+                              return OrderDetailPage();
+                            },
+                          ));
+                        }),
                     CupertinoButton.filled(
-                      child: Text("确认完成"),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                      child: Text("确认完成", style: TextStyle(fontSize: 14)),
+                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                       onPressed: null,
                     )
                   ],
@@ -159,7 +165,7 @@ class _HandlerOrderState extends State<HandlingOrderPage>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("费用"),
-                  Text("${price}元"),
+                  Text("$price元"),
                   Text("(总额${percent * 100}%)"),
                 ],
               ),

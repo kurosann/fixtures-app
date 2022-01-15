@@ -1,12 +1,13 @@
 import 'package:fixtures/utils/util.dart';
 import 'package:fixtures/view/editPersonal/editPersonal.dart';
+import 'package:fixtures/view/home/home.dart';
 import 'package:fixtures/view/home/my/balance.dart';
+import 'package:fixtures/view/setting/setting.dart';
+import 'package:fixtures/view/share/share.dart';
+import 'package:fixtures/widget/StickyTabBarDelegate.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
-import '../../share/share.dart';
-import '../home.dart';
 
 class MyPage extends StatefulWidget {
   static MyPage? _instance;
@@ -23,24 +24,57 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
-  double balance = 0.0;
+  String balance = "0.0";
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      backgroundColor: Color.fromARGB(255, 250, 250, 250),
+      backgroundColor: CupertinoColors.lightBackgroundGray,
       child: CustomScrollView(slivers: [
         CupertinoSliverRefreshControl(
           onRefresh: () async {},
+        ),
+        SliverPersistentHeader(
+          // 可以吸顶的TabBar
+          pinned: true,
+          delegate: StickyTabBarDelegate(
+            max: 125,
+            min: 50,
+            pre: _profile(),
+            header: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  backgroundImage: NetworkImage(
+                      "https://img1.baidu.com/it/u=105496718,1970821593&fm=26&fmt=auto"),
+                  radius: 20,
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    "xxx人",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
         SliverSafeArea(
           sliver: SliverList(
               delegate: SliverChildListDelegate([
 //          _role(),
-            _profile(),
-            _score(),
-            _infoGrid(),
-            _actionList(),
+            Container(
+              padding: EdgeInsets.all(8),
+              child: Column(
+                children: [
+
+                  _score(),
+                  _infoGrid(),
+                  _actionList(),
+                ],
+              ),
+            ),
           ])),
         )
       ]),
@@ -50,62 +84,70 @@ class _MyPageState extends State<MyPage> {
   /// 信息栏
   Widget _profile() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      height: 125,
+      margin: EdgeInsets.symmetric(vertical: gutter),
       child: Row(
         children: [
           CircleAvatar(
             backgroundImage: NetworkImage(
                 "https://img1.baidu.com/it/u=105496718,1970821593&fm=26&fmt=auto"),
-            radius: 40,
+            backgroundColor: CupertinoColors.white,
+            maxRadius: 40,
+            minRadius: 40,
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 100,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 0,
-                    vertical: 10,
-                  ),
-                  child: Text("xxx人"),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Container(
+                      child: Text(
+                        "xxx人",
+                        style: TextStyle(fontSize: 30),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(gutter),
+                      child: Text(
+                        "00岁",
+                        style: TextStyle(
+                            fontSize: 12, color: CupertinoColors.inactiveGray),
+                      ),
+                    )
+                  ],
                 ),
                 Row(
                   children: [
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-                      child: Text("身份："),
-                    ),
                     Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-                      child: Text("某某身份"),
+                      child: Text(
+                        "身份：${'某某身份'}",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Container(
+                      child: Text(
+                        "服务：${'某某服务'}",
+                        style: TextStyle(fontSize: 12),
+                      ),
                     ),
                   ],
                 ),
               ],
             ),
           ),
-          Column(
-            children: [
-              Container(
-                width: 100,
-                padding: EdgeInsets.all(10),
-                child: Text("00岁"),
-              ),
-              Container(
-                width: 100,
-                padding: EdgeInsets.all(10),
-                child: Text("某某服务"),
-              ),
-            ],
-          )
         ],
       ),
     );
   }
+
+  static final double gutter = 4;
 
   /// 分数栏
   Widget _score() {
@@ -114,8 +156,8 @@ class _MyPageState extends State<MyPage> {
 
     return Container(
       decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
 //          boxShadow: [
 //            BoxShadow(
 //                color: Color.fromARGB(255, 200, 200, 200),
@@ -128,56 +170,58 @@ class _MyPageState extends State<MyPage> {
 //            style: BorderStyle.solid,
 //          )
       ),
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      margin: EdgeInsets.symmetric(vertical: gutter),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Column(
             children: [
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Text("好评数"),
+              Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Text("好评数"),
+                  ),
+                  _starScoreWidget(5, 20.0, likeScore),
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: gutter, vertical: 10),
+                    child: Text(likeScore.toString()),
+                  ),
+                ],
               ),
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Text("服务分"),
+              Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Text("服务分"),
+                  ),
+                  _starScoreWidget(5, 20.0, likeScore),
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: gutter, vertical: 10),
+                    child: Text(likeScore.toString()),
+                  ),
+                ],
               ),
             ],
           ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Column(
-                children: [
-                  _starScoreWidget(5, 20.0, likeScore),
-                  _starScoreWidget(5, 20.0, serveScore),
-                ],
-              ),
-              Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 4, vertical: 10),
-                    child: Text(likeScore.toString()),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 4, vertical: 10),
-                    child: Text(serveScore.toString()),
-                  ),
-                ],
-              ),
               Container(
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Color.fromARGB(255, 240, 240, 240),
+                  borderRadius: BorderRadius.circular(8),
+                  color: Color.fromARGB(255, 240, 240, 240),
 //                    border: Border.all(
 //                      color: Color.fromARGB(255, 240, 240, 240),
 //                      width: 1,
 //                      style: BorderStyle.solid,
 //                    )
                 ),
-                margin: EdgeInsets.all(6),
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                margin: EdgeInsets.all(8),
+                padding: EdgeInsets.symmetric(horizontal: 4),
                 child: Text("友好"),
               ),
             ],
@@ -213,11 +257,11 @@ class _MyPageState extends State<MyPage> {
 
   Widget _infoGrid() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      padding: EdgeInsets.all(12),
+      margin: EdgeInsets.symmetric(vertical: gutter),
+      padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
 //          border: Border.all(
 //            color: Color.fromARGB(255, 200, 200, 200),
 //            width: 1,
@@ -227,43 +271,66 @@ class _MyPageState extends State<MyPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Container(
-            width: 100,
+          Expanded(
+            flex: 1,
             child: TextButton(
                 onPressed: () {
-                  Navigator.of(allContext!).push(CupertinoPageRoute(builder: (context) {
-                    return BalancePage(balance);
-                  },));
+                  Navigator.of(allContext!).push(CupertinoPageRoute(
+                    builder: (context) {
+                      return BalancePage(balance);
+                    },
+                  ));
                 },
                 style: mainButtonStyle(),
                 child: Column(
                   children: [
                     Icon(
                       Icons.account_balance_wallet,
-                      size: 60,
-                      color: Colors.grey,
+                      size: 40,
+                      color: CupertinoTheme.of(context).primaryColor,
                     ),
                     Text("余额"),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Hero(tag: 'balance', child: Text("$balance")),
-                        Text("￥"),
+                        Hero(
+                            tag: 'balance',
+                            child: Text(
+                              balance,
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: CupertinoColors.inactiveGray),
+                            )),
+                        Text(
+                          "￥",
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: CupertinoColors.inactiveGray),
+                        ),
                       ],
                     )
                   ],
                 )),
           ),
-          Container(
-            width: 100,
+          Expanded(
+            flex: 1,
             child: TextButton(
               style: mainButtonStyle(),
-              onPressed: () {  },
+              onPressed: () {},
               child: Column(
                 children: [
-                  Icon(Icons.person_pin, size: 60, color: Colors.grey),
+                  Icon(
+                    Icons.person_pin,
+                    size: 40,
+                    color: CupertinoTheme.of(context).primaryColor,
+                  ),
                   Text("会员等级"),
-                  Text("黄金会员")
+                  Text(
+                    "黄金会员",
+                    style: TextStyle(
+                        fontSize: 12, color: CupertinoColors.inactiveGray),
+                  )
                 ],
               ),
             ),
@@ -275,11 +342,11 @@ class _MyPageState extends State<MyPage> {
 
   Widget _actionList() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      padding: EdgeInsets.all(4),
+      margin: EdgeInsets.symmetric(vertical: gutter),
+      padding: EdgeInsets.all(gutter),
       decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
 //          border: Border.all(
 //            color: Color.fromARGB(255, 200, 200, 200),
 //            width: 1,
@@ -288,45 +355,45 @@ class _MyPageState extends State<MyPage> {
       ),
       child: Column(
         children: [
-          TextButton(
-            style: mainButtonStyle(),
-            onPressed: () {
-              Navigator.of(allContext!)
-                  .push(CupertinoPageRoute(builder: (BuildContext context) {
-                return CupertinoPageScaffold(
-                  child: Container(),
-                );
-              }));
-            },
-            child: ListTile(
-              leading: Icon(Icons.person),
-              title: Text("我的会员"),
-              subtitle: Text("黄金会员"),
-              trailing: Text("去升级"),
-            ),
-          ),
-          Divider(
-            height: 1.0,
-          ),
-          TextButton(
-            style: mainButtonStyle(),
-            onPressed: () {
-              Navigator.of(allContext!)
-                  .push(CupertinoPageRoute(builder: (BuildContext context) {
-                return CupertinoPageScaffold(
-                  child: Container(),
-                );
-              }));
-            },
-            child: ListTile(
-              leading: Icon(Icons.file_upload),
-              title: Text("余额提现"),
-              trailing: Text("提现"),
-            ),
-          ),
-          Divider(
-            height: 1.0,
-          ),
+//          TextButton(
+//            style: mainButtonStyle(),
+//            onPressed: () {
+//              Navigator.of(allContext!)
+//                  .push(CupertinoPageRoute(builder: (BuildContext context) {
+//                return CupertinoPageScaffold(
+//                  child: Container(),
+//                );
+//              }));
+//            },
+//            child: ListTile(
+//              leading: Icon(Icons.person),
+//              title: Text("我的会员"),
+//              subtitle: Text("黄金会员"),
+//              trailing: Text("去升级"),
+//            ),
+//          ),
+//          Divider(
+//            height: 1.0,
+//          ),
+//          TextButton(
+//            style: mainButtonStyle(),
+//            onPressed: () {
+//              Navigator.of(allContext!)
+//                  .push(CupertinoPageRoute(builder: (BuildContext context) {
+//                return CupertinoPageScaffold(
+//                  child: Container(),
+//                );
+//              }));
+//            },
+//            child: ListTile(
+//              leading: Icon(Icons.file_upload),
+//              title: Text("余额提现"),
+//              trailing: Text("提现"),
+//            ),
+//          ),
+//          Divider(
+//            height: 1.0,
+//          ),
           TextButton(
             style: mainButtonStyle(),
             onPressed: () {
@@ -389,7 +456,11 @@ class _MyPageState extends State<MyPage> {
           TextButton(
             style: mainButtonStyle(),
             onPressed: () {
-              Navigator.pushNamed(allContext!, "/setting");
+              Navigator.of(allContext!).push(CupertinoPageRoute(
+                builder: (context) {
+                  return SettingPage();
+                },
+              ));
             },
             child: ListTile(
               leading: Icon(Icons.settings),
