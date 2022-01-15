@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PublishPage extends StatefulWidget {
-  final String id;
+  final int id;
 
   PublishPage({required this.id});
 

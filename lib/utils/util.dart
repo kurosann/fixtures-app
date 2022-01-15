@@ -16,8 +16,10 @@ PreferredSize emptyAppBar(BuildContext context) {
 
 ButtonStyle mainButtonStyle() {
   return ButtonStyle(
+    //圆角
+      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
       overlayColor: MaterialStateProperty.all(Colors.black12),
-      padding: MaterialStateProperty.all(EdgeInsets.all(0)),
+      padding: MaterialStateProperty.all(EdgeInsets.all(18)),
       foregroundColor: MaterialStateProperty.all(Colors.black87));
 }
 

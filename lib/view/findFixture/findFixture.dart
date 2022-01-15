@@ -1,7 +1,11 @@
+import 'package:fixtures/model/ItemModel.dart';
+import 'package:fixtures/service/api/ItemApi.dart';
 import 'package:fixtures/utils/util.dart';
 import 'package:fixtures/view/findFixture/publish.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../config.dart';
 
 class FindFixturePage extends StatefulWidget {
   static FindFixturePage? _instance;
@@ -17,12 +21,62 @@ class FindFixturePage extends StatefulWidget {
   State<StatefulWidget> createState() => _FindFixtureState();
 }
 
-class _FindFixtureState extends State<FindFixturePage> {
+class _FindFixtureState extends State<FindFixturePage> with ItemMixin {
+  List<dynamic> itemList = [];
+  int count = 0;
+  final itemName = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getList("");
+  }
+
+  void openMsg(String msg) {
+    showCupertinoDialog(
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            title: Text('提示'),
+            content: Text(msg),
+            actions: <Widget>[
+              CupertinoDialogAction(
+                child: Text('确认'),
+                onPressed: () {
+                  Navigator.of(context).pop("ok");
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  void getList(String name) {
+    var models = ItemModel(id: 0, itemName: name);
+    getItem(
+      params: models,
+      successCallBack: (data) {
+        var list = data["list"];
+        setState(() {
+          count = data["count"];
+          itemList = list;
+        });
+        print(itemList.toString());
+      },
+      errorCallBack: (code, err) {
+        if (code == 500) {
+          openMsg(err);
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: emptyAppBar(context),
       body: CupertinoPageScaffold(
+        backgroundColor: Colors.black12,
         child: CustomScrollView(
           slivers: <Widget>[
             CupertinoSliverNavigationBar(
@@ -32,30 +86,36 @@ class _FindFixtureState extends State<FindFixturePage> {
             ),
             SliverToBoxAdapter(
               child: Container(
-                margin: const EdgeInsets.all(4.0),
+                margin:
+                    const EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 8),
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: CupertinoSearchTextField(
+                  backgroundColor: Colors.white,
+                  controller: itemName,
                   prefixIcon: Icon(CupertinoIcons.search),
                   placeholder: "搜索",
                   suffixMode: OverlayVisibilityMode.editing,
+                  onTap: () {
+                    getList(itemName.text);
+                  },
                 ),
               ),
             ),
             SliverGrid(
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 150.0,
-                mainAxisSpacing: 30.0,
+                mainAxisSpacing: 10.0,
                 crossAxisSpacing: 4.0,
                 childAspectRatio: 1.4,
               ),
               delegate: SliverChildBuilderDelegate(
                 (BuildContext context, int index) {
                   return _itemCell(
-                      "门窗",
-                      "https://img2.baidu.com/it/u=2548989639,546384781&fm=15&fmt=auto",
-                      "1");
+                      itemList[index]["itemName"],
+                      Config.BASE_URL + itemList[index]["image_url"],
+                      itemList[index]["id"]);
                 },
-                childCount: 12,
+                childCount: count,
               ),
             )
           ],
@@ -65,7 +125,16 @@ class _FindFixtureState extends State<FindFixturePage> {
   }
 
   Widget _itemCell(label, imageUrl, id) {
-    return Card(
+    return Container(
+      margin: EdgeInsets.only(left: 8, right: 8),
+      //圆角
+      decoration: new BoxDecoration(
+        color: Colors.white.withOpacity(0.8),
+        // //背景
+        // color: Colors.white,
+        //设置四周圆角 角度
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+      ),
       child: TextButton(
         style: mainButtonStyle(),
         child: Column(

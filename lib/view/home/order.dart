@@ -24,7 +24,6 @@ class OrderPage extends StatefulWidget {
 class _OrderPageState extends State<OrderPage> {
   /// 订单数据
   var orderList = <Order>[Order()];
-
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
