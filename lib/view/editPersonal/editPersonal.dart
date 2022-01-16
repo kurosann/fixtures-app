@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'dart:ui';
-
+import 'dart:convert';
 import 'package:fixtures/Localizations/AppGlobalCupertinoLocalizationsDelegate.dart';
 import 'package:fixtures/model/AreaModel.dart';
+import 'package:fixtures/model/FileModel.dart';
+import 'package:fixtures/service/api/FileApi.dart';
 import 'package:fixtures/utils/util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +17,7 @@ class EditPersonalPage extends StatefulWidget {
   State<StatefulWidget> createState() => _EditPersonalPageState();
 }
 
-class _EditPersonalPageState extends State<EditPersonalPage> {
+class _EditPersonalPageState extends State<EditPersonalPage> with FileMixin {
   Future<XFile?>? _imagePath;
 
   var _image;
@@ -67,6 +69,13 @@ class _EditPersonalPageState extends State<EditPersonalPage> {
           ],
         ));
   }
+    Future<void> UploadFiles(file) async {
+      var response = await UploadImage(file,"card");
+      if(response.code == 200){
+          // 写入逻辑
+
+      }
+    }
 
   void _showSheetDialog() {
     showCupertinoModalPopup(
@@ -106,6 +115,7 @@ class _EditPersonalPageState extends State<EditPersonalPage> {
     setState(() {
       _imagePath = image;
     });
+
   }
 
   Widget _previewImage() {
@@ -115,6 +125,7 @@ class _EditPersonalPageState extends State<EditPersonalPage> {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.data != null) {
           _image = snapshot.data;
+          UploadFiles(File(snapshot.data!.path));
           return CircleAvatar(
               radius: 40,
               backgroundImage: FileImage(File(snapshot.data!.path)));
