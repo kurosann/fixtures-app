@@ -1,13 +1,15 @@
+import 'dart:ui';
+
 import 'package:fixtures/utils/util.dart';
 import 'package:fixtures/view/editPersonal/editPersonal.dart';
 import 'package:fixtures/view/home/home.dart';
 import 'package:fixtures/view/home/my/balance.dart';
 import 'package:fixtures/view/setting/setting.dart';
 import 'package:fixtures/view/share/share.dart';
-import 'package:fixtures/widget/StickyTabBarDelegate.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MyPage extends StatefulWidget {
   static MyPage? _instance;
@@ -24,130 +26,210 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
+  static final double gutter = 4;
+
   String balance = "0.0";
+
+  static const int APPBAR_SCROLL_OFFSET = 50;
+
+  double alphaAppBar = 0;
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      backgroundColor: CupertinoColors.lightBackgroundGray,
-      child: CustomScrollView(slivers: [
-        CupertinoSliverRefreshControl(
-          onRefresh: () async {},
-        ),
-        SliverPersistentHeader(
-          // 可以吸顶的TabBar
-          pinned: true,
-          delegate: StickyTabBarDelegate(
-            max: 125,
-            min: 50,
-            pre: _profile(),
-            header: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      "https://img1.baidu.com/it/u=105496718,1970821593&fm=26&fmt=auto"),
-                  radius: 20,
+        backgroundColor: CupertinoColors.lightBackgroundGray,
+        child: Stack(
+          children: [
+            NotificationListener(
+              onNotification: (notification) {
+                if (notification is ScrollUpdateNotification) {
+                  var offset = notification.metrics.pixels;
+                  double alpha = (offset / APPBAR_SCROLL_OFFSET)
+                      .clamp(0, 1); // APPBAE_SCROLL_OFFSET为appBar高度
+                  setState(() {
+                    alphaAppBar = alpha;
+                  });
+                }
+                return true;
+              },
+              child: CustomScrollView(slivers: [
+                CupertinoSliverRefreshControl(
+                  onRefresh: () async {},
                 ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 8),
-                  child: Text(
-                    "xxx人",
-                    style: TextStyle(fontSize: 20),
+                SliverSafeArea(
+                    sliver: NotificationListener(
+                  onNotification: (notification) {
+                    if (notification is ScrollUpdateNotification) {
+                      var offset = notification.metrics.pixels;
+                      double alpha = offset /
+                          APPBAR_SCROLL_OFFSET; // APPBAE_SCROLL_OFFSET为appBar高度
+                      if (alpha < 0) {
+                        alpha = 0;
+                      } else if (alpha > 1) {
+                        alpha = 1;
+                      }
+                      setState(() {
+                        alphaAppBar = alpha;
+                      });
+                    }
+                    return false;
+                  },
+                  child: SliverList(
+                      delegate: SliverChildListDelegate([
+                    Container(
+                      padding: EdgeInsets.all(8),
+                      child: Column(
+                        children: [
+                          _profile(),
+                          _score(),
+                          _infoGrid(),
+                          _actionList(),
+                        ],
+                      ),
+                    ),
+                  ])),
+                ))
+              ]),
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              top: 0,
+              child: ClipRect(
+                child: Opacity(
+                  opacity: alphaAppBar > 0.1 ? 1 : 0,
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                    child: Opacity(
+                      opacity: alphaAppBar,
+                      child: Container(
+                        height: APPBAR_SCROLL_OFFSET.toDouble(),
+                        color: CupertinoColors.white.withAlpha(100),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                  "https://img1.baidu.com/it/u=105496718,1970821593&fm=26&fmt=auto"),
+                              radius: 20,
+                            ),
+                            Container(
+                              margin: EdgeInsets.symmetric(horizontal: 8),
+                              child: Text(
+                                "xxx人",
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
-        SliverSafeArea(
-          sliver: SliverList(
-              delegate: SliverChildListDelegate([
-//          _role(),
-            Container(
-              padding: EdgeInsets.all(8),
-              child: Column(
-                children: [
-
-                  _score(),
-                  _infoGrid(),
-                  _actionList(),
-                ],
               ),
-            ),
-          ])),
-        )
-      ]),
-    );
+            )
+          ],
+        ));
   }
 
   /// 信息栏
   Widget _profile() {
-    return Container(
-      height: 125,
-      margin: EdgeInsets.symmetric(vertical: gutter),
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(
-                "https://img1.baidu.com/it/u=105496718,1970821593&fm=26&fmt=auto"),
-            backgroundColor: CupertinoColors.white,
-            maxRadius: 40,
-            minRadius: 40,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    Color tapedColor = CupertinoColors.white.withAlpha(100);
+    bool taped = false;
+    return GestureDetector(
+      onTap: () {
+      },
+      onTapDown: (e) {
+        setState(() {
+          taped = true;
+        });
+      },
+      onTapUp: (e) {
+        setState(() {
+          taped = false;
+        });
+      },
+      child: Container(
+        height: 100,
+        decoration: BoxDecoration(
+            color: taped?tapedColor:Colors.white, borderRadius: BorderRadius.circular(12)),
+        margin: EdgeInsets.only(bottom: gutter),
+        padding: EdgeInsets.symmetric(horizontal: 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Container(
-                      child: Text(
-                        "xxx人",
-                        style: TextStyle(fontSize: 30),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(gutter),
-                      child: Text(
-                        "00岁",
-                        style: TextStyle(
-                            fontSize: 12, color: CupertinoColors.inactiveGray),
-                      ),
-                    )
-                  ],
+                CircleAvatar(
+                  backgroundImage: NetworkImage(
+                      "https://img1.baidu.com/it/u=105496718,1970821593&fm=26&fmt=auto"),
+                  backgroundColor: CupertinoColors.white,
+                  minRadius: 40,
                 ),
-                Row(
-                  children: [
-                    Container(
-                      child: Text(
-                        "身份：${'某某身份'}",
-                        style: TextStyle(fontSize: 12),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Container(
+                            child: Text(
+                              "xxx人",
+                              style: TextStyle(fontSize: 30),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(gutter),
+                            child: Text(
+                              "00岁",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: CupertinoColors.inactiveGray),
+                            ),
+                          )
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
-                      child: Text(
-                        "服务：${'某某服务'}",
-                        style: TextStyle(fontSize: 12),
+                      Row(
+                        children: [
+                          Container(
+                            child: Text(
+                              "身份：${'某某身份'}",
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                      Row(
+                        children: [
+                          Container(
+                            child: Text(
+                              "服务：${'某某服务'}",
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                CupertinoIcons.forward,
+                size: 18,
+                color: CupertinoColors.inactiveGray,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
-
-  static final double gutter = 4;
 
   /// 分数栏
   Widget _score() {
@@ -171,87 +253,84 @@ class _MyPageState extends State<MyPage> {
 //          )
       ),
       margin: EdgeInsets.symmetric(vertical: gutter),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Column(
-            children: [
-              Row(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Column(
                 children: [
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Text("好评数"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "好评数",
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      _starScoreWidget(5, 20.0, likeScore),
+                      Text(
+                        likeScore.toString(),
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ],
                   ),
-                  _starScoreWidget(5, 20.0, likeScore),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: gutter, vertical: 10),
-                    child: Text(likeScore.toString()),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "服务分",
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      _starScoreWidget(5, 20.0, likeScore),
+                      Text(
+                        likeScore.toString(),
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ],
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Text("服务分"),
-                  ),
-                  _starScoreWidget(5, 20.0, likeScore),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: gutter, vertical: 10),
-                    child: Text(likeScore.toString()),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Color.fromARGB(255, 240, 240, 240),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: Color.fromARGB(255, 240, 240, 240),
 //                    border: Border.all(
 //                      color: Color.fromARGB(255, 240, 240, 240),
 //                      width: 1,
 //                      style: BorderStyle.solid,
 //                    )
-                ),
-                margin: EdgeInsets.all(8),
-                padding: EdgeInsets.symmetric(horizontal: 4),
-                child: Text("友好"),
               ),
-            ],
-          ),
-        ],
+              margin: EdgeInsets.symmetric(horizontal: 4),
+              padding: EdgeInsets.symmetric(horizontal: 4),
+              child: Text(
+                "友好",
+                style: TextStyle(fontSize: 12),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   /// 分数星星组件
   Widget _starScoreWidget(int count, double size, double score) {
-    return Row(
-      children: [
-        Padding(
-          padding: EdgeInsets.all(8),
-          child: RatingBar.builder(
-            itemCount: count,
-            allowHalfRating: true,
-            ignoreGestures: true,
-            itemSize: size,
-            initialRating: score,
-            itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-            itemBuilder: (context, _) => Icon(
-              Icons.star,
-              color: Colors.amber,
-            ),
-            onRatingUpdate: (value) {},
-          ),
-        ),
-      ],
+    return RatingBar.builder(
+      itemCount: count,
+      allowHalfRating: true,
+      ignoreGestures: true,
+      itemSize: size,
+      initialRating: score,
+      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+      itemBuilder: (context, _) => Icon(
+        Icons.star,
+        color: Colors.amber,
+      ),
+      onRatingUpdate: (value) {},
     );
   }
 
@@ -273,45 +352,47 @@ class _MyPageState extends State<MyPage> {
         children: [
           Expanded(
             flex: 1,
-            child: TextButton(
-                onPressed: () {
-                  Navigator.of(allContext!).push(CupertinoPageRoute(
-                    builder: (context) {
-                      return BalancePage(balance);
-                    },
-                  ));
-                },
-                style: mainButtonStyle(),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.account_balance_wallet,
-                      size: 40,
-                      color: CupertinoTheme.of(context).primaryColor,
-                    ),
-                    Text("余额"),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Hero(
-                            tag: 'balance',
-                            child: Text(
-                              balance,
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  color: CupertinoColors.inactiveGray),
-                            )),
-                        Text(
-                          "￥",
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: CupertinoColors.inactiveGray),
-                        ),
-                      ],
-                    )
-                  ],
-                )),
+            child: Container(
+              child: TextButton(
+                  onPressed: () {
+                    Navigator.of(allContext!).push(CupertinoPageRoute(
+                      builder: (context) {
+                        return BalancePage(balance);
+                      },
+                    ));
+                  },
+                  style: mainButtonStyle(),
+                  child: Column(
+                    children: [
+                      Icon(
+                        FontAwesomeIcons.wallet,
+                        size: 40,
+                        color: CupertinoTheme.of(context).primaryColor,
+                      ),
+                      Text("余额"),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Hero(
+                              tag: 'balance',
+                              child: Text(
+                                balance,
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: CupertinoColors.inactiveGray),
+                              )),
+                          Text(
+                            "￥",
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: CupertinoColors.inactiveGray),
+                          ),
+                        ],
+                      )
+                    ],
+                  )),
+            ),
           ),
           Expanded(
             flex: 1,
@@ -406,13 +487,16 @@ class _MyPageState extends State<MyPage> {
               leading: Icon(Icons.share),
               title: Text("邀请二维码"),
               trailing: Icon(
-                Icons.arrow_forward_ios,
+                CupertinoIcons.forward,
                 size: 16,
               ),
             ),
           ),
-          Divider(
-            height: 1.0,
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Divider(
+              height: 1.0,
+            ),
           ),
           TextButton(
             style: mainButtonStyle(),
@@ -430,8 +514,11 @@ class _MyPageState extends State<MyPage> {
               trailing: Text("336402"),
             ),
           ),
-          Divider(
-            height: 1.0,
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Divider(
+              height: 1.0,
+            ),
           ),
           TextButton(
             style: mainButtonStyle(),
@@ -445,13 +532,16 @@ class _MyPageState extends State<MyPage> {
               leading: Icon(Icons.description),
               title: Text("填写资料"),
               trailing: Icon(
-                Icons.arrow_forward_ios,
+                CupertinoIcons.forward,
                 size: 16,
               ),
             ),
           ),
-          Divider(
-            height: 1.0,
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Divider(
+              height: 1.0,
+            ),
           ),
           TextButton(
             style: mainButtonStyle(),
@@ -466,7 +556,7 @@ class _MyPageState extends State<MyPage> {
               leading: Icon(Icons.settings),
               title: Text("设置"),
               trailing: Icon(
-                Icons.arrow_forward_ios,
+                CupertinoIcons.forward,
                 size: 16,
               ),
             ),

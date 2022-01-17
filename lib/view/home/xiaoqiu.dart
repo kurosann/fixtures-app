@@ -3,19 +3,18 @@ import 'dart:ui';
 import 'package:fixtures/view/findFixture/findFixture.dart';
 import 'package:fixtures/view/getWork/getWork.dart';
 import 'package:fixtures/view/home/home.dart';
-import 'package:fixtures/widget/StickyTabBarDelegate.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class XiaoqiuPage extends StatelessWidget {
-  static XiaoqiuPage? _instance;
+class XiaoqiuPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _XiaoqiuPage();
+}
 
-  static XiaoqiuPage get instance {
-    if (_instance == null) {
-      _instance = XiaoqiuPage();
-    }
-    return _instance!;
-  }
+class _XiaoqiuPage extends State<XiaoqiuPage> {
+  double alphaAppBar = 0;
+
+  static const int APPBAR_SCROLL_OFFSET = 50;
 
   @override
   Widget build(BuildContext context) {
@@ -25,39 +24,61 @@ class XiaoqiuPage extends StatelessWidget {
           Image.asset(
             "assets/images/ss.png",
             fit: BoxFit.fitHeight,
-            height: MediaQuery
-                .of(context)
-                .size
-                .height,
+            height: MediaQuery.of(context).size.height,
           ),
           BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
-            child: CustomScrollView(
-              slivers: [
-                SliverPersistentHeader(
-                  // 可以吸顶的TabBar
-                  pinned: true,
-                  delegate: StickyTabBarDelegate(
-                    header: _head(),
-                    pre: _head(),
-                    max: 50,
-                    min: 50,
+            child: NotificationListener(
+              onNotification: (notification) {
+                if (notification is ScrollNotification) {
+                  var offset = notification.metrics.pixels;
+                  double alpha =
+                      (offset / APPBAR_SCROLL_OFFSET).clamp(0, 1);
+                  setState(() {
+                    alphaAppBar = alpha;
+                  });
+                }
+                return false;
+              },
+              child: CustomScrollView(
+                slivers: [
+                  SliverSafeArea(
+                    sliver: SliverList(
+                        delegate: SliverChildListDelegate([
+                      _head(),
+                      Divider(), // 分割线
+                      _actionButton(),
+                      Container(
+                        margin: EdgeInsets.all(4),
+                        padding: EdgeInsets.all(4),
+                        alignment: Alignment.center,
+                        child: Text("可以帮助您解决一切装修困难"),
+                      ),
+                    ])),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: ClipRect(
+              child: Opacity(
+                opacity: alphaAppBar>0.1?1:0,
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                  child: Opacity(
+                    opacity: alphaAppBar,
+                    child: Container(
+                      height: APPBAR_SCROLL_OFFSET.toDouble(),
+                      color: CupertinoColors.white.withAlpha(100),
+                      child: _head(),
+                    ),
                   ),
                 ),
-                SliverSafeArea(
-                  sliver: SliverList(
-                      delegate: SliverChildListDelegate([
-                        Divider(), // 分割线
-                        _actionButton(),
-                        Container(
-                          margin: EdgeInsets.all(4),
-                          padding: EdgeInsets.all(4),
-                          alignment: Alignment.center,
-                          child: Text("可以帮助您解决一切装修困难"),
-                        ),
-                      ])),
-                )
-              ],
+              ),
             ),
           )
         ],

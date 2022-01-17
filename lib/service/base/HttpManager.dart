@@ -1,12 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:fixtures/config.dart';
 import 'package:fixtures/utils/SharedPreferencesUtil.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
-typedef ErrorCallBack = Function(int code, String msg);
-typedef SuccessCallBack = Function(dynamic data);
+typedef ErrorCallBack = void Function(int code, String msg);
+typedef SuccessCallBack = void Function(dynamic data);
 
 typedef AuthInterceptor = Future<Map<String, String>>? Function(
     Map<String, String> header);
@@ -124,7 +125,7 @@ class BaseNet {
       dataMap.code = 401;
       return dataMap;
     }
-    if (response.statusCode != 200) {
+    if (response.statusCode != ResultCode.SUCCESS) {
       // debug模式才打印
       if (Config.isDebug) {
         print('请求异常:    \t' + response.reasonPhrase!);
@@ -148,7 +149,7 @@ class BaseNet {
       print('返回参数: \t' + json.decode(response.body).toString());
     }
     dataMap = Result.fromJson(json.decode(response.body));
-    if (dataMap.code == 200) {
+    if (dataMap.code == ResultCode.SUCCESS) {
       if (successCallBack != null) {
         successCallBack(dataMap.data!);
       }
@@ -162,6 +163,50 @@ class BaseNet {
     if (errorCallBack != null) {
       errorCallBack(code, msg);
     }
+  }
+
+  //上传图片到服务器
+  uploadImage(File imagPath,
+      {Map<String, dynamic>? params,
+      SuccessCallBack? successCallBack,
+      ErrorCallBack? errorCallBack}) async {
+    var uri = Uri.parse(Config.BASE_URL + '/api/v1/app/public/uploadFile');
+    //创建请求
+    var request = http.MultipartRequest("POST", uri);
+    //添加请求参数（参数名和参数值，必须为String。int也不行，必须转成String）
+    params?.forEach((key, value) {
+      request.fields[key] = value;
+    });
+    //第一个参数对应参数名，第二个参数对应文件地址
+    var multipartFile =
+        await http.MultipartFile.fromPath('file', imagPath.path);
+    //文件添加进请求
+    request.files.add(multipartFile);
+    Result dataMap = Result();
+    var response = await request.send();
+    if (response.statusCode != ResultCode.SUCCESS) {
+      // debug模式才打印
+      if (Config.isDebug) {
+        print('请求异常:    \t' + response.reasonPhrase!);
+        print('请求异常url: \t' + uri.toString());
+        print('请求头:      \t' + headers.toString());
+        print('请求方式:    \tPOST');
+      }
+      dataMap.msg = response.reasonPhrase!;
+      dataMap.code = response.statusCode;
+      _error(errorCallBack, response.reasonPhrase!, response.statusCode);
+      return dataMap;
+    }
+    dataMap = Result.fromJson(
+        json.decode(await response.stream.transform(utf8.decoder).join()));
+    if (dataMap.code == ResultCode.SUCCESS) {
+      if (successCallBack != null) {
+        successCallBack(dataMap.data!);
+      }
+    } else {
+      _error(errorCallBack, dataMap.msg.toString(), dataMap.code!);
+    }
+    return dataMap;
   }
 }
 
@@ -185,7 +230,7 @@ mixin FromJson {
 
 class ResultCode {
   //正常返回是1
-  static const SUCCESS = 1;
+  static const SUCCESS = 200;
 
   //异常返回是0
   static const ERROR = 0;

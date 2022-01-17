@@ -19,7 +19,7 @@ class _BalancePageState extends State<BalancePage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      backgroundColor: Color.fromARGB(255, 250, 250, 250),
+      backgroundColor: CupertinoColors.lightBackgroundGray,
       navigationBar: CupertinoNavigationBar(
         previousPageTitle: '返回',
         middle: Text("余额")

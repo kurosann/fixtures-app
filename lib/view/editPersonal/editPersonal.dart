@@ -1,9 +1,8 @@
 import 'dart:io';
 import 'dart:ui';
-import 'dart:convert';
+
 import 'package:fixtures/Localizations/AppGlobalCupertinoLocalizationsDelegate.dart';
 import 'package:fixtures/model/AreaModel.dart';
-import 'package:fixtures/model/FileModel.dart';
 import 'package:fixtures/service/api/FileApi.dart';
 import 'package:fixtures/utils/util.dart';
 import 'package:flutter/cupertino.dart';
@@ -69,13 +68,17 @@ class _EditPersonalPageState extends State<EditPersonalPage> with FileMixin {
           ],
         ));
   }
-    Future<void> UploadFiles(file) async {
-      var response = await UploadImage(file,"card");
-      if(response.code == 200){
-          // 写入逻辑
 
-      }
-    }
+  void UploadFiles(file) async {
+    postFile(
+        file: file,
+        successCallBack: (data) {
+//          success
+        },
+        errorCallBack: (int code, String msg) {
+//          error
+        });
+  }
 
   void _showSheetDialog() {
     showCupertinoModalPopup(
@@ -115,7 +118,6 @@ class _EditPersonalPageState extends State<EditPersonalPage> with FileMixin {
     setState(() {
       _imagePath = image;
     });
-
   }
 
   Widget _previewImage() {

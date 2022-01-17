@@ -196,9 +196,6 @@ class _HandlerOrderState extends State<HandlingOrderPage>
             placeholder: "请重新输入尺寸",
             clearButtonMode: OverlayVisibilityMode.editing,
             autofocus: true,
-            onTap: () {
-              HomePage.instance.tabController.index = 1;
-            },
           ),
           actions: <Widget>[
             CupertinoDialogAction(

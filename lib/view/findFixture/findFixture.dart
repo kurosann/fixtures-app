@@ -28,27 +28,27 @@ class _FindFixtureState extends State<FindFixturePage> with ItemMixin {
 
   @override
   void initState() {
-    // TODO: implement initState
     getList("");
   }
 
   void openMsg(String msg) {
-    showCupertinoDialog(
-        context: context,
-        builder: (context) {
-          return CupertinoAlertDialog(
-            title: Text('提示'),
-            content: Text(msg),
-            actions: <Widget>[
-              CupertinoDialogAction(
-                child: Text('确认'),
-                onPressed: () {
-                  Navigator.of(context).pop("ok");
-                },
-              ),
-            ],
-          );
-        });
+    if (context != null)
+      showCupertinoDialog(
+          context: context,
+          builder: (context) {
+            return CupertinoAlertDialog(
+              title: Text('提示'),
+              content: Text(msg),
+              actions: <Widget>[
+                CupertinoDialogAction(
+                  child: Text('确认'),
+                  onPressed: () {
+                    Navigator.of(context).pop("ok");
+                  },
+                ),
+              ],
+            );
+          });
   }
 
   void getList(String name) {
@@ -90,6 +90,7 @@ class _FindFixtureState extends State<FindFixturePage> with ItemMixin {
                     const EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 8),
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: CupertinoSearchTextField(
+                  style: TextStyle(height: 1.4),
                   backgroundColor: Colors.white,
                   controller: itemName,
                   prefixIcon: Icon(CupertinoIcons.search),

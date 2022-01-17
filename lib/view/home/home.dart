@@ -7,19 +7,14 @@ import 'order.dart';
 
 BuildContext? allContext;
 
-class HomePage extends StatelessWidget {
-  static HomePage? _instance;
+class HomePage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _HomePage();
 
-  static HomePage get instance {
-    if (_instance == null) {
-      _instance = HomePage();
-    }
-    return _instance!;
-  }
+}
+class _HomePage extends State<HomePage> {
 
-  final tabController = CupertinoTabController(
-    initialIndex: 0,
-  );
+  final tabController = CupertinoTabController();
 
   @override
   Widget build(BuildContext context) {
@@ -58,18 +53,18 @@ class HomePage extends StatelessWidget {
     var empty = Container();
     return CupertinoTabView(
       routes: {
-        '/home/xiaoqiu': (context) => XiaoqiuPage.instance,
-        '/home/order': (context) => OrderPage.instance,
-        '/home/my': (context) => MyPage.instance,
+        '/home/xiaoqiu': (context) => XiaoqiuPage(),
+        '/home/order': (context) => OrderPage(),
+        '/home/my': (context) => MyPage(),
       },
       builder: (context) {
         switch (index) {
           case 0:
-            return XiaoqiuPage.instance;
+            return XiaoqiuPage();
           case 1:
-            return OrderPage.instance;
+            return OrderPage();
           case 2:
-            return MyPage.instance;
+            return MyPage();
           default:
             return empty;
         }

@@ -8,14 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class OrderPage extends StatefulWidget {
-  static OrderPage? _instance;
-
-  static OrderPage get instance {
-    if (_instance == null) {
-      _instance = OrderPage();
-    }
-    return _instance!;
-  }
 
   @override
   State<StatefulWidget> createState() => _OrderPageState();
@@ -23,7 +15,7 @@ class OrderPage extends StatefulWidget {
 
 class _OrderPageState extends State<OrderPage> {
   /// 订单数据
-  var orderList = <Order>[Order()];
+  var orderList = <Order>[];
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -46,8 +38,11 @@ class _OrderPageState extends State<OrderPage> {
               sliver: SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
                 if (index.isOdd)
-                  return Divider(
-                    height: 1,
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: Divider(
+                      height: 1,
+                    ),
                   );
                 final i = index ~/ 2;
                 return orderList.length == 0
@@ -65,7 +60,7 @@ class _OrderPageState extends State<OrderPage> {
     return TextButton(
       style: mainButtonStyle(),
       onPressed: () {
-        Navigator.of(context).push(CupertinoPageRoute(
+        Navigator.of(allContext!).push(CupertinoPageRoute(
           builder: (context) {
             return HandlingOrderPage(
               id: "1",
@@ -74,59 +69,44 @@ class _OrderPageState extends State<OrderPage> {
         ));
       },
       child: Container(
-        padding: EdgeInsets.all(18),
+        height: 50,
+        margin: EdgeInsets.all(12),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween, // 左右对齐
           children: [
             Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Padding(
-                  padding: EdgeInsets.all(7),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 100,
-                        height: 16,
-                        decoration: BoxDecoration(
-                            color: Colors.black12,
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                    ],
-                  ),
+                Row(
+                  children: [
+                    Container(
+                      width: 140,
+                      height: 12,
+                      decoration: BoxDecoration(
+                          color: CupertinoColors.lightBackgroundGray,
+                          borderRadius: BorderRadius.circular(4)),
+                    ),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(7),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 100,
-                        height: 16,
-                        decoration: BoxDecoration(
-                            color: Colors.black12,
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                    ],
-                  ),
+                Row(
+                  children: [
+                    Container(
+                      width: 140,
+                      height: 12,
+                      decoration: BoxDecoration(
+                          color: CupertinoColors.lightBackgroundGray,
+                          borderRadius: BorderRadius.circular(4)),
+                    ),
+                  ],
                 )
               ],
             ),
-            Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.all(7),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 100,
-                        height: 16,
-                        decoration: BoxDecoration(
-                            color: Colors.black12,
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                    ],
-                  ),
-                )
-              ],
+            Container(
+              width: 100,
+              height: 12,
+              decoration: BoxDecoration(
+                  color: CupertinoColors.lightBackgroundGray,
+                  borderRadius: BorderRadius.circular(4)),
             )
           ],
         ),
@@ -149,39 +129,30 @@ class _OrderPageState extends State<OrderPage> {
         ));
       },
       child: Container(
-        padding: EdgeInsets.all(8),
+        height: 50,
+        margin: EdgeInsets.all(12),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween, // 左右对齐
           children: [
             Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Padding(
-                  padding: EdgeInsets.all(6),
-                  child: Row(
-                    children: [
-                      Text("工程编号："),
-                      Text("000000000"),
-                    ],
-                  ),
+                Row(
+                  children: [
+                    Text("工程编号："),
+                    Text("000000000"),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(6),
-                  child: Row(
-                    children: [
-                      Text("开始时间："),
-                      Text("000000000"),
-                    ],
-                  ),
+                Row(
+                  children: [
+                    Text("开始时间："),
+                    Text("000000000"),
+                  ],
                 )
               ],
             ),
-            Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.all(7),
-                  child: Text("工单状态${'000分'}"),
-                )
-              ],
+            Container(
+              child: Text("工单状态${'000分'}"),
             )
           ],
         ),
