@@ -61,7 +61,7 @@ class _Login extends State<Login> with LoginMixin {
         });
   }
 
-  Future<void> SuccessFunc(dynamic data) async {
+  void SuccessFunc(dynamic data)  {
     setState(() {
       isLogin = false;
     });
@@ -75,12 +75,12 @@ class _Login extends State<Login> with LoginMixin {
     SharedPreferencesUtil.putData('securitykey', aes);
 
     /// 登录并跳转
-   await Navigator.of(context).push(CupertinoPageRoute(
+    Navigator.of(context).pushReplacement(CupertinoPageRoute(
       builder: (context) {
         return HomePage();
       },
     ));
-    Navigator.pop(context);
+   // Navigator.pushReplacement(context);
   }
 
   void login() {
