@@ -181,7 +181,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             },
             child: ListTile(
               selected: _checkboxAliPay,
-              selectedColor: aliPayActive,
+              selectedTileColor: aliPayActive,
               minLeadingWidth: 10,
               leading: Icon(
                 FontAwesomeIcons.alipay,
@@ -212,7 +212,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               autofocus: true,
               minLeadingWidth: 10,
               selected: _checkBoxWeiXin,
-              selectedColor: weixinSelectColor,
+              selectedTileColor: weixinSelectColor,
               leading: Icon(
                 FontAwesomeIcons.weixin,
                 color: weixinColor,

@@ -17,8 +17,8 @@ class EncryptUtil {
   static aesEncrypt(plainText) {
     try {
       final key = Key.fromUtf8(Config.AES_KEY);
-      final iv = IV.fromUtf8(_IV);
-      final encrypter = Encrypter(AES(key, mode: AESMode.cbc));
+      final iv = IV.fromUtf8(Config.AES_KEY);
+      final encrypter = Encrypter(AES(key, mode: AESMode.ecb));
       final encrypted = encrypter.encrypt(plainText, iv: iv);
       return encrypted.base64;
     } catch (err) {

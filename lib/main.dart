@@ -1,4 +1,5 @@
 import 'package:fixtures/view/home/home.dart';
+import 'package:fixtures/view/login/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluwx/fluwx.dart' as fluwx;
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
           barBackgroundColor: Color.fromARGB(100, 255, 255, 255),
           primaryColor: Colors.orange,
           brightness: Brightness.light),
-      home: HomePage(),
+      home: Login(),
     );
   }
 }
