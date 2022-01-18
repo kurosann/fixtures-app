@@ -154,7 +154,7 @@ class BaseNet {
         successCallBack(dataMap.data!);
       }
     } else {
-      _error(errorCallBack, dataMap.msg.toString(), dataMap.code!);
+      _error(errorCallBack, dataMap.msg.toString(), dataMap.code);
     }
     return dataMap;
   }
@@ -204,14 +204,14 @@ class BaseNet {
         successCallBack(dataMap.data!);
       }
     } else {
-      _error(errorCallBack, dataMap.msg.toString(), dataMap.code!);
+      _error(errorCallBack, dataMap.msg.toString(), dataMap.code);
     }
     return dataMap;
   }
 }
 
 class Result {
-  int? code;
+  int code = ResultCode.CONNECT_TIMEOUT;
   String? msg;
   dynamic data;
 

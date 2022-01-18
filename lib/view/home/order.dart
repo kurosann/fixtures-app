@@ -1,4 +1,5 @@
-import 'package:fixtures/model/LoginModel.dart';
+import 'dart:async';
+
 import 'package:fixtures/model/Order.dart';
 import 'package:fixtures/service/api/LoginApi.dart';
 import 'package:fixtures/service/base/HttpManager.dart';
@@ -10,7 +11,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class OrderPage extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() => _OrderPageState();
 }
@@ -18,100 +18,100 @@ class OrderPage extends StatefulWidget {
 class _OrderPageState extends State<OrderPage> with LoginMixin {
   /// 订单数据
   var orderList = <Order>[];
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      child: NetServiceFreshPanel(
-        onRequest: () async {
-          Result result = Result();
-
-          return result;
-        },
-        child: CustomScrollView(
-          slivers: <Widget>[
-            CupertinoSliverRefreshControl(
-              onRefresh: () async {},
+      child: SafeArea(
+        child: NetServiceFreshPanel(
+          loadingPanel: Container(
+            color: Colors.white,
+            child: ListView(
+              physics: NeverScrollableScrollPhysics(),
+              children: [
+                for (int i = 0; i < 10; i += 1) _skeletonItemCell()
+              ],
             ),
-            CupertinoSliverNavigationBar(
-              stretch: true,
-              largeTitle: Text("订单"),
-            ),
-            SliverSafeArea(
-              sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate((context, index) {
-                if (index.isOdd)
-                  return Padding(
-                    padding: const EdgeInsets.only(left: 16),
-                    child: Divider(
-                      height: 1,
-                    ),
-                  );
-                final i = index ~/ 2;
-                return orderList.length == 0
-                    ? _skeletonItemCell()
-                    : _itemCell(i);
-              }, childCount: orderList.length == 0 ? 6 : orderList.length * 2)),
-            ),
-          ],
+          ),
+          onRequest: () async {
+            Result result = Result();
+            await Future.delayed(Duration(seconds: 3));
+            return result;
+          },
+          child: CustomScrollView(
+            slivers: <Widget>[
+              CupertinoSliverRefreshControl(
+                onRefresh: () async {},
+              ),
+              CupertinoSliverNavigationBar(
+                stretch: true,
+                largeTitle: Text("订单"),
+              ),
+              SliverSafeArea(
+                sliver: SliverList(
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      if (index.isOdd)
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 16),
+                          child: Divider(
+                            height: 1,
+                          ),
+                        );
+                      final i = index ~/ 2;
+                      return _itemCell(i);
+                    },
+                        childCount:
+                        orderList.length * 2)),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _skeletonItemCell() {
-    return TextButton(
-      style: mainButtonStyle(),
-      onPressed: () {
-        Navigator.of(allContext!).push(CupertinoPageRoute(
-          builder: (context) {
-            return HandlingOrderPage(
-              id: "1",
-            );
-          },
-        ));
-      },
-      child: Container(
-        height: 50,
-        margin: EdgeInsets.all(12),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween, // 左右对齐
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 140,
-                      height: 12,
-                      decoration: BoxDecoration(
-                          color: CupertinoColors.lightBackgroundGray,
-                          borderRadius: BorderRadius.circular(4)),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
-                      width: 140,
-                      height: 12,
-                      decoration: BoxDecoration(
-                          color: CupertinoColors.lightBackgroundGray,
-                          borderRadius: BorderRadius.circular(4)),
-                    ),
-                  ],
-                )
-              ],
-            ),
-            Container(
-              width: 100,
-              height: 12,
-              decoration: BoxDecoration(
-                  color: CupertinoColors.lightBackgroundGray,
-                  borderRadius: BorderRadius.circular(4)),
-            )
-          ],
-        ),
+    return Container(
+      height: 50,
+      margin: EdgeInsets.all(12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween, // 左右对齐
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 140,
+                    height: 12,
+                    decoration: BoxDecoration(
+                        color: CupertinoColors.lightBackgroundGray,
+                        borderRadius: BorderRadius.circular(4)),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Container(
+                    width: 140,
+                    height: 12,
+                    decoration: BoxDecoration(
+                        color: CupertinoColors.lightBackgroundGray,
+                        borderRadius: BorderRadius.circular(4)),
+                  ),
+                ],
+              )
+            ],
+          ),
+          Container(
+            width: 100,
+            height: 12,
+            decoration: BoxDecoration(
+                color: CupertinoColors.lightBackgroundGray,
+                borderRadius: BorderRadius.circular(4)),
+          )
+        ],
       ),
     );
   }

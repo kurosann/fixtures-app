@@ -11,6 +11,9 @@ class NetServiceFreshPanel extends StatefulWidget {
   /// 待加载页面
   final Widget child;
 
+  /// 加载中页面 为null则为默认loading界面
+  final Widget? loadingPanel;
+
   /// 网络请求 为空可使用[state]控制
   final NetCallback? onRequest;
 
@@ -20,21 +23,24 @@ class NetServiceFreshPanel extends StatefulWidget {
   NetServiceFreshPanel(
       {this.state = NetServiceState.STATE_ING,
       required this.child,
+      this.loadingPanel,
       this.onRequest});
 
   @override
   State<StatefulWidget> createState() =>
-      _NetServiceRefresh(state, child, onRequest);
+      _NetServiceRefresh(state, child, loadingPanel, onRequest);
 }
 
 class _NetServiceRefresh extends State<NetServiceFreshPanel> {
   NetServiceState state;
 
-  Widget _child;
+  Widget child;
+
+  Widget? loadingPanel;
 
   NetCallback? getData;
 
-  _NetServiceRefresh(this.state, this._child, this.getData);
+  _NetServiceRefresh(this.state, this.child, this.loadingPanel, this.getData);
 
   void _refresh() async {
     setState(() {
@@ -61,16 +67,18 @@ class _NetServiceRefresh extends State<NetServiceFreshPanel> {
       child: Stack(
         alignment: AlignmentDirectional.center,
         children: [
-          _child,
+          child,
           state == NetServiceState.STATE_ING
-              ? BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                  child: Container(
-                    color: Color.fromARGB(100, 255, 255, 255),
-                    alignment: Alignment.center,
-                    child: CupertinoActivityIndicator(),
-                  ),
-                )
+              ? loadingPanel != null
+                  ? loadingPanel!
+                  : BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                      child: Container(
+                        color: Color.fromARGB(100, 255, 255, 255),
+                        alignment: Alignment.center,
+                        child: CupertinoActivityIndicator(),
+                      ),
+                    )
               : state == NetServiceState.STATE_ERROR
                   ? BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
