@@ -23,7 +23,7 @@ class _OrderPageState extends State<OrderPage> with LoginMixin {
     return CupertinoPageScaffold(
       child: NetServiceFreshPanel(
         onRequest: () async {
-          Result result = await loginPwd(params: SmsLoginModel());
+          Result result = Result();
 
           return result;
         },

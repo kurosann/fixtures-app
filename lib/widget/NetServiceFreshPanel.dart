@@ -4,32 +4,35 @@ import 'package:fixtures/service/base/HttpManager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-typedef NetDateCallback = Future<Result> Function();
+typedef NetCallback = Future<Result> Function();
 
+/// 网络请求状态面板
 class NetServiceFreshPanel extends StatefulWidget {
+  /// 待加载页面
   final Widget child;
 
-  final NetDateCallback? onRequest;
+  /// 网络请求 为空可使用[state]控制
+  final NetCallback? onRequest;
 
-  final NetServiceState? state;
+  /// 页面状态为 [NetServiceState.STATE_SUCCESS] 时显示 [child]
+  final NetServiceState state;
 
   NetServiceFreshPanel(
       {this.state = NetServiceState.STATE_ING,
       required this.child,
-      this.onRequest})
-      : assert(onRequest != null || state != null);
+      this.onRequest});
 
   @override
   State<StatefulWidget> createState() =>
-      _NetServiceRefresh(state!, child, onRequest);
+      _NetServiceRefresh(state, child, onRequest);
 }
 
 class _NetServiceRefresh extends State<NetServiceFreshPanel> {
-  NetServiceState state = NetServiceState.STATE_ING;
+  NetServiceState state;
 
   Widget _child;
 
-  NetDateCallback? getData;
+  NetCallback? getData;
 
   _NetServiceRefresh(this.state, this._child, this.getData);
 
@@ -48,8 +51,6 @@ class _NetServiceRefresh extends State<NetServiceFreshPanel> {
   @override
   void initState() {
     if (getData != null) _refresh();
-//    else
-//      state = NetServiceState.STATE_SUCCESS;
   }
 
   @override
@@ -63,18 +64,18 @@ class _NetServiceRefresh extends State<NetServiceFreshPanel> {
           _child,
           state == NetServiceState.STATE_ING
               ? BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                   child: Container(
-                    color: Color.fromARGB(200, 255, 255, 255),
+                    color: Color.fromARGB(100, 255, 255, 255),
                     alignment: Alignment.center,
                     child: CupertinoActivityIndicator(),
                   ),
                 )
               : state == NetServiceState.STATE_ERROR
                   ? BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+                      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                       child: Container(
-                        color: Color.fromARGB(200, 255, 255, 255),
+                        color: Color.fromARGB(100, 255, 255, 255),
                         alignment: Alignment.center,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
