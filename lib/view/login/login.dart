@@ -15,12 +15,11 @@ import 'loginWidget.dart';
 
 class Login extends StatefulWidget {
   @override
-  _Login createState() => new _Login();
+  _Login createState() => _Login();
 }
 
 class _Login extends State<Login> with LoginMixin {
   //获取Key用来获取Form表单组件
-  GlobalKey<FormState> loginKey = new GlobalKey<FormState>();
   final phoneText = TextEditingController();
   final password = TextEditingController();
   final phoneCode = TextEditingController();

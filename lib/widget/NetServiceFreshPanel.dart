@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:fixtures/service/base/HttpManager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,19 +9,19 @@ typedef NetDateCallback = Future<Result> Function();
 class NetServiceFreshPanel extends StatefulWidget {
   final Widget child;
 
-  final NetDateCallback? onNetData;
+  final NetDateCallback? onRequest;
 
   final NetServiceState? state;
 
   NetServiceFreshPanel(
       {this.state = NetServiceState.STATE_ING,
       required this.child,
-      this.onNetData})
-      : assert(onNetData != null || state != null);
+      this.onRequest})
+      : assert(onRequest != null || state != null);
 
   @override
   State<StatefulWidget> createState() =>
-      _NetServiceRefresh(state!, child, onNetData);
+      _NetServiceRefresh(state!, child, onRequest);
 }
 
 class _NetServiceRefresh extends State<NetServiceFreshPanel> {
@@ -37,7 +39,7 @@ class _NetServiceRefresh extends State<NetServiceFreshPanel> {
     });
     Result data = await getData!();
     setState(() {
-      state = data.code == 200
+      state = data.code == ResultCode.SUCCESS
           ? NetServiceState.STATE_SUCCESS
           : NetServiceState.STATE_ERROR;
     });
@@ -60,12 +62,38 @@ class _NetServiceRefresh extends State<NetServiceFreshPanel> {
         children: [
           _child,
           state == NetServiceState.STATE_ING
-              ? Container(
-                  color: Color.fromARGB(200, 255, 255, 255),
-                  alignment: Alignment.center,
-                  child: CupertinoActivityIndicator(),
+              ? BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+                  child: Container(
+                    color: Color.fromARGB(200, 255, 255, 255),
+                    alignment: Alignment.center,
+                    child: CupertinoActivityIndicator(),
+                  ),
                 )
-              : Container(),
+              : state == NetServiceState.STATE_ERROR
+                  ? BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
+                      child: Container(
+                        color: Color.fromARGB(200, 255, 255, 255),
+                        alignment: Alignment.center,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.error_outline,
+                              color: CupertinoTheme.of(context).primaryColor,
+                            ),
+                            Text("网络错误"),
+                            CupertinoButton(
+                                child: Text("重新加载"),
+                                onPressed: () {
+                                  _refresh();
+                                })
+                          ],
+                        ),
+                      ),
+                    )
+                  : Container(),
         ],
       ),
     );

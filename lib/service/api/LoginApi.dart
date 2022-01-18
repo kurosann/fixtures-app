@@ -4,11 +4,11 @@ import 'package:fixtures/service/base/HttpManager.dart';
 mixin LoginMixin {
 
   /// post
-  void loginPwd(
+  loginPwd(
       {required SmsLoginModel params,
-        required SuccessCallBack successCallBack,
+        SuccessCallBack? successCallBack,
         ErrorCallBack? errorCallBack}) async {
-    BaseNet.instance.post(
+    return BaseNet.instance.post(
         url: '/api/v1/app-login',
         // 不是map需序列化为map
         params: params.toJson(),
@@ -18,7 +18,7 @@ mixin LoginMixin {
   /// post
   void loginSms(
       {required SmsLoginModel params,
-        required SuccessCallBack successCallBack,
+        SuccessCallBack? successCallBack,
         ErrorCallBack? errorCallBack}) async {
     BaseNet.instance.post(
         url: '/api/v1/app-login/login/sms',

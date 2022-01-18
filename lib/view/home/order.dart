@@ -1,4 +1,6 @@
+import 'package:fixtures/model/LoginModel.dart';
 import 'package:fixtures/model/Order.dart';
+import 'package:fixtures/service/api/LoginApi.dart';
 import 'package:fixtures/service/base/HttpManager.dart';
 import 'package:fixtures/utils/util.dart';
 import 'package:fixtures/view/handlingOrder/handlingOrder.dart';
@@ -13,16 +15,16 @@ class OrderPage extends StatefulWidget {
   State<StatefulWidget> createState() => _OrderPageState();
 }
 
-class _OrderPageState extends State<OrderPage> {
+class _OrderPageState extends State<OrderPage> with LoginMixin {
   /// 订单数据
   var orderList = <Order>[];
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       child: NetServiceFreshPanel(
-        state: NetServiceState.STATE_SUCCESS,
-        onNetData: () async {
-          Result result = Result();
+        onRequest: () async {
+          Result result = await loginPwd(params: SmsLoginModel());
+
           return result;
         },
         child: CustomScrollView(
