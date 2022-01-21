@@ -20,15 +20,19 @@ class NetServiceFreshPanel extends StatefulWidget {
   /// 页面状态为 [NetServiceState.STATE_SUCCESS] 时显示 [child]
   final NetServiceState state;
 
+  /// 状态面板背景色 不设置则为Theme的appbar背景色
+  final Color? backgroundColor;
+
   NetServiceFreshPanel(
       {this.state = NetServiceState.STATE_ING,
       required this.child,
       this.loadingPanel,
+      this.backgroundColor,
       this.onRequest});
 
   @override
-  State<StatefulWidget> createState() =>
-      _NetServiceRefresh(state, child, loadingPanel, onRequest);
+  State<StatefulWidget> createState() => _NetServiceRefresh(
+      state, child, loadingPanel, backgroundColor, onRequest);
 }
 
 class _NetServiceRefresh extends State<NetServiceFreshPanel> {
@@ -38,9 +42,12 @@ class _NetServiceRefresh extends State<NetServiceFreshPanel> {
 
   Widget? loadingPanel;
 
+  final Color? backgroundColor;
+
   NetCallback? getData;
 
-  _NetServiceRefresh(this.state, this.child, this.loadingPanel, this.getData);
+  _NetServiceRefresh(this.state, this.child, this.loadingPanel,
+      this.backgroundColor, this.getData);
 
   void _refresh() async {
     setState(() {
@@ -74,7 +81,9 @@ class _NetServiceRefresh extends State<NetServiceFreshPanel> {
                   : BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                       child: Container(
-                        color: Color.fromARGB(100, 255, 255, 255),
+                        color: backgroundColor != null
+                            ? backgroundColor
+                            : CupertinoTheme.of(context).barBackgroundColor,
                         alignment: Alignment.center,
                         child: CupertinoActivityIndicator(),
                       ),
@@ -83,7 +92,9 @@ class _NetServiceRefresh extends State<NetServiceFreshPanel> {
                   ? BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                       child: Container(
-                        color: Color.fromARGB(100, 255, 255, 255),
+                        color: backgroundColor != null
+                            ? backgroundColor
+                            : CupertinoTheme.of(context).barBackgroundColor,
                         alignment: Alignment.center,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,

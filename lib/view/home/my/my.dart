@@ -4,10 +4,13 @@ import 'package:fixtures/utils/util.dart';
 import 'package:fixtures/view/editPersonal/editPersonal.dart';
 import 'package:fixtures/view/home/home.dart';
 import 'package:fixtures/view/home/my/balance.dart';
+import 'package:fixtures/view/personal/editOurInfo.dart';
+import 'package:fixtures/view/personal/editPhone.dart';
 import 'package:fixtures/view/setting/setting.dart';
 import 'package:fixtures/view/share/share.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -34,6 +37,10 @@ class _MyPageState extends State<MyPage> {
 
   double alphaAppBar = 0;
 
+  var inviteCode = "336402";
+  Color tapedColor = CupertinoColors.white.withAlpha(100);
+  bool taped = false;
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -58,37 +65,37 @@ class _MyPageState extends State<MyPage> {
                 ),
                 SliverSafeArea(
                     sliver: NotificationListener(
-                  onNotification: (notification) {
-                    if (notification is ScrollUpdateNotification) {
-                      var offset = notification.metrics.pixels;
-                      double alpha = offset /
-                          APPBAR_SCROLL_OFFSET; // APPBAE_SCROLL_OFFSET为appBar高度
-                      if (alpha < 0) {
-                        alpha = 0;
-                      } else if (alpha > 1) {
-                        alpha = 1;
-                      }
-                      setState(() {
-                        alphaAppBar = alpha;
-                      });
-                    }
-                    return false;
-                  },
-                  child: SliverList(
-                      delegate: SliverChildListDelegate([
-                    Container(
-                      padding: EdgeInsets.all(8),
-                      child: Column(
-                        children: [
-                          _profile(),
-                          _score(),
-                          _infoGrid(),
-                          _actionList(),
-                        ],
-                      ),
-                    ),
-                  ])),
-                ))
+                      onNotification: (notification) {
+                        if (notification is ScrollUpdateNotification) {
+                          var offset = notification.metrics.pixels;
+                          double alpha = offset /
+                              APPBAR_SCROLL_OFFSET; // APPBAE_SCROLL_OFFSET为appBar高度
+                          if (alpha < 0) {
+                            alpha = 0;
+                          } else if (alpha > 1) {
+                            alpha = 1;
+                          }
+                          setState(() {
+                            alphaAppBar = alpha;
+                          });
+                        }
+                        return false;
+                      },
+                      child: SliverList(
+                          delegate: SliverChildListDelegate([
+                            Container(
+                              padding: EdgeInsets.all(8),
+                              child: Column(
+                                children: [
+                                  _profile(),
+                                  _score(),
+                                  _infoGrid(),
+                                  _actionList(),
+                                ],
+                              ),
+                            ),
+                          ])),
+                    ))
               ]),
             ),
             Positioned(
@@ -111,6 +118,7 @@ class _MyPageState extends State<MyPage> {
                             CircleAvatar(
                               backgroundImage: NetworkImage(
                                   "https://img1.baidu.com/it/u=105496718,1970821593&fm=26&fmt=auto"),
+                              backgroundColor: CupertinoColors.white,
                               radius: 20,
                             ),
                             Container(
@@ -134,10 +142,12 @@ class _MyPageState extends State<MyPage> {
 
   /// 信息栏
   Widget _profile() {
-    Color tapedColor = CupertinoColors.white.withAlpha(100);
-    bool taped = false;
     return GestureDetector(
       onTap: () {
+        Navigator.of(context, rootNavigator: true)
+            .push(CupertinoPageRoute(builder: (BuildContext context) {
+          return EditPersonalPage();
+        }));
       },
       onTapDown: (e) {
         setState(() {
@@ -149,10 +159,16 @@ class _MyPageState extends State<MyPage> {
           taped = false;
         });
       },
+      onTapCancel: () {
+        setState(() {
+          taped = false;
+        });
+      },
       child: Container(
         height: 100,
         decoration: BoxDecoration(
-            color: taped?tapedColor:Colors.white, borderRadius: BorderRadius.circular(12)),
+            color: taped ? tapedColor : Colors.white,
+            borderRadius: BorderRadius.circular(12)),
         margin: EdgeInsets.only(bottom: gutter),
         padding: EdgeInsets.symmetric(horizontal: 8),
         child: Row(
@@ -165,7 +181,7 @@ class _MyPageState extends State<MyPage> {
                   backgroundImage: NetworkImage(
                       "https://img1.baidu.com/it/u=105496718,1970821593&fm=26&fmt=auto"),
                   backgroundColor: CupertinoColors.white,
-                  minRadius: 40,
+                  radius: 40,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -326,10 +342,11 @@ class _MyPageState extends State<MyPage> {
       itemSize: size,
       initialRating: score,
       itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-      itemBuilder: (context, _) => Icon(
-        Icons.star,
-        color: Colors.amber,
-      ),
+      itemBuilder: (context, _) =>
+          Icon(
+            Icons.star,
+            color: Colors.amber,
+          ),
       onRatingUpdate: (value) {},
     );
   }
@@ -355,7 +372,7 @@ class _MyPageState extends State<MyPage> {
             child: Container(
               child: TextButton(
                   onPressed: () {
-                    Navigator.of(allContext!).push(CupertinoPageRoute(
+                    Navigator.of(context, rootNavigator: true).push(CupertinoPageRoute(
                       builder: (context) {
                         return BalancePage(balance);
                       },
@@ -367,7 +384,9 @@ class _MyPageState extends State<MyPage> {
                       Icon(
                         FontAwesomeIcons.wallet,
                         size: 40,
-                        color: CupertinoTheme.of(context).primaryColor,
+                        color: CupertinoTheme
+                            .of(context)
+                            .primaryColor,
                       ),
                       Text("余额"),
                       Row(
@@ -404,7 +423,9 @@ class _MyPageState extends State<MyPage> {
                   Icon(
                     Icons.person_pin,
                     size: 40,
-                    color: CupertinoTheme.of(context).primaryColor,
+                    color: CupertinoTheme
+                        .of(context)
+                        .primaryColor,
                   ),
                   Text("会员等级"),
                   Text(
@@ -439,7 +460,7 @@ class _MyPageState extends State<MyPage> {
 //          TextButton(
 //            style: mainButtonStyle(),
 //            onPressed: () {
-//              Navigator.of(allContext!)
+//              Navigator.of(context, rootNavigator: true)
 //                  .push(CupertinoPageRoute(builder: (BuildContext context) {
 //                return CupertinoPageScaffold(
 //                  child: Container(),
@@ -459,7 +480,7 @@ class _MyPageState extends State<MyPage> {
 //          TextButton(
 //            style: mainButtonStyle(),
 //            onPressed: () {
-//              Navigator.of(allContext!)
+//              Navigator.of(context, rootNavigator: true)
 //                  .push(CupertinoPageRoute(builder: (BuildContext context) {
 //                return CupertinoPageScaffold(
 //                  child: Container(),
@@ -478,7 +499,7 @@ class _MyPageState extends State<MyPage> {
           TextButton(
             style: mainButtonStyle(),
             onPressed: () {
-              Navigator.of(allContext!)
+              Navigator.of(context, rootNavigator: true)
                   .push(CupertinoPageRoute(builder: (BuildContext context) {
                 return SharePage();
               }));
@@ -501,17 +522,21 @@ class _MyPageState extends State<MyPage> {
           TextButton(
             style: mainButtonStyle(),
             onPressed: () {
-              Navigator.of(allContext!)
-                  .push(CupertinoPageRoute(builder: (BuildContext context) {
-                return CupertinoPageScaffold(
-                  child: Container(),
-                );
-              }));
+              Clipboard.setData(ClipboardData(text:inviteCode));
+//              Navigator.of(context, rootNavigator: true)
+//                  .push(CupertinoPageRoute(builder: (BuildContext context) {
+//                return CupertinoPageScaffold(
+//                  child: Container(),
+//                );
+//              }));
+            },
+            onLongPress: () {
+              Clipboard.setData(ClipboardData(text:inviteCode));
             },
             child: ListTile(
               leading: Icon(Icons.record_voice_over),
               title: Text("我的邀请码"),
-              trailing: Text("336402"),
+              trailing: Text(inviteCode),
             ),
           ),
           Padding(
@@ -523,14 +548,14 @@ class _MyPageState extends State<MyPage> {
           TextButton(
             style: mainButtonStyle(),
             onPressed: () {
-              Navigator.of(allContext!)
+              Navigator.of(context, rootNavigator: true)
                   .push(CupertinoPageRoute(builder: (BuildContext context) {
-                return EditPersonalPage();
+                return EditPhonePage();
               }));
             },
             child: ListTile(
               leading: Icon(Icons.description),
-              title: Text("填写资料"),
+              title: Text("编辑手机"),
               trailing: Icon(
                 CupertinoIcons.forward,
                 size: 16,
@@ -546,7 +571,7 @@ class _MyPageState extends State<MyPage> {
           TextButton(
             style: mainButtonStyle(),
             onPressed: () {
-              Navigator.of(allContext!).push(CupertinoPageRoute(
+              Navigator.of(context, rootNavigator: true).push(CupertinoPageRoute(
                 builder: (context) {
                   return SettingPage();
                 },
