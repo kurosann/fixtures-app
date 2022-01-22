@@ -1,16 +1,13 @@
-import 'dart:io';
-
 import 'package:fixtures/service/base/HttpManager.dart';
 
-mixin FileMixin {
-  /// PostFile
-  postFile(
-      {required File file,
-      params,
+mixin OrderApi {
+  /// 获取工程订单
+  getWorkOrder(
+      {
       required SuccessCallBack successCallBack,
       ErrorCallBack? errorCallBack}) async {
-    return BaseNet.instance.uploadImage(file,
-        params: params,
+    return BaseNet.instance.get(
+        url: '/api/v1/appWorkOrder',
         successCallBack: successCallBack,
         errorCallBack: errorCallBack);
   }

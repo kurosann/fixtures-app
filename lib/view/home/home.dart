@@ -10,11 +10,14 @@ BuildContext? allContext;
 class HomePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _HomePage();
-
 }
-class _HomePage extends State<HomePage> {
 
+class _HomePage extends State<HomePage> with AutomaticKeepAliveClientMixin {
   final tabController = CupertinoTabController();
+
+  /// 启动界面缓存
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {

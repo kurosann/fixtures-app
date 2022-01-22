@@ -28,7 +28,7 @@ class _ShareState extends State<SharePage> {
     return Scaffold(
       body: CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
-          backgroundColor: Color.fromARGB(0, 0, 0, 0),
+          backgroundColor: Colors.white.withAlpha(0),
           previousPageTitle: '返回',
           middle: Text("邀请有奖"),
         ),

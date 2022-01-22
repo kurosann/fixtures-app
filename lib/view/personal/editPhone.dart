@@ -2,15 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class EditPhonePage extends StatefulWidget {
-  static EditPhonePage? _instance;
-
-  static EditPhonePage get instance {
-    if (_instance == null) {
-      _instance = EditPhonePage();
-    }
-    return _instance!;
-  }
-
   @override
   State<StatefulWidget> createState() => _EditPhonePageState();
 }
