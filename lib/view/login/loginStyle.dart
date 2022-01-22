@@ -74,6 +74,18 @@ BoxDecoration TextFieldBoxStyle() {
   );
 }
 
+BoxDecoration WithdrawTextFieldBoxStyle() {
+  return BoxDecoration(
+    borderRadius: BorderRadius.circular(8.0),
+    color: Color.fromARGB(255, 242, 242, 243),
+    border: Border.all(
+      color: Color.fromARGB(255, 242, 242, 243),
+      style: BorderStyle.none,
+      width: 1,
+    ),
+  );
+}
+
 Icon UserClose() {
   return Icon(
     Icons.close_rounded,

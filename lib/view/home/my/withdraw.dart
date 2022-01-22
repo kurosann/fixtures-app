@@ -1,5 +1,10 @@
+import 'dart:async';
+
+import 'package:fixtures/utils/styles/myStyle.dart';
+import 'package:fixtures/view/login/loginStyle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class WithdrawPage extends StatefulWidget {
@@ -13,15 +18,105 @@ class WithdrawPage extends StatefulWidget {
 
 class _WithdrawPageState extends State<WithdrawPage> {
   String balance;
-
+  late Timer _timer;
+  int _countdownTime = 0;
   var way = 0;
-
+  final phoneCode = TextEditingController();
   var _controller = TextEditingController();
 
   _WithdrawPageState(this.balance);
 
   @override
   Widget build(BuildContext context) {
+    var rulesTile = Container(
+        padding: EdgeInsets.only(top: 40),
+        child: Row(children: <Widget>[
+          Expanded(
+            child: Divider(height: 1,color:Colors.grey),
+          ),
+          Expanded(
+              child: Text(
+            '提现须知',
+            style: TextStyle(
+                fontWeight: FontWeight.w800,
+                fontSize: 18.0,
+                color: Colors.orange,),
+
+            textAlign: TextAlign.center,
+          )),
+          Expanded(
+            child: Divider(height: 1,color:Colors.grey),
+          ),
+        ]));
+    // color: Color.fromARGB(255, 250, 130, 65)),
+    var rulesBody = Container(
+        padding: EdgeInsets.only(top: 20,left: 30),
+        child: Row(children: <Widget>[
+          Container(
+              width: MediaQuery.of(context).size.width * 0.90,
+              child: Text(
+                '1.仅支持账户全额提现，实际到账金额以当日结算为准。\n'+
+                '2.申请审核通过后，抵用券自动作废。\n'+
+                '3.提现将扣除相应的充值优惠。\n'+
+                '4.工作日星期二至星期五可作为提现时间 \n',
+                style: TextStyle(
+                    fontSize: 15.0,
+                    color: Colors.black,
+                )
+              )),
+        ]));
+
+    /// 用户手机短信验证码输入框
+    var codeSms = Container(
+      padding: EdgeInsets.only(top: 24),
+      child: CupertinoTextField(
+        controller: phoneCode,
+        placeholderStyle: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 14.0,
+            color: Color.fromARGB(255, 93, 93, 93)),
+        decoration: WithdrawTextFieldBoxStyle(),
+        padding: EdgeInsets.symmetric(vertical: 14),
+        inputFormatters: [
+          LengthLimitingTextInputFormatter(6),
+          FilteringTextInputFormatter.digitsOnly
+        ],
+        prefix: Text(
+          '验证码: ',
+          style: TextStyle(
+              fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
+        ),
+        placeholder: ' 已发送您的手机,请查收 ',
+        clearButtonMode: OverlayVisibilityMode.editing,
+        keyboardType: TextInputType.number,
+      ),
+    );
+
+    void openMsg(String msg) {
+      showCupertinoDialog(
+          context: context,
+          builder: (c) {
+            return CupertinoAlertDialog(
+              title: Text('短信验证'),
+              content: codeSms,
+              actions: <Widget>[
+                CupertinoDialogAction(
+                  child: Text('确认'),
+                  onPressed: () {
+                    Navigator.of(context).pop("ok");
+                  },
+                ),
+                CupertinoDialogAction(
+                  child: Text('取消'),
+                  onPressed: () {
+                    Navigator.of(context).pop("ok");
+                  },
+                ),
+              ],
+            );
+          });
+    }
+
     return CupertinoPageScaffold(
         backgroundColor: CupertinoColors.lightBackgroundGray,
         navigationBar: CupertinoNavigationBar(
@@ -50,13 +145,13 @@ class _WithdrawPageState extends State<WithdrawPage> {
                               padding: const EdgeInsets.all(8.0),
                               child: way == 0
                                   ? Icon(
-                                FontAwesomeIcons.weixin,
-                                color: Colors.green,
-                              )
+                                      FontAwesomeIcons.weixin,
+                                      color: Colors.green,
+                                    )
                                   : Icon(
-                                FontAwesomeIcons.alipay,
-                                color: Colors.blue,
-                              ),
+                                      FontAwesomeIcons.alipay,
+                                      color: Colors.blue,
+                                    ),
                             ),
                             Text(
                               way == 0 ? "微信" : "支付宝",
@@ -146,7 +241,7 @@ class _WithdrawPageState extends State<WithdrawPage> {
                           ),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -162,9 +257,13 @@ class _WithdrawPageState extends State<WithdrawPage> {
                           Expanded(child: Container()),
                         ],
                       ),
-                      onPressed: () {}),
+                      onPressed: () {
+                        openMsg("");
+                      }),
                 ),
-              )
+              ),
+              rulesTile,
+              rulesBody,
             ],
           ),
         ));
@@ -206,6 +305,7 @@ class _WithdrawPageState extends State<WithdrawPage> {
       },
     );
   }
+
 //  void toAlipay() async {
 //    tobias.isAliPayInstalled().then((value) => { // 判断是否安装了支付宝
 //      if (!value) {
@@ -225,13 +325,14 @@ class _WithdrawPageState extends State<WithdrawPage> {
 //  }
 
   void showAlert(title) {
-    showCupertinoDialog(context: context, builder: (context) {
-      return CupertinoAlertDialog(
-        title: Text(title),
-        actions: [
-          CupertinoDialogAction(child: Text("确定"))
-        ],
-      );
-    },);
+    showCupertinoDialog(
+      context: context,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          title: Text(title),
+          actions: [CupertinoDialogAction(child: Text("确定"))],
+        );
+      },
+    );
   }
 }
