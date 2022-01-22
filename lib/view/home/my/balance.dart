@@ -1,4 +1,5 @@
 import 'package:fixtures/view/home/my/topUp.dart';
+import 'package:fixtures/view/home/my/withdraw.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -91,7 +92,13 @@ class _BalancePageState extends State<BalancePage> {
                             "提现",
                             style: TextStyle(color: Colors.black87),
                           ),
-                          onPressed: () {}),
+                          onPressed: () {
+                            Navigator.of(context).push(CupertinoPageRoute(
+                              builder: (context) {
+                                return WithdrawPage(balance);
+                              },
+                            ));
+                          }),
                     ],
                   ),
                 ),

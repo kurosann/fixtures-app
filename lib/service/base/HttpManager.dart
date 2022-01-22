@@ -33,13 +33,11 @@ class BaseNet {
 
   BaseNet._internal() {
     _authInterceptor = (Map<String, String> header) async {
-      String? accessToken =
-          await SharedPreferencesUtil.getData(Config.ACCESS_TOKEN);
+      String? accessToken = await SharedPreferencesUtil.getData(Config.ACCESS_TOKEN);
       if (accessToken != null && accessToken != '') {
         headers['content-type'] = 'application/json;charset=utf-8';
-        headers[Config.ACCESS_TOKEN] = 'JWT $accessToken';
+        headers[Config.ACCESS_TOKEN] = '$accessToken';
       }
-
       /// 拦截内容
       return header;
     };

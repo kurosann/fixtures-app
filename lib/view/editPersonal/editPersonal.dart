@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:fixtures/Localizations/AppGlobalCupertinoLocalizationsDelegate.dart';
 import 'package:fixtures/model/AreaModel.dart';
 import 'package:fixtures/service/api/FileApi.dart';
+import 'package:fixtures/service/api/MyInfoApi.dart';
 import 'package:fixtures/utils/util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,12 +12,15 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../config.dart';
+
 class EditPersonalPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _EditPersonalPageState();
 }
 
-class _EditPersonalPageState extends State<EditPersonalPage> with FileMixin {
+class _EditPersonalPageState extends State<EditPersonalPage>
+    with FileMixin, PersonalMixin {
   Future<XFile?>? _imagePath;
 
   var _image;
@@ -24,6 +28,7 @@ class _EditPersonalPageState extends State<EditPersonalPage> with FileMixin {
   var _imageSource;
 
   var _birthDayController = TextEditingController();
+  var _nickNameController = TextEditingController();
 
   var _localTextController = TextEditingController();
 
@@ -47,11 +52,59 @@ class _EditPersonalPageState extends State<EditPersonalPage> with FileMixin {
   var sex = false;
 
   bool _isShowPick = false;
+  int rid = 1;
+  String balance = "0.0";
+  String age = "0";
+  String invitationCode = "000000";
+  String nickName = "";
+  String phone = "";
+  String pic = "";
+  String sexStr = "";
+  String uName = "";
+  String vipStr = "";
+  String rolesStr = "";
+  String birthday = "";
+  double services = 0.0;
+  double crafts = 0.0;
+  static const int APPBAR_SCROLL_OFFSET = 50;
+
+  double alphaAppBar = 0;
+
+  void getMyInfo() {
+     getPersonal(successCallBack: (data) {
+       setState(() {
+      var user = data["user"];
+      var wallet = data["wallet"];
+      var master = data["master"];
+      services = double.parse(master["services"]);
+      crafts = double.parse(master["crafts"]);
+      balance = wallet["walletBalance"].toString();
+      age = user["age"].toString();
+      invitationCode = user["invitationCode"];
+      _nickNameController.text = user["nickName"];
+      phone = user["phone"];
+      pic = user["pic"];
+      sexStr = user["sexStr"];
+      sex = user["sex"] == 1 ?false:true;
+      uName = user["uName"];
+      rid = user["rid"];
+      vipStr = user["vipStr"];
+      rolesStr = user["rolesStr"];
+      birthday = user["birthday"];
+      _birthDayController.text = birthday;
+      subLocalList = locals[1].children!;
+      _localTextController.text ="广东深圳";
+      print(subLocalList);
+       });
+    }, errorCallBack: (code, msg) {
+      print(msg);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    subLocalList = locals[0].children!;
+    getMyInfo();
   }
 
   @override
@@ -133,8 +186,7 @@ class _EditPersonalPageState extends State<EditPersonalPage> with FileMixin {
               backgroundImage: FileImage(File(snapshot.data!.path)));
         } else {
           return CircleAvatar(
-            backgroundImage: NetworkImage(
-                "https://img1.baidu.com/it/u=105496718,1970821593&fm=26&fmt=auto"),
+            backgroundImage: NetworkImage(Config.BASE_URL+pic),
             radius: 40,
           );
         }
@@ -167,9 +219,10 @@ class _EditPersonalPageState extends State<EditPersonalPage> with FileMixin {
             ),
             CupertinoTextFormFieldRow(
               style: TextStyle(height: 1.4),
+              controller: _nickNameController,
               prefix: Text("昵称"),
               textAlign: TextAlign.end,
-              placeholder: "昵称",
+              placeholder: nickName,
               textInputAction: TextInputAction.next,
             ),
             CupertinoTextFormFieldRow(

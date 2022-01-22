@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../config.dart';
 import 'loginStyle.dart';
 import 'loginWidget.dart';
 
@@ -68,11 +69,9 @@ class _Login extends State<Login> with LoginMixin {
     var token = data["token"];
     var aes = EncryptUtil.aesEncrypt(securityKey);
     print("存储aes:" + aes);
-
     /// 存储securitykey、token
-    SharedPreferencesUtil.putData('token', token);
-    SharedPreferencesUtil.putData('securitykey', aes);
-
+    SharedPreferencesUtil.putData(Config.ACCESS_TOKEN, token);
+    SharedPreferencesUtil.putData(Config.SECURITY_KEY, aes);
     /// 登录并跳转
     Navigator.of(context).pushReplacement(CupertinoPageRoute(
       builder: (context) {
@@ -170,9 +169,7 @@ class _Login extends State<Login> with LoginMixin {
         /// 注册验证码
         sendRegisterSms(
           params: models,
-          successCallBack: (data) {
-            SuccessFunc(data);
-          },
+          successCallBack: (data) {},
           errorCallBack: (code, err) {
             openMsg(err);
           },
@@ -181,9 +178,7 @@ class _Login extends State<Login> with LoginMixin {
         /// 登录验证码
         sendLoginSms(
           params: models,
-          successCallBack: (data) {
-            SuccessFunc(data);
-          },
+          successCallBack: (data) {},
           errorCallBack: (code, err) {
             openMsg(err);
           },

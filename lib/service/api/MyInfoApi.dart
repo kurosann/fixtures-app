@@ -1,18 +1,16 @@
 
-import 'package:fixtures/model/ItemModel.dart';
 import 'package:fixtures/service/base/HttpManager.dart';
 
-mixin ItemMixin {
+mixin PersonalMixin {
 
   /// get
-  void getItem(
-      {required ItemModel params,
-        required SuccessCallBack successCallBack,
+  void getPersonal(
+      {required SuccessCallBack successCallBack,
         ErrorCallBack? errorCallBack}) async {
     return BaseNet.instance.get(
-        url: '/api/v1/appItem/list',
+        url: '/api/v1/appUser/get_profile',
         // 不是map需序列化为map
-        params: params.toJson(),
+        params: {},
         successCallBack: successCallBack,
         errorCallBack: errorCallBack);
   }

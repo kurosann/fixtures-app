@@ -1,5 +1,7 @@
+import 'dart:ffi';
 import 'dart:ui';
 
+import 'package:fixtures/service/api/MyInfoApi.dart';
 import 'package:fixtures/utils/util.dart';
 import 'package:fixtures/view/editPersonal/editPersonal.dart';
 import 'package:fixtures/view/home/home.dart';
@@ -10,6 +12,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../../../config.dart';
 
 class MyPage extends StatefulWidget {
   static MyPage? _instance;
@@ -25,14 +29,52 @@ class MyPage extends StatefulWidget {
   State<StatefulWidget> createState() => _MyPageState();
 }
 
-class _MyPageState extends State<MyPage> {
+class _MyPageState extends State<MyPage> with PersonalMixin {
   static final double gutter = 4;
-
+  int rid = 1;
   String balance = "0.0";
-
+  String age = "0";
+  String invitationCode = "000000";
+  String nickName = "";
+  String phone = "";
+  String pic = "";
+  String sexStr = "";
+  String uName = "";
+  String vipStr = "";
+  String rolesStr = "";
+  double services = 0.0;
+  double crafts = 0.0;
   static const int APPBAR_SCROLL_OFFSET = 50;
 
   double alphaAppBar = 0;
+
+  void getMyInfo() {
+    getPersonal(successCallBack: (data) {
+       var user = data["user"];
+       var wallet = data["wallet"];
+       var master = data["master"];
+       services = double.parse(master["services"]);
+       crafts = double.parse(master["crafts"]);
+       balance = wallet["walletBalance"].toString();
+       age = user["age"].toString();
+       invitationCode = user["invitationCode"];
+       nickName = user["nickName"];
+       phone = user["phone"];
+       pic = user["pic"];
+       sexStr = user["sexStr"];
+       uName = user["uName"];
+       rid = user["rid"];
+       vipStr = user["vipStr"];
+       rolesStr = user["rolesStr"];
+    }, errorCallBack: (code, msg) {
+      print(msg);
+    });
+  }
+
+  @override
+  void initState() {
+    getMyInfo();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,14 +151,13 @@ class _MyPageState extends State<MyPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                  "https://img1.baidu.com/it/u=105496718,1970821593&fm=26&fmt=auto"),
+                              backgroundImage: NetworkImage(Config.BASE_URL+pic),
                               radius: 20,
                             ),
                             Container(
                               margin: EdgeInsets.symmetric(horizontal: 8),
                               child: Text(
-                                "xxx人",
+                                uName,
                                 style: TextStyle(fontSize: 20),
                               ),
                             ),
@@ -137,8 +178,7 @@ class _MyPageState extends State<MyPage> {
     Color tapedColor = CupertinoColors.white.withAlpha(100);
     bool taped = false;
     return GestureDetector(
-      onTap: () {
-      },
+      onTap: () {},
       onTapDown: (e) {
         setState(() {
           taped = true;
@@ -152,7 +192,8 @@ class _MyPageState extends State<MyPage> {
       child: Container(
         height: 100,
         decoration: BoxDecoration(
-            color: taped?tapedColor:Colors.white, borderRadius: BorderRadius.circular(12)),
+            color: taped ? tapedColor : Colors.white,
+            borderRadius: BorderRadius.circular(12)),
         margin: EdgeInsets.only(bottom: gutter),
         padding: EdgeInsets.symmetric(horizontal: 8),
         child: Row(
@@ -162,8 +203,7 @@ class _MyPageState extends State<MyPage> {
             Row(
               children: [
                 CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      "https://img1.baidu.com/it/u=105496718,1970821593&fm=26&fmt=auto"),
+                  backgroundImage: NetworkImage(Config.BASE_URL+pic),
                   backgroundColor: CupertinoColors.white,
                   minRadius: 40,
                 ),
@@ -177,14 +217,14 @@ class _MyPageState extends State<MyPage> {
                         children: [
                           Container(
                             child: Text(
-                              "xxx人",
+                              uName,
                               style: TextStyle(fontSize: 30),
                             ),
                           ),
                           Container(
                             padding: EdgeInsets.all(gutter),
                             child: Text(
-                              "00岁",
+                              age +" 岁",
                               style: TextStyle(
                                   fontSize: 12,
                                   color: CupertinoColors.inactiveGray),
@@ -196,7 +236,7 @@ class _MyPageState extends State<MyPage> {
                         children: [
                           Container(
                             child: Text(
-                              "身份：${'某某身份'}",
+                              "身份："+rolesStr,
                               style: TextStyle(fontSize: 12),
                             ),
                           ),
@@ -235,7 +275,9 @@ class _MyPageState extends State<MyPage> {
   Widget _score() {
     var likeScore = 3.0;
     var serveScore = 3.0;
-
+    if (rid == 1){
+      return Container();
+    }
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -269,9 +311,9 @@ class _MyPageState extends State<MyPage> {
                         "好评数",
                         style: TextStyle(fontSize: 14),
                       ),
-                      _starScoreWidget(5, 20.0, likeScore),
+                      _starScoreWidget(5, 20.0, crafts),
                       Text(
-                        likeScore.toString(),
+                        crafts.toString(),
                         style: TextStyle(fontSize: 15),
                       ),
                     ],
@@ -284,9 +326,9 @@ class _MyPageState extends State<MyPage> {
                         "服务分",
                         style: TextStyle(fontSize: 14),
                       ),
-                      _starScoreWidget(5, 20.0, likeScore),
+                      _starScoreWidget(5, 20.0, services),
                       Text(
-                        likeScore.toString(),
+                        services.toString(),
                         style: TextStyle(fontSize: 15),
                       ),
                     ],
@@ -398,7 +440,9 @@ class _MyPageState extends State<MyPage> {
             flex: 1,
             child: TextButton(
               style: mainButtonStyle(),
-              onPressed: () {},
+              onPressed: () {
+                getMyInfo();
+              },
               child: Column(
                 children: [
                   Icon(
@@ -408,7 +452,7 @@ class _MyPageState extends State<MyPage> {
                   ),
                   Text("会员等级"),
                   Text(
-                    "黄金会员",
+                    vipStr,
                     style: TextStyle(
                         fontSize: 12, color: CupertinoColors.inactiveGray),
                   )
@@ -511,7 +555,7 @@ class _MyPageState extends State<MyPage> {
             child: ListTile(
               leading: Icon(Icons.record_voice_over),
               title: Text("我的邀请码"),
-              trailing: Text("336402"),
+              trailing: Text(invitationCode),
             ),
           ),
           Padding(
