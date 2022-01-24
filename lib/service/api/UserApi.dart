@@ -1,12 +1,14 @@
 import 'package:fixtures/service/base/HttpManager.dart';
 
 mixin UserApi {
-  /// 获取用户信息
-  getProfile(
+  /// get
+  void getPersonal(
       {required SuccessCallBack successCallBack,
       ErrorCallBack? errorCallBack}) async {
     return BaseNet.instance.get(
-        url: '/api/v1/appUser/getProfile',
+        url: '/api/v1/appUser/get_profile',
+        // 不是map需序列化为map
+        params: {},
         successCallBack: successCallBack,
         errorCallBack: errorCallBack);
   }

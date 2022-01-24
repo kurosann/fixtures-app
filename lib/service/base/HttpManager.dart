@@ -227,7 +227,7 @@ mixin FromJson {
 }
 
 class ResultCode {
-  //正常返回是1
+  //正常返回是200
   static const SUCCESS = 200;
 
   //异常返回是0

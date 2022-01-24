@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:fixtures/Localizations/AppGlobalCupertinoLocalizationsDelegate.dart';
 import 'package:fixtures/model/AreaModel.dart';
 import 'package:fixtures/service/api/FileApi.dart';
-import 'package:fixtures/service/api/MyInfoApi.dart';
+import 'package:fixtures/service/api/UserApi.dart';
 import 'package:fixtures/utils/util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +20,7 @@ class EditPersonalPage extends StatefulWidget {
 }
 
 class _EditPersonalPageState extends State<EditPersonalPage>
-    with FileMixin, PersonalMixin {
+    with FileMixin, UserApi {
   Future<XFile?>? _imagePath;
 
   var _image;
@@ -71,31 +71,31 @@ class _EditPersonalPageState extends State<EditPersonalPage>
   double alphaAppBar = 0;
 
   void getMyInfo() {
-     getPersonal(successCallBack: (data) {
-       setState(() {
-      var user = data["user"];
-      var wallet = data["wallet"];
-      var master = data["master"];
-      services = double.parse(master["services"]);
-      crafts = double.parse(master["crafts"]);
-      balance = wallet["walletBalance"].toString();
-      age = user["age"].toString();
-      invitationCode = user["invitationCode"];
-      _nickNameController.text = user["nickName"];
-      phone = user["phone"];
-      pic = user["pic"];
-      sexStr = user["sexStr"];
-      sex = user["sex"] == 1 ?false:true;
-      uName = user["uName"];
-      rid = user["rid"];
-      vipStr = user["vipStr"];
-      rolesStr = user["rolesStr"];
-      birthday = user["birthday"];
-      _birthDayController.text = birthday;
-      subLocalList = locals[1].children!;
-      _localTextController.text ="广东深圳";
-      print(subLocalList);
-       });
+    getPersonal(successCallBack: (data) {
+      setState(() {
+        var user = data["user"];
+        var wallet = data["wallet"];
+        var master = data["master"];
+        services = double.parse(master["services"]);
+        crafts = double.parse(master["crafts"]);
+        balance = wallet["walletBalance"].toString();
+        age = user["age"].toString();
+        invitationCode = user["invitationCode"];
+        _nickNameController.text = user["nickName"];
+        phone = user["phone"];
+        pic = user["pic"];
+        sexStr = user["sexStr"];
+        sex = user["sex"] == 1 ? false : true;
+        uName = user["uName"];
+        rid = user["rid"];
+        vipStr = user["vipStr"];
+        rolesStr = user["rolesStr"];
+        birthday = user["birthday"];
+        _birthDayController.text = birthday;
+        subLocalList = locals[1].children!;
+        _localTextController.text = "广东深圳";
+        print(subLocalList);
+      });
     }, errorCallBack: (code, msg) {
       print(msg);
     });
@@ -186,7 +186,7 @@ class _EditPersonalPageState extends State<EditPersonalPage>
               backgroundImage: FileImage(File(snapshot.data!.path)));
         } else {
           return CircleAvatar(
-            backgroundImage: NetworkImage(Config.BASE_URL+pic),
+            backgroundImage: NetworkImage(Config.BASE_URL + pic),
             radius: 40,
           );
         }

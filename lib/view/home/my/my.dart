@@ -1,8 +1,7 @@
-import 'dart:ffi';
 import 'dart:ui';
 
-import 'package:fixtures/service/api/MyInfoApi.dart';
-import 'package:fixtures/utils/util.dart';
+import 'package:fixtures/config.dart';
+import 'package:fixtures/service/api/UserApi.dart';
 import 'package:fixtures/view/editPersonal/editPersonal.dart';
 import 'package:fixtures/view/home/home.dart';
 import 'package:fixtures/view/home/my/balance.dart';
@@ -12,8 +11,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import '../../../config.dart';
 
 class MyPage extends StatefulWidget {
   static MyPage? _instance;
@@ -29,7 +26,7 @@ class MyPage extends StatefulWidget {
   State<StatefulWidget> createState() => _MyPageState();
 }
 
-class _MyPageState extends State<MyPage> with PersonalMixin {
+class _MyPageState extends State<MyPage> with UserApi {
   static final double gutter = 4;
   int rid = 1;
   String balance = "0.0";
@@ -50,22 +47,22 @@ class _MyPageState extends State<MyPage> with PersonalMixin {
 
   void getMyInfo() {
     getPersonal(successCallBack: (data) {
-       var user = data["user"];
-       var wallet = data["wallet"];
-       var master = data["master"];
-       services = double.parse(master["services"]);
-       crafts = double.parse(master["crafts"]);
-       balance = wallet["walletBalance"].toString();
-       age = user["age"].toString();
-       invitationCode = user["invitationCode"];
-       nickName = user["nickName"];
-       phone = user["phone"];
-       pic = user["pic"];
-       sexStr = user["sexStr"];
-       uName = user["uName"];
-       rid = user["rid"];
-       vipStr = user["vipStr"];
-       rolesStr = user["rolesStr"];
+      var user = data["user"];
+      var wallet = data["wallet"];
+      var master = data["master"];
+      services = double.parse(master["services"]);
+      crafts = double.parse(master["crafts"]);
+      balance = wallet["walletBalance"].toString();
+      age = user["age"].toString();
+      invitationCode = user["invitationCode"];
+      nickName = user["nickName"];
+      phone = user["phone"];
+      pic = user["pic"];
+      sexStr = user["sexStr"];
+      uName = user["uName"];
+      rid = user["rid"];
+      vipStr = user["vipStr"];
+      rolesStr = user["rolesStr"];
     }, errorCallBack: (code, msg) {
       print(msg);
     });
@@ -151,7 +148,8 @@ class _MyPageState extends State<MyPage> with PersonalMixin {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             CircleAvatar(
-                              backgroundImage: NetworkImage(Config.BASE_URL+pic),
+                              backgroundImage:
+                                  NetworkImage(Config.BASE_URL + pic),
                               radius: 20,
                             ),
                             Container(
@@ -203,7 +201,7 @@ class _MyPageState extends State<MyPage> with PersonalMixin {
             Row(
               children: [
                 CircleAvatar(
-                  backgroundImage: NetworkImage(Config.BASE_URL+pic),
+                  backgroundImage: NetworkImage(Config.BASE_URL + pic),
                   backgroundColor: CupertinoColors.white,
                   minRadius: 40,
                 ),
@@ -224,7 +222,7 @@ class _MyPageState extends State<MyPage> with PersonalMixin {
                           Container(
                             padding: EdgeInsets.all(gutter),
                             child: Text(
-                              age +" 岁",
+                              age + " 岁",
                               style: TextStyle(
                                   fontSize: 12,
                                   color: CupertinoColors.inactiveGray),
@@ -236,7 +234,7 @@ class _MyPageState extends State<MyPage> with PersonalMixin {
                         children: [
                           Container(
                             child: Text(
-                              "身份："+rolesStr,
+                              "身份：" + rolesStr,
                               style: TextStyle(fontSize: 12),
                             ),
                           ),
@@ -275,7 +273,7 @@ class _MyPageState extends State<MyPage> with PersonalMixin {
   Widget _score() {
     var likeScore = 3.0;
     var serveScore = 3.0;
-    if (rid == 1){
+    if (rid == 1) {
       return Container();
     }
     return Container(
@@ -340,11 +338,6 @@ class _MyPageState extends State<MyPage> with PersonalMixin {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 color: Color.fromARGB(255, 240, 240, 240),
-//                    border: Border.all(
-//                      color: Color.fromARGB(255, 240, 240, 240),
-//                      width: 1,
-//                      style: BorderStyle.solid,
-//                    )
               ),
               margin: EdgeInsets.symmetric(horizontal: 4),
               padding: EdgeInsets.symmetric(horizontal: 4),
@@ -383,11 +376,6 @@ class _MyPageState extends State<MyPage> with PersonalMixin {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-//          border: Border.all(
-//            color: Color.fromARGB(255, 200, 200, 200),
-//            width: 1,
-//            style: BorderStyle.solid,
-//          )
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -395,7 +383,9 @@ class _MyPageState extends State<MyPage> with PersonalMixin {
           Expanded(
             flex: 1,
             child: Container(
-              child: TextButton(
+              child: CupertinoButton(
+                  minSize: 0,
+                  padding: EdgeInsets.all(0),
                   onPressed: () {
                     Navigator.of(allContext!).push(CupertinoPageRoute(
                       builder: (context) {
@@ -403,7 +393,6 @@ class _MyPageState extends State<MyPage> with PersonalMixin {
                       },
                     ));
                   },
-                  style: mainButtonStyle(),
                   child: Column(
                     children: [
                       Icon(
@@ -411,7 +400,10 @@ class _MyPageState extends State<MyPage> with PersonalMixin {
                         size: 40,
                         color: CupertinoTheme.of(context).primaryColor,
                       ),
-                      Text("余额"),
+                      Text(
+                        "余额",
+                        style: TextStyle(fontSize: 14, color: Colors.black87),
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.end,
@@ -438,11 +430,13 @@ class _MyPageState extends State<MyPage> with PersonalMixin {
           ),
           Expanded(
             flex: 1,
-            child: TextButton(
-              style: mainButtonStyle(),
+            child: CupertinoButton(
+              minSize: 0,
+              padding: EdgeInsets.all(0),
               onPressed: () {
                 getMyInfo();
               },
+              pressedOpacity: 0.6,
               child: Column(
                 children: [
                   Icon(
@@ -450,7 +444,10 @@ class _MyPageState extends State<MyPage> with PersonalMixin {
                     size: 40,
                     color: CupertinoTheme.of(context).primaryColor,
                   ),
-                  Text("会员等级"),
+                  Text(
+                    "会员等级",
+                    style: TextStyle(fontSize: 14, color: Colors.black87),
+                  ),
                   Text(
                     vipStr,
                     style: TextStyle(
@@ -465,147 +462,138 @@ class _MyPageState extends State<MyPage> with PersonalMixin {
     );
   }
 
+  Widget _actionCell(
+      {required IconData icon,
+      required String title,
+      required Widget tailing,
+      required onPressed}) {
+    return Container(
+      color: CupertinoColors.lightBackgroundGray,
+      child: CupertinoButton(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(0),
+        padding: EdgeInsets.all(8),
+        onPressed: onPressed,
+        child: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    icon,
+                    color: CupertinoColors.inactiveGray,
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(
+                      title,
+                      style: TextStyle(fontSize: 14, color: Colors.black87),
+                    ),
+                  ),
+                ],
+              ),
+              tailing
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _actionList() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: gutter),
-      padding: EdgeInsets.all(gutter),
-      decoration: BoxDecoration(
-        color: Colors.white,
+      child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
-//          border: Border.all(
-//            color: Color.fromARGB(255, 200, 200, 200),
-//            width: 1,
-//            style: BorderStyle.solid,
-//          )
-      ),
-      child: Column(
-        children: [
-//          TextButton(
-//            style: mainButtonStyle(),
-//            onPressed: () {
-//              Navigator.of(allContext!)
-//                  .push(CupertinoPageRoute(builder: (BuildContext context) {
-//                return CupertinoPageScaffold(
-//                  child: Container(),
-//                );
-//              }));
-//            },
-//            child: ListTile(
-//              leading: Icon(Icons.person),
-//              title: Text("我的会员"),
-//              subtitle: Text("黄金会员"),
-//              trailing: Text("去升级"),
-//            ),
-//          ),
-//          Divider(
-//            height: 1.0,
-//          ),
-//          TextButton(
-//            style: mainButtonStyle(),
-//            onPressed: () {
-//              Navigator.of(allContext!)
-//                  .push(CupertinoPageRoute(builder: (BuildContext context) {
-//                return CupertinoPageScaffold(
-//                  child: Container(),
-//                );
-//              }));
-//            },
-//            child: ListTile(
-//              leading: Icon(Icons.file_upload),
-//              title: Text("余额提现"),
-//              trailing: Text("提现"),
-//            ),
-//          ),
-//          Divider(
-//            height: 1.0,
-//          ),
-          TextButton(
-            style: mainButtonStyle(),
-            onPressed: () {
-              Navigator.of(allContext!)
-                  .push(CupertinoPageRoute(builder: (BuildContext context) {
-                return SharePage();
-              }));
-            },
-            child: ListTile(
-              leading: Icon(Icons.share),
-              title: Text("邀请二维码"),
-              trailing: Icon(
-                CupertinoIcons.forward,
-                size: 16,
+        child: Column(
+          children: [
+            _actionCell(
+                icon: Icons.share,
+                title: "邀请二维码",
+                tailing: Icon(
+                  CupertinoIcons.forward,
+                  size: 16,
+                  color: CupertinoColors.inactiveGray,
+                ),
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true)
+                      .push(CupertinoPageRoute(builder: (BuildContext context) {
+                    return SharePage();
+                  }));
+                }),
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.only(left: 32),
+              child: Divider(
+                height: 1.0,
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: Divider(
-              height: 1.0,
+            _actionCell(
+              icon: Icons.record_voice_over,
+              title: "我的邀请码",
+              tailing: Text(
+                invitationCode,
+                style: TextStyle(color: CupertinoColors.inactiveGray),
+              ),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true)
+                    .push(CupertinoPageRoute(builder: (BuildContext context) {
+                  return CupertinoPageScaffold(
+                    child: Container(),
+                  );
+                }));
+              },
             ),
-          ),
-          TextButton(
-            style: mainButtonStyle(),
-            onPressed: () {
-              Navigator.of(allContext!)
-                  .push(CupertinoPageRoute(builder: (BuildContext context) {
-                return CupertinoPageScaffold(
-                  child: Container(),
-                );
-              }));
-            },
-            child: ListTile(
-              leading: Icon(Icons.record_voice_over),
-              title: Text("我的邀请码"),
-              trailing: Text(invitationCode),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: Divider(
-              height: 1.0,
-            ),
-          ),
-          TextButton(
-            style: mainButtonStyle(),
-            onPressed: () {
-              Navigator.of(allContext!)
-                  .push(CupertinoPageRoute(builder: (BuildContext context) {
-                return EditPersonalPage();
-              }));
-            },
-            child: ListTile(
-              leading: Icon(Icons.description),
-              title: Text("填写资料"),
-              trailing: Icon(
-                CupertinoIcons.forward,
-                size: 16,
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.only(left: 32),
+              child: Divider(
+                height: 1.0,
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: Divider(
-              height: 1.0,
-            ),
-          ),
-          TextButton(
-            style: mainButtonStyle(),
-            onPressed: () {
-              Navigator.of(allContext!).push(CupertinoPageRoute(
-                builder: (context) {
-                  return SettingPage();
-                },
-              ));
-            },
-            child: ListTile(
-              leading: Icon(Icons.settings),
-              title: Text("设置"),
-              trailing: Icon(
+            _actionCell(
+              icon: Icons.description,
+              title: "填写资料",
+              tailing: Icon(
                 CupertinoIcons.forward,
                 size: 16,
+                color: CupertinoColors.inactiveGray,
+              ),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true)
+                    .push(CupertinoPageRoute(builder: (BuildContext context) {
+                  return EditPersonalPage();
+                }));
+              },
+            ),
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.only(left: 32),
+              child: Divider(
+                height: 1.0,
               ),
             ),
-          ),
-        ],
+            _actionCell(
+              icon: Icons.settings,
+              title: "设置",
+              tailing: Icon(
+                CupertinoIcons.forward,
+                size: 16,
+                color: CupertinoColors.inactiveGray,
+              ),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true)
+                    .push(CupertinoPageRoute(
+                  builder: (context) {
+                    return SettingPage();
+                  },
+                ));
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

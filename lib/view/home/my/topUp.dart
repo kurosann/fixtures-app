@@ -25,147 +25,166 @@ class _TopUpPageState extends State<TopUpPage> {
     return CupertinoPageScaffold(
         backgroundColor: CupertinoColors.lightBackgroundGray,
         navigationBar: CupertinoNavigationBar(
+          previousPageTitle: '余额',
           middle: Text("充值"),
         ),
         child: SafeArea(
-          child: ListView(
-            children: [
-              Container(
-                padding: EdgeInsets.all(24),
-                child: Row(children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "充值方式",
-                        style: TextStyle(fontSize: 14),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          _showPopupModel(context);
-                        },
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: way == 0
-                                  ? Icon(
-                                      FontAwesomeIcons.weixin,
-                                      color: Colors.green,
-                                    )
-                                  : Icon(
-                                      FontAwesomeIcons.alipay,
-                                      color: Colors.blue,
-                                    ),
-                            ),
-                            Text(
-                              way == 0 ? "微信" : "支付宝",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  color: way == 0 ? Colors.green : Colors.blue),
-                            ),
-                            Icon(
-                              CupertinoIcons.forward,
-                              color: Colors.grey,
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
-                ]),
-              ),
-              Container(
-                margin: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: Color.fromARGB(255, 242, 242, 243),
-                    width: 0,
+          child: GestureDetector(
+            onPanDown: (_) => FocusScope.of(context).requestFocus(FocusNode()),
+            child: ListView(
+              children: [
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(14),
-                      child: Row(
+                  child: Row(children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "充值金额",
+                            "充值方式",
                             style: TextStyle(fontSize: 14),
                           ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: CupertinoTextField(
-                        clearButtonMode: OverlayVisibilityMode.editing,
-                        textInputAction: TextInputAction.done,
-                        keyboardType: TextInputType.number,
-                        controller: _controller,
-                        autofocus: true,
-                        prefix: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text(
-                            "￥",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                        ),
-                        decoration: BoxDecoration(),
-                        style: TextStyle(fontSize: 34),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Divider(
-                        height: 1,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            "账户余额：",
-                            style: TextStyle(fontSize: 14),
-                          ),
-                          Hero(
-                            tag: 'balance',
-                            child: Text(
-                              balance,
-                              style: TextStyle(fontSize: 14),
+                          CupertinoButton(
+                            padding: EdgeInsets.all(0),
+                            onPressed: () {
+                              _showPopupModel(context);
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: way == 0
+                                          ? Icon(
+                                        FontAwesomeIcons.weixin,
+                                        color: Colors.green,
+                                      )
+                                          : Icon(
+                                        FontAwesomeIcons.alipay,
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                                    Text(
+                                      way == 0 ? "微信" : "支付宝",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          height: 1.1,
+                                          color: way == 0
+                                              ? Colors.green
+                                              : Colors.blue),
+                                    )
+                                  ],
+                                ),
+                                Expanded(child: Container()),
+                                Icon(
+                                  CupertinoIcons.forward,
+                                  color: Colors.grey,
+                                  size: 22,
+                                )
+                              ],
                             ),
-                          ),
-                          Text(
-                            "￥",
-                            style: TextStyle(fontSize: 12),
                           ),
                         ],
                       ),
                     )
-                  ],
+                  ]),
                 ),
-              ),
-              Container(
-                padding: EdgeInsets.all(10),
-                child: Hero(
-                  tag: 'TopUp',
-                  child: CupertinoButton.filled(
-                      child: Row(
-                        children: [
-                          Expanded(child: Container()),
-                          Text("充值"),
-                          Expanded(child: Container()),
-                        ],
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(14),
+                        child: Row(
+                          children: [
+                            Text(
+                              "充值金额",
+                              style: TextStyle(fontSize: 14),
+                            ),
+                          ],
+                        ),
                       ),
-                      onPressed: () {}),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: CupertinoTextField(
+                          clearButtonMode: OverlayVisibilityMode.editing,
+                          textInputAction: TextInputAction.done,
+                          keyboardType: TextInputType.number,
+                          controller: _controller,
+                          autofocus: true,
+                          prefix: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0),
+                            child: Text(
+                              "￥",
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                          decoration: BoxDecoration(),
+                          style: TextStyle(fontSize: 34),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Divider(
+                          height: 1,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              "账户余额：",
+                              style: TextStyle(fontSize: 14),
+                            ),
+                            Hero(
+                              tag: 'balance',
+                              child: Text(
+                                balance,
+                                style: TextStyle(fontSize: 14),
+                              ),
+                            ),
+                            Text(
+                              "￥",
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              )
-            ],
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 8, vertical: 32),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Hero(
+                        tag: 'TopUp',
+                        child: CupertinoButton.filled(
+                            child: Text("充值"),
+                            onPressed: () {}),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ));
   }
@@ -206,6 +225,7 @@ class _TopUpPageState extends State<TopUpPage> {
       },
     );
   }
+
 //  void toAlipay() async {
 //    tobias.isAliPayInstalled().then((value) => { // 判断是否安装了支付宝
 //      if (!value) {
@@ -225,13 +245,14 @@ class _TopUpPageState extends State<TopUpPage> {
 //  }
 
   void showAlert(title) {
-    showCupertinoDialog(context: context, builder: (context) {
-      return CupertinoAlertDialog(
-        title: Text(title),
-        actions: [
-          CupertinoDialogAction(child: Text("确定"))
-        ],
-      );
-    },);
+    showCupertinoDialog(
+      context: context,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          title: Text(title),
+          actions: [CupertinoDialogAction(child: Text("确定"))],
+        );
+      },
+    );
   }
 }

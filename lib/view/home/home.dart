@@ -23,7 +23,6 @@ class _HomePage extends State<HomePage> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     allContext = context;
     return CupertinoPageScaffold(
-      resizeToAvoidBottomInset: false,
       child: SafeArea(
           child: _bottomNavigationBar()),
 //        bottomNavigationBar: _bottomNavigationBar()

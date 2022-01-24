@@ -58,7 +58,7 @@ class SettingPage extends StatelessWidget {
                   size: 16,
                 ),
                 onTap: () {
-                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                  Navigator.of(context).pushAndRemoveUntil(CupertinoPageRoute(builder: (context) =>
                       Login()), (Route<dynamic> route) => false);
 
                   // Navigator.of(allContext!).pushAndRemoveUtil(CupertinoPageRoute(

@@ -17,14 +17,14 @@ class NetServiceFreshPanel extends StatefulWidget {
   /// 网络请求 为空可使用[state]控制
   final NetCallback? onRequest;
 
-  /// 页面状态为 [NetServiceState.STATE_SUCCESS] 时显示 [child]
+  /// 页面状态为 [NetServiceState.SUCCESS] 时显示 [child]
   final NetServiceState state;
 
   /// 状态面板背景色 不设置则为Theme的appbar背景色
   final Color? backgroundColor;
 
   NetServiceFreshPanel(
-      {this.state = NetServiceState.STATE_ING,
+      {this.state = NetServiceState.PROCESS,
       required this.child,
       this.loadingPanel,
       this.backgroundColor,
@@ -44,26 +44,26 @@ class _NetServiceRefresh extends State<NetServiceFreshPanel> {
 
   final Color? backgroundColor;
 
-  NetCallback? getData;
+  NetCallback? onRequest;
 
   _NetServiceRefresh(this.state, this.child, this.loadingPanel,
-      this.backgroundColor, this.getData);
+      this.backgroundColor, this.onRequest);
 
   void _refresh() async {
     setState(() {
-      state = NetServiceState.STATE_ING;
+      state = NetServiceState.PROCESS;
     });
-    Result data = await getData!();
+    Result data = await onRequest!();
     setState(() {
-      state = data.code == ResultCode.SUCCESS
-          ? NetServiceState.STATE_SUCCESS
-          : NetServiceState.STATE_ERROR;
+      state = (data.code == ResultCode.SUCCESS)
+          ? NetServiceState.SUCCESS
+          : NetServiceState.ERROR;
     });
   }
 
   @override
   void initState() {
-    if (getData != null) _refresh();
+    if (onRequest != null) _refresh();
   }
 
   @override
@@ -75,7 +75,7 @@ class _NetServiceRefresh extends State<NetServiceFreshPanel> {
         alignment: AlignmentDirectional.center,
         children: [
           child,
-          state == NetServiceState.STATE_ING
+          state == NetServiceState.PROCESS
               ? loadingPanel != null
                   ? loadingPanel!
                   : BackdropFilter(
@@ -88,7 +88,7 @@ class _NetServiceRefresh extends State<NetServiceFreshPanel> {
                         child: CupertinoActivityIndicator(),
                       ),
                     )
-              : state == NetServiceState.STATE_ERROR
+              : state == NetServiceState.ERROR
                   ? BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                       child: Container(
@@ -122,11 +122,11 @@ class _NetServiceRefresh extends State<NetServiceFreshPanel> {
 
 enum NetServiceState {
   /// 请求成功
-  STATE_SUCCESS,
+  SUCCESS,
 
   ///请求失败
-  STATE_ERROR,
+  ERROR,
 
   ///请求中
-  STATE_ING
+  PROCESS
 }

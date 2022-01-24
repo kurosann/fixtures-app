@@ -28,14 +28,12 @@ class _BalancePageState extends State<BalancePage> {
       child: SafeArea(
         child: ListView(children: [
           Container(
-            height: 300,
-            margin: EdgeInsets.all(10),
+            height: 340,
+            margin: EdgeInsets.all(16),
+            padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: Color.fromARGB(255, 242, 242, 243),
-              ),
             ),
             child: Column(
               children: [
@@ -79,26 +77,25 @@ class _BalancePageState extends State<BalancePage> {
                             child: Text("充值"),
                             onPressed: () {
                               Navigator.of(context).push(CupertinoPageRoute(
-                                builder: (context) {
-                                  return TopUpPage(balance);
-                                },
+                                builder: (context) => TopUpPage(balance),
                               ));
                             }),
                       ),
                       Expanded(child: Container()),
-                      CupertinoButton(
-                          color: Colors.grey.shade200,
-                          child: Text(
-                            "提现",
-                            style: TextStyle(color: Colors.black87),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).push(CupertinoPageRoute(
-                              builder: (context) {
-                                return WithdrawPage(balance);
-                              },
-                            ));
-                          }),
+                      Hero(
+                        tag: 'Withdraw',
+                        child: CupertinoButton(
+                            color: Colors.grey.shade200,
+                            child: Text(
+                              "提现",
+                              style: TextStyle(color: Colors.black87),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).push(CupertinoPageRoute(
+                                builder: (context) => WithdrawPage(balance),
+                              ));
+                            }),
+                      ),
                     ],
                   ),
                 ),

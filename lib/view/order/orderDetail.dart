@@ -41,7 +41,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   Divider(height: 1,),
                   _itemCard("优惠", "10元"),
                   Divider(height: 1,),
-                  _totalCard("应付款总额", "￥10元", "(含税费 ￥0.00)"),
+                  _totalCard("应付款总额", "￥${10}元", "(含税费 ￥${0.00})"),
                 ])),
             _actionList(),
             _submitOrder()
@@ -181,7 +181,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             },
             child: ListTile(
               selected: _checkboxAliPay,
-              selectedTileColor: aliPayActive,
+              selectedColor: aliPayActive,
               minLeadingWidth: 10,
               leading: Icon(
                 FontAwesomeIcons.alipay,
@@ -212,7 +212,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               autofocus: true,
               minLeadingWidth: 10,
               selected: _checkBoxWeiXin,
-              selectedTileColor: weixinSelectColor,
+              selectedColor: weixinSelectColor,
               leading: Icon(
                 FontAwesomeIcons.weixin,
                 color: weixinColor,

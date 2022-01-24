@@ -68,11 +68,12 @@ class _ShareState extends State<SharePage> {
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Color.fromARGB(255, 200, 200, 200),
-                        width: 1,
-                        style: BorderStyle.solid,
-                      )),
+//                      border: Border.all(
+//                        color: Color.fromARGB(255, 200, 200, 200),
+//                        width: 1,
+//                        style: BorderStyle.solid,
+//                      )
+                  ),
                   child: Column(
                     children: [
                       Container(
@@ -197,11 +198,12 @@ class _ShareState extends State<SharePage> {
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Color.fromARGB(255, 200, 200, 200),
-                        width: 1,
-                        style: BorderStyle.solid,
-                      )),
+//                      border: Border.all(
+//                        color: Color.fromARGB(255, 200, 200, 200),
+//                        width: 1,
+//                        style: BorderStyle.solid,
+//                      )
+                  ),
                   child: Column(
                     children: [
                       Container(
