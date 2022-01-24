@@ -66,4 +66,30 @@ mixin LoginMixin {
         successCallBack: successCallBack,
         errorCallBack: errorCallBack);
   }
+
+  /// post
+  void sendResetPasswordSms(
+      {required SuccessCallBack successCallBack,
+      ErrorCallBack? errorCallBack}) async {
+    BaseNet.instance.post(
+        url: '/api/v1/appUser/send_reset',
+        // 不是map需序列化为map
+        params: {},
+        successCallBack: successCallBack,
+        errorCallBack: errorCallBack);
+  }
+
+  /// post
+  void resetPasswordSms(
+      { required SmsLoginModel params,
+        required SuccessCallBack successCallBack,
+        ErrorCallBack? errorCallBack}) async {
+    BaseNet.instance.post(
+        url: '/api/v1/appUser/reset_password',
+        // 不是map需序列化为map
+        params:params.toJson(),
+        successCallBack: successCallBack,
+        errorCallBack: errorCallBack);
+  }
 }
+

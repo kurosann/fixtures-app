@@ -1,5 +1,6 @@
 import 'package:fixtures/view/home/home.dart';
 import 'package:fixtures/view/login/login.dart';
+import 'package:fixtures/view/setting/rePassword.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +26,7 @@ class SettingPage extends StatelessWidget {
                   Navigator.of(allContext!)
                       .push(CupertinoPageRoute(builder: (BuildContext context) {
                     return CupertinoPageScaffold(
-                      child: Container(),
+                      child: RePassWord(),
                     );
                   }));
                 },

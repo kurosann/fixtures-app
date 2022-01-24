@@ -47,22 +47,24 @@ class _MyPageState extends State<MyPage> with UserApi {
 
   void getMyInfo() {
     getPersonal(successCallBack: (data) {
-      var user = data["user"];
-      var wallet = data["wallet"];
-      var master = data["master"];
-      services = double.parse(master["services"]);
-      crafts = double.parse(master["crafts"]);
-      balance = wallet["walletBalance"].toString();
-      age = user["age"].toString();
-      invitationCode = user["invitationCode"];
-      nickName = user["nickName"];
-      phone = user["phone"];
-      pic = user["pic"];
-      sexStr = user["sexStr"];
-      uName = user["uName"];
-      rid = user["rid"];
-      vipStr = user["vipStr"];
-      rolesStr = user["rolesStr"];
+      setState(() {
+        var user = data["user"];
+        var wallet = data["wallet"];
+        var master = data["master"];
+        services = double.parse(master["services"]);
+        crafts = double.parse(master["crafts"]);
+        balance = wallet["walletBalance"].toString();
+        age = user["age"].toString();
+        invitationCode = user["invitationCode"];
+        nickName = user["nickName"];
+        phone = user["phone"];
+        pic = user["pic"];
+        sexStr = user["sexStr"];
+        uName = user["uName"];
+        rid = user["rid"];
+        vipStr = user["vipStr"];
+        rolesStr = user["rolesStr"];
+      });
     }, errorCallBack: (code, msg) {
       print(msg);
     });
