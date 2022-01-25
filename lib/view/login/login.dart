@@ -1,16 +1,16 @@
 import 'dart:async';
 
+import 'package:fixtures/config.dart';
 import 'package:fixtures/model/LoginModel.dart';
 import 'package:fixtures/service/api/LoginApi.dart';
 import 'package:fixtures/utils/EncryptUtil.dart';
 import 'package:fixtures/utils/SharedPreferencesUtil.dart';
-import 'package:fixtures/utils/util.dart';
+import 'package:fixtures/utils/utils.dart';
 import 'package:fixtures/view/home/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../config.dart';
 import 'loginStyle.dart';
 import 'loginWidget.dart';
 

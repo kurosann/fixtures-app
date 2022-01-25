@@ -1,4 +1,4 @@
-import 'package:fixtures/utils/util.dart';
+import 'package:fixtures/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

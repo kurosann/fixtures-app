@@ -30,7 +30,15 @@ class _TopUpPageState extends State<TopUpPage> {
         ),
         child: SafeArea(
           child: GestureDetector(
-            onPanDown: (_) => FocusScope.of(context).requestFocus(FocusNode()),
+            onPanDown: (_) {
+              FocusScopeNode currentFocus = FocusScope.of(context);
+
+              /// 键盘是否是弹起状态
+              if (!currentFocus.hasPrimaryFocus &&
+                  currentFocus.focusedChild != null) {
+                FocusManager.instance.primaryFocus?.unfocus();
+              }
+            },
             child: ListView(
               children: [
                 Container(
@@ -64,13 +72,13 @@ class _TopUpPageState extends State<TopUpPage> {
                                       padding: const EdgeInsets.all(8.0),
                                       child: way == 0
                                           ? Icon(
-                                        FontAwesomeIcons.weixin,
-                                        color: Colors.green,
-                                      )
+                                              FontAwesomeIcons.weixin,
+                                              color: Colors.green,
+                                            )
                                           : Icon(
-                                        FontAwesomeIcons.alipay,
-                                        color: Colors.blue,
-                                      ),
+                                              FontAwesomeIcons.alipay,
+                                              color: Colors.blue,
+                                            ),
                                     ),
                                     Text(
                                       way == 0 ? "微信" : "支付宝",
@@ -125,8 +133,8 @@ class _TopUpPageState extends State<TopUpPage> {
                           controller: _controller,
                           autofocus: true,
                           prefix: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Text(
                               "￥",
                               style: TextStyle(fontSize: 20),
@@ -177,8 +185,7 @@ class _TopUpPageState extends State<TopUpPage> {
                       Hero(
                         tag: 'TopUp',
                         child: CupertinoButton.filled(
-                            child: Text("充值"),
-                            onPressed: () {}),
+                            child: Text("充值"), onPressed: () {}),
                       ),
                     ],
                   ),

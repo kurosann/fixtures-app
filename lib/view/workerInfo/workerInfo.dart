@@ -1,4 +1,4 @@
-import 'package:fixtures/utils/util.dart';
+import 'package:fixtures/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -15,7 +15,7 @@ class _WorkerInfoPageState extends State<WorkerInfoPage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      backgroundColor: Color.fromARGB(255, 240, 240, 240),
+      backgroundColor: CupertinoColors.lightBackgroundGray,
       navigationBar: CupertinoNavigationBar(
         backgroundColor: Color.fromARGB(0, 0, 0, 0),
       ),

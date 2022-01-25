@@ -35,7 +35,15 @@ class _WithdrawPageState extends State<WithdrawPage> {
         ),
         child: SafeArea(
           child: GestureDetector(
-            onPanDown: (_) => FocusScope.of(context).requestFocus(FocusNode()),
+            onPanDown: (_) {
+              FocusScopeNode currentFocus = FocusScope.of(context);
+
+              /// 键盘是否是弹起状态
+              if (!currentFocus.hasPrimaryFocus &&
+                  currentFocus.focusedChild != null) {
+                FocusManager.instance.primaryFocus?.unfocus();
+              }
+            },
             child: ListView(
               children: [
                 Container(
@@ -105,7 +113,7 @@ class _WithdrawPageState extends State<WithdrawPage> {
                   ]),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 8,vertical: 4),
+                  margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
@@ -132,7 +140,8 @@ class _WithdrawPageState extends State<WithdrawPage> {
                           controller: _controller,
                           autofocus: true,
                           prefix: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Text(
                               "￥",
                               style: TextStyle(fontSize: 20),
@@ -222,7 +231,7 @@ class _WithdrawPageState extends State<WithdrawPage> {
   // color: Color.fromARGB(255, 250, 130, 65)),
   Widget rulesBody() {
     return Container(
-        margin: EdgeInsets.symmetric(horizontal: 8,vertical: 4),
+        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         padding: EdgeInsets.all(10),
         child: Row(children: <Widget>[
           Expanded(

@@ -558,6 +558,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.8.0"
+  tobias:
+    dependency: "direct main"
+    description:
+      name: tobias
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.2.0"
   typed_data:
     dependency: transitive
     description:

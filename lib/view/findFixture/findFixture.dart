@@ -1,11 +1,10 @@
+import 'package:fixtures/config.dart';
 import 'package:fixtures/model/ItemModel.dart';
 import 'package:fixtures/service/api/ItemApi.dart';
-import 'package:fixtures/utils/util.dart';
+import 'package:fixtures/utils/utils.dart';
 import 'package:fixtures/view/findFixture/publish.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../../config.dart';
 
 class FindFixturePage extends StatefulWidget {
   static FindFixturePage? _instance;

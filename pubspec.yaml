@@ -43,6 +43,7 @@ dependencies:
   date_format: ^1.0.8 #https://pub.dev/packages/date_format
   json_annotation: ^4.4.0
   fluwx: ^3.6.1+4
+  tobias: ^2.2.0
   face_net_authentication:
     path: plugin/face_net_authentication
   encrypt: ^5.0.1

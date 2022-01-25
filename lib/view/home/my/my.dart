@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:fixtures/config.dart';
 import 'package:fixtures/service/api/UserApi.dart';
+import 'package:fixtures/utils/utils.dart';
 import 'package:fixtures/view/editPersonal/editPersonal.dart';
 import 'package:fixtures/view/home/home.dart';
 import 'package:fixtures/view/home/my/balance.dart';
@@ -280,17 +281,6 @@ class _MyPageState extends State<MyPage> with UserApi {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-//          boxShadow: [
-//            BoxShadow(
-//                color: Color.fromARGB(255, 200, 200, 200),
-//                blurRadius: 1.0,
-//                spreadRadius: 1.0)
-//          ],
-//          border: Border.all(
-//            color: Color.fromARGB(255, 200, 200, 200),
-//            width: 1,
-//            style: BorderStyle.solid,
-//          )
       ),
       margin: EdgeInsets.symmetric(vertical: gutter),
       child: Padding(
@@ -462,56 +452,60 @@ class _MyPageState extends State<MyPage> with UserApi {
     );
   }
 
-  Widget _actionCell(
-      {required IconData icon,
-      required String title,
-      required Widget tailing,
-      required onPressed}) {
-    return Container(
-      color: CupertinoColors.lightBackgroundGray,
-      child: CupertinoButton(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(0),
-        padding: EdgeInsets.all(8),
-        onPressed: onPressed,
-        child: Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Icon(
-                    icon,
-                    color: CupertinoColors.inactiveGray,
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 8),
-                    child: Text(
-                      title,
-                      style: TextStyle(fontSize: 14, color: Colors.black87),
-                    ),
-                  ),
-                ],
-              ),
-              tailing
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _actionList() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: gutter),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
-        child: Column(
-          children: [
-            _actionCell(
-                icon: Icons.share,
-                title: "邀请二维码",
+        child: Container(
+          color: CupertinoColors.white,
+          child: Column(
+            children: [
+              actionCell(
+                  icon: Icons.share,
+                  title: "邀请二维码",
+                  tailing: Icon(
+                    CupertinoIcons.forward,
+                    size: 16,
+                    color: CupertinoColors.inactiveGray,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true)
+                        .push(CupertinoPageRoute(builder: (BuildContext context) {
+                      return SharePage();
+                    }));
+                  }),
+              Container(
+                padding: const EdgeInsets.only(left: 38),
+                child: Divider(
+                  height: 1.0,
+                ),
+              ),
+              actionCell(
+                icon: Icons.record_voice_over,
+                title: "我的邀请码",
+                tailing: Text(
+                  invitationCode,
+                  style: TextStyle(color: CupertinoColors.inactiveGray),
+                ),
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true)
+                      .push(CupertinoPageRoute(builder: (BuildContext context) {
+                    return CupertinoPageScaffold(
+                      child: Container(),
+                    );
+                  }));
+                },
+              ),
+              Container(
+                padding: const EdgeInsets.only(left: 38),
+                child: Divider(
+                  height: 1.0,
+                ),
+              ),
+              actionCell(
+                icon: Icons.description,
+                title: "填写资料",
                 tailing: Icon(
                   CupertinoIcons.forward,
                   size: 16,
@@ -520,79 +514,35 @@ class _MyPageState extends State<MyPage> with UserApi {
                 onPressed: () {
                   Navigator.of(context, rootNavigator: true)
                       .push(CupertinoPageRoute(builder: (BuildContext context) {
-                    return SharePage();
+                    return EditPersonalPage();
                   }));
-                }),
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.only(left: 32),
-              child: Divider(
-                height: 1.0,
+                },
               ),
-            ),
-            _actionCell(
-              icon: Icons.record_voice_over,
-              title: "我的邀请码",
-              tailing: Text(
-                invitationCode,
-                style: TextStyle(color: CupertinoColors.inactiveGray),
+              Container(
+                padding: const EdgeInsets.only(left: 38),
+                child: Divider(
+                  height: 1.0,
+                ),
               ),
-              onPressed: () {
-                Navigator.of(context, rootNavigator: true)
-                    .push(CupertinoPageRoute(builder: (BuildContext context) {
-                  return CupertinoPageScaffold(
-                    child: Container(),
-                  );
-                }));
-              },
-            ),
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.only(left: 32),
-              child: Divider(
-                height: 1.0,
+              actionCell(
+                icon: Icons.settings,
+                title: "设置",
+                tailing: Icon(
+                  CupertinoIcons.forward,
+                  size: 16,
+                  color: CupertinoColors.inactiveGray,
+                ),
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true)
+                      .push(CupertinoPageRoute(
+                    builder: (context) {
+                      return SettingPage();
+                    },
+                  ));
+                },
               ),
-            ),
-            _actionCell(
-              icon: Icons.description,
-              title: "填写资料",
-              tailing: Icon(
-                CupertinoIcons.forward,
-                size: 16,
-                color: CupertinoColors.inactiveGray,
-              ),
-              onPressed: () {
-                Navigator.of(context, rootNavigator: true)
-                    .push(CupertinoPageRoute(builder: (BuildContext context) {
-                  return EditPersonalPage();
-                }));
-              },
-            ),
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.only(left: 32),
-              child: Divider(
-                height: 1.0,
-              ),
-            ),
-            _actionCell(
-              icon: Icons.settings,
-              title: "设置",
-              tailing: Icon(
-                CupertinoIcons.forward,
-                size: 16,
-                color: CupertinoColors.inactiveGray,
-              ),
-              onPressed: () {
-                Navigator.of(context, rootNavigator: true)
-                    .push(CupertinoPageRoute(
-                  builder: (context) {
-                    return SettingPage();
-                  },
-                ));
-              },
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
