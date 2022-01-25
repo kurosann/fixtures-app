@@ -6,6 +6,7 @@ import 'package:fixtures/utils/utils.dart';
 import 'package:fixtures/view/editPersonal/editPersonal.dart';
 import 'package:fixtures/view/home/home.dart';
 import 'package:fixtures/view/home/my/balance.dart';
+import 'package:fixtures/view/home/my/checkBankCard.dart';
 import 'package:fixtures/view/setting/setting.dart';
 import 'package:fixtures/view/share/share.dart';
 import 'package:flutter/cupertino.dart';
@@ -79,7 +80,7 @@ class _MyPageState extends State<MyPage> with UserApi {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-        backgroundColor: CupertinoColors.lightBackgroundGray,
+        backgroundColor: CupertinoColors.systemGroupedBackground,
         child: Stack(
           children: [
             NotificationListener(
@@ -364,92 +365,114 @@ class _MyPageState extends State<MyPage> with UserApi {
   Widget _infoGrid() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: gutter),
-      padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Expanded(
-            flex: 1,
-            child: Container(
-              child: CupertinoButton(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Expanded(
+              flex: 1,
+              child: Container(
+                color: CupertinoColors.lightBackgroundGray,
+                child: CupertinoButton(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(0),
+                    minSize: 0,
+                    padding: EdgeInsets.all(0),
+                    onPressed: () {
+                      Navigator.of(allContext!).push(CupertinoPageRoute(
+                        builder: (context) {
+                          return BalancePage(balance);
+                        },
+                      ));
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 40,
+                            padding: EdgeInsets.all(4),
+                            child: Icon(
+                              FontAwesomeIcons.wallet,
+                              size: 32,
+                              color: CupertinoTheme.of(context).primaryColor,
+                            ),
+                          ),
+                          Text(
+                            "余额",
+                            style: TextStyle(fontSize: 14, color: Colors.black87),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Hero(
+                                  tag: 'balance',
+                                  child: Text(
+                                    balance,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: CupertinoColors.inactiveGray),
+                                  )),
+                              Text(
+                                "￥",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: CupertinoColors.inactiveGray),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    )),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(
+                color: CupertinoColors.lightBackgroundGray,
+                child: CupertinoButton(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(0),
                   minSize: 0,
                   padding: EdgeInsets.all(0),
                   onPressed: () {
-                    Navigator.of(allContext!).push(CupertinoPageRoute(
-                      builder: (context) {
-                        return BalancePage(balance);
-                      },
-                    ));
+                    getMyInfo();
                   },
-                  child: Column(
-                    children: [
-                      Icon(
-                        FontAwesomeIcons.wallet,
-                        size: 40,
-                        color: CupertinoTheme.of(context).primaryColor,
-                      ),
-                      Text(
-                        "余额",
-                        style: TextStyle(fontSize: 14, color: Colors.black87),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Hero(
-                              tag: 'balance',
-                              child: Text(
-                                balance,
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    color: CupertinoColors.inactiveGray),
-                              )),
-                          Text(
-                            "￥",
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: CupertinoColors.inactiveGray),
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 42,
+                          padding: EdgeInsets.all(4),
+                          child: Icon(
+                            FontAwesomeIcons.idCardAlt,
+                            size: 28,
+                            color: CupertinoTheme.of(context).primaryColor,
                           ),
-                        ],
-                      )
-                    ],
-                  )),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: CupertinoButton(
-              minSize: 0,
-              padding: EdgeInsets.all(0),
-              onPressed: () {
-                getMyInfo();
-              },
-              pressedOpacity: 0.6,
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.person_pin,
-                    size: 40,
-                    color: CupertinoTheme.of(context).primaryColor,
+                        ),
+                        Text(
+                          "会员等级",
+                          style: TextStyle(fontSize: 14, color: Colors.black87),
+                        ),
+                        Text(
+                          vipStr,
+                          style: TextStyle(
+                              fontSize: 12, color: CupertinoColors.inactiveGray),
+                        )
+                      ],
+                    ),
                   ),
-                  Text(
-                    "会员等级",
-                    style: TextStyle(fontSize: 14, color: Colors.black87),
-                  ),
-                  Text(
-                    vipStr,
-                    style: TextStyle(
-                        fontSize: 12, color: CupertinoColors.inactiveGray),
-                  )
-                ],
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -464,7 +487,7 @@ class _MyPageState extends State<MyPage> with UserApi {
           child: Column(
             children: [
               actionCell(
-                  icon: Icons.share,
+                  icon: FontAwesomeIcons.shareAlt,
                   title: "邀请二维码",
                   tailing: Icon(
                     CupertinoIcons.forward,
@@ -478,13 +501,13 @@ class _MyPageState extends State<MyPage> with UserApi {
                     }));
                   }),
               Container(
-                padding: const EdgeInsets.only(left: 38),
+                padding: const EdgeInsets.only(left: 42),
                 child: Divider(
                   height: 1.0,
                 ),
               ),
               actionCell(
-                icon: Icons.record_voice_over,
+                icon: FontAwesomeIcons.copy,
                 title: "我的邀请码",
                 tailing: Text(
                   invitationCode,
@@ -500,13 +523,13 @@ class _MyPageState extends State<MyPage> with UserApi {
                 },
               ),
               Container(
-                padding: const EdgeInsets.only(left: 38),
+                padding: const EdgeInsets.only(left: 42),
                 child: Divider(
                   height: 1.0,
                 ),
               ),
               actionCell(
-                icon: Icons.description,
+                icon: FontAwesomeIcons.list,
                 title: "填写资料",
                 tailing: Icon(
                   CupertinoIcons.forward,
@@ -521,13 +544,34 @@ class _MyPageState extends State<MyPage> with UserApi {
                 },
               ),
               Container(
-                padding: const EdgeInsets.only(left: 38),
+                padding: const EdgeInsets.only(left: 42),
                 child: Divider(
                   height: 1.0,
                 ),
               ),
               actionCell(
-                icon: Icons.settings,
+                icon: FontAwesomeIcons.solidCreditCard,
+                title: "银行卡",
+                tailing: Icon(
+                  CupertinoIcons.forward,
+                  size: 16,
+                  color: CupertinoColors.inactiveGray,
+                ),
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true)
+                      .push(CupertinoPageRoute(builder: (BuildContext context) {
+                    return CheckBankCard();
+                  }));
+                },
+              ),
+              Container(
+                padding: const EdgeInsets.only(left: 42),
+                child: Divider(
+                  height: 1.0,
+                ),
+              ),
+              actionCell(
+                icon: FontAwesomeIcons.cog,
                 title: "设置",
                 tailing: Icon(
                   CupertinoIcons.forward,

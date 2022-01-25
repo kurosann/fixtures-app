@@ -82,7 +82,7 @@ class _EditPersonalPageState extends State<EditPersonalPage>
         navigationBar: CupertinoNavigationBar(
           middle: Text("编辑个人资料"),
         ),
-        backgroundColor: CupertinoColors.lightBackgroundGray,
+        backgroundColor: CupertinoColors.systemGroupedBackground,
         child: ListView(
           children: [
             _head(),

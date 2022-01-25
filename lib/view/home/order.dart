@@ -50,7 +50,7 @@ class _OrderPageState extends State<OrderPage> with LoginMixin {
                     delegate: SliverChildBuilderDelegate((context, index) {
                   if (index.isOdd)
                     return Padding(
-                      padding: const EdgeInsets.only(left: 16),
+                      padding: const EdgeInsets.only(left: 20),
                       child: Divider(
                         height: 1,
                       ),
@@ -82,7 +82,7 @@ class _OrderPageState extends State<OrderPage> with LoginMixin {
                     width: 140,
                     height: 12,
                     decoration: BoxDecoration(
-                        color: CupertinoColors.lightBackgroundGray,
+                        color: CupertinoColors.systemGroupedBackground,
                         borderRadius: BorderRadius.circular(4)),
                   ),
                 ],
@@ -93,7 +93,7 @@ class _OrderPageState extends State<OrderPage> with LoginMixin {
                     width: 140,
                     height: 12,
                     decoration: BoxDecoration(
-                        color: CupertinoColors.lightBackgroundGray,
+                        color: CupertinoColors.systemGroupedBackground,
                         borderRadius: BorderRadius.circular(4)),
                   ),
                 ],
@@ -104,7 +104,7 @@ class _OrderPageState extends State<OrderPage> with LoginMixin {
             width: 100,
             height: 12,
             decoration: BoxDecoration(
-                color: CupertinoColors.lightBackgroundGray,
+                color: CupertinoColors.systemGroupedBackground,
                 borderRadius: BorderRadius.circular(4)),
           )
         ],
@@ -116,7 +116,7 @@ class _OrderPageState extends State<OrderPage> with LoginMixin {
   Widget _itemCell(index) {
     Order order = orderList[index];
     return Container(
-      color: CupertinoColors.lightBackgroundGray,
+      color: CupertinoColors.systemGroupedBackground,
       child: CupertinoButton(
         color: Colors.white,
         borderRadius: BorderRadius.circular(0),

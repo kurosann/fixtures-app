@@ -21,7 +21,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
         previousPageTitle: '返回',
         middle: Text("订单支付"),
       ),
-      backgroundColor: CupertinoColors.lightBackgroundGray,
+      backgroundColor: CupertinoColors.systemGroupedBackground,
       child: CustomScrollView(slivers: [
         CupertinoSliverRefreshControl(
           onRefresh: () async {},

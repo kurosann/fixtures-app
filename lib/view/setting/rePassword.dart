@@ -3,15 +3,11 @@ import 'dart:async';
 import 'package:fixtures/model/LoginModel.dart';
 import 'package:fixtures/service/api/LoginApi.dart';
 import 'package:fixtures/utils/EncryptUtil.dart';
-import 'package:fixtures/utils/SharedPreferencesUtil.dart';
-import 'package:fixtures/utils/util.dart';
 import 'package:fixtures/view/home/home.dart';
 import 'package:fixtures/view/login/loginStyle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import '../../config.dart';
 
 class RePassWord extends StatefulWidget {
   @override
@@ -61,7 +57,6 @@ class _RePassWord extends State<RePassWord> with LoginMixin {
   }
 
   void SuccessFunc(dynamic data) {
-
     showCupertinoDialog(
         context: context,
         builder: (context) {
@@ -121,12 +116,12 @@ class _RePassWord extends State<RePassWord> with LoginMixin {
     if (_countdownTime == 0) {
       /// 注册验证码
       sendResetPasswordSms(
-        successCallBack: (data) {
-        },
+        successCallBack: (data) {},
         errorCallBack: (code, err) {
           openMsg(err);
         },
       );
+
       /// Http请求发送验证码
       setState(() {
         _countdownTime = 60;
@@ -241,7 +236,7 @@ class _RePassWord extends State<RePassWord> with LoginMixin {
           setState(() {
             isErr = true;
           });
-        }else{
+        } else {
           setState(() {
             isErr = false;
           });
@@ -265,7 +260,6 @@ class _RePassWord extends State<RePassWord> with LoginMixin {
       obscureText: !_isShowRePassWord,
     );
   }
-
 
   /// 密码
   Widget _password() {
@@ -296,7 +290,7 @@ class _RePassWord extends State<RePassWord> with LoginMixin {
           children: [
             Expanded(
               child: Text("两次密码不一样,请确认",
-                  style: TextStyle(fontSize: 12,color: Colors.red)),
+                  style: TextStyle(fontSize: 12, color: Colors.red)),
             ),
           ],
         ),
@@ -325,9 +319,11 @@ class _RePassWord extends State<RePassWord> with LoginMixin {
         children: [
           Hero(
             tag: 'repwd',
-            child: CupertinoButton.filled(child: Text("设置"), onPressed: () {
-              resPWd();
-            }),
+            child: CupertinoButton.filled(
+                child: Text("设置"),
+                onPressed: () {
+                  resPWd();
+                }),
           ),
         ],
       ),

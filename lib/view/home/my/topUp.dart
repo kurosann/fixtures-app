@@ -23,7 +23,7 @@ class _TopUpPageState extends State<TopUpPage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-        backgroundColor: CupertinoColors.lightBackgroundGray,
+        backgroundColor: CupertinoColors.systemGroupedBackground,
         navigationBar: CupertinoNavigationBar(
           previousPageTitle: '余额',
           middle: Text("充值"),
@@ -84,7 +84,6 @@ class _TopUpPageState extends State<TopUpPage> {
                                       way == 0 ? "微信" : "支付宝",
                                       style: TextStyle(
                                           fontSize: 20,
-                                          height: 1.1,
                                           color: way == 0
                                               ? Colors.green
                                               : Colors.blue),
@@ -95,7 +94,7 @@ class _TopUpPageState extends State<TopUpPage> {
                                 Icon(
                                   CupertinoIcons.forward,
                                   color: Colors.grey,
-                                  size: 22,
+                                  size: 18,
                                 )
                               ],
                             ),
@@ -125,7 +124,8 @@ class _TopUpPageState extends State<TopUpPage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 20),
+                        padding:
+                            const EdgeInsets.only(top: 20, left: 6, right: 6),
                         child: CupertinoTextField(
                           clearButtonMode: OverlayVisibilityMode.editing,
                           textInputAction: TextInputAction.done,
@@ -134,7 +134,7 @@ class _TopUpPageState extends State<TopUpPage> {
                           autofocus: true,
                           prefix: Padding(
                             padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
+                                const EdgeInsets.symmetric(horizontal: 6.0),
                             child: Text(
                               "￥",
                               style: TextStyle(fontSize: 20),
@@ -151,7 +151,8 @@ class _TopUpPageState extends State<TopUpPage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 8),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.end,

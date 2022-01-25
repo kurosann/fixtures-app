@@ -55,9 +55,13 @@ Widget actionCell(
             Row(
               children: [
                 icon != null
-                    ? Icon(
-                        icon,
-                        color: CupertinoColors.inactiveGray,
+                    ? Container(
+                        padding: EdgeInsets.all(2),
+                        child: Icon(
+                          icon,
+                          color: CupertinoColors.inactiveGray,
+                          size: 20,
+                        ),
                       )
                     : Container(),
                 Container(

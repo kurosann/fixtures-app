@@ -20,7 +20,7 @@ class SettingPage extends StatelessWidget {
               actionCell(
                   title: "修改密码",
                   tailing: Icon(
-                    Icons.arrow_forward_ios,
+                    CupertinoIcons.forward,
                     size: 16,
                     color: CupertinoColors.inactiveGray,
                   ),
@@ -34,7 +34,7 @@ class SettingPage extends StatelessWidget {
                   }),
               Container(
                 color: Colors.white,
-                padding: const EdgeInsets.only(left: 38),
+                padding: const EdgeInsets.only(left: 20),
                 child: Divider(
                   height: 1.0,
                 ),
@@ -42,7 +42,7 @@ class SettingPage extends StatelessWidget {
               actionCell(
                   title: "关于页面",
                   tailing: Icon(
-                    Icons.arrow_forward_ios,
+                    CupertinoIcons.forward,
                     size: 16,
                     color: CupertinoColors.inactiveGray,
                   ),
@@ -56,7 +56,7 @@ class SettingPage extends StatelessWidget {
                   }),
               Container(
                 color: Colors.white,
-                padding: const EdgeInsets.only(left: 38),
+                padding: const EdgeInsets.only(left: 20),
                 child: Divider(
                   height: 1.0,
                 ),
@@ -64,7 +64,7 @@ class SettingPage extends StatelessWidget {
               actionCell(
                   title: "退出登录",
                   tailing: Icon(
-                    Icons.arrow_forward_ios,
+                    CupertinoIcons.forward,
                     size: 16,
                     color: CupertinoColors.inactiveGray,
                   ),

@@ -75,7 +75,7 @@ class _FindFixtureState extends State<FindFixturePage> with ItemMixin {
     return Scaffold(
       appBar: emptyAppBar(context),
       body: CupertinoPageScaffold(
-        backgroundColor: Colors.black12,
+        backgroundColor: CupertinoColors.systemGroupedBackground,
         child: CustomScrollView(
           slivers: <Widget>[
             CupertinoSliverNavigationBar(

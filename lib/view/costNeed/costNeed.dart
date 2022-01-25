@@ -42,7 +42,7 @@ class _CostNeedPageState extends State<CostNeedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: CupertinoPageScaffold(
-          backgroundColor: CupertinoColors.lightBackgroundGray,
+          backgroundColor: CupertinoColors.systemGroupedBackground,
           navigationBar: CupertinoNavigationBar(
             previousPageTitle: '费用需求',
             middle: Text("费用需求",style: TextStyle(fontSize: 21.0, color: Colors.black)),

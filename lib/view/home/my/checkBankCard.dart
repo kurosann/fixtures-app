@@ -24,7 +24,7 @@ class _CheckBankCardState extends State<CheckBankCard> with FileMixin, UserApi {
         navigationBar: CupertinoNavigationBar(
           middle: Text("验证银行卡信息"),
         ),
-        backgroundColor: CupertinoColors.lightBackgroundGray,
+        backgroundColor: CupertinoColors.systemGroupedBackground,
         child: GestureDetector(
           onPanDown: (_) {
             FocusScopeNode currentFocus = FocusScope.of(context);

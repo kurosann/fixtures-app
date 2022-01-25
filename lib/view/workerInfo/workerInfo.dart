@@ -15,7 +15,7 @@ class _WorkerInfoPageState extends State<WorkerInfoPage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      backgroundColor: CupertinoColors.lightBackgroundGray,
+      backgroundColor: CupertinoColors.systemGroupedBackground,
       navigationBar: CupertinoNavigationBar(
         backgroundColor: Color.fromARGB(0, 0, 0, 0),
       ),
