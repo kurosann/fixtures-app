@@ -13,6 +13,8 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'idCard.dart';
+
 class EditPersonalPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _EditPersonalPageState();
@@ -25,12 +27,15 @@ class _EditPersonalPageState extends State<EditPersonalPage>
   var _image;
 
   var _imageSource;
-
+  var _idCardController = TextEditingController();
+  var _phoneController = TextEditingController();
+  var _nameController = TextEditingController();
   var _birthDayController = TextEditingController();
   var _nickNameController = TextEditingController();
-
+  var _selectValue = TextEditingController(text:"身份证");
   var _localTextController = TextEditingController();
-
+  var positions = <String>["身份证", "护照"];
+  bool _isSelect = false;
   List<AreaModel> locals = [
     AreaModel(
         111, "广东", [AreaModel(1222, "惠州", null), AreaModel(1333, "广州", null)]),
@@ -141,6 +146,42 @@ class _EditPersonalPageState extends State<EditPersonalPage>
       _imagePath = image;
     });
   }
+  void _showTypePick() {
+    var i = 0;
+    showCupertinoDialog(
+      context: context,
+      builder: (ctx) {
+        return CupertinoAlertDialog(
+          title: Text("选择证件类型"),
+          actions: [
+            CupertinoDialogAction(
+              child: Text("确定"),
+              onPressed: () {
+                setState(() {
+                  _isSelect = !_isSelect;
+                  _selectValue.text = positions[i];
+                });
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+          content: Container(
+            height: 200,
+            child: CupertinoPicker(
+              itemExtent: 28,
+              onSelectedItemChanged: (int value) {
+                i = value;
+                setState(() {
+                  _selectValue.text = positions[i];
+                });
+              },
+              children: positions.map((e) => Text(e)).toList(),
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   Widget _previewImage() {
     return FutureBuilder<XFile?>(
@@ -155,7 +196,8 @@ class _EditPersonalPageState extends State<EditPersonalPage>
               backgroundImage: FileImage(File(snapshot.data!.path)));
         } else {
           return CircleAvatar(
-            backgroundImage: NetworkImage(Config.BASE_URL + pic),
+
+        backgroundImage: NetworkImage(Config.BASE_URL + pic),
             radius: 40,
           );
         }
@@ -392,28 +434,56 @@ class _EditPersonalPageState extends State<EditPersonalPage>
                 Navigator.of(context).push(CupertinoPageRoute(
                   builder: (context) {
                     return CupertinoPageScaffold(
-                        navigationBar: CupertinoNavigationBar(
-                          previousPageTitle: "编辑个人资料",
-                          middle: Text("实名认证"),
-                        ),
-                        child: ListView(
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: 300,
-                              child: Image(
-                                  image: NetworkImage(
-                                      "https://bkimg.cdn.bcebos.com/pic/0eb30f2442a7d933b0a8b30ca24bd11373f00148?x-bce-process=image/watermark,image_d2F0ZXIvYmFpa2U5Mg==,g_7,xp_5,yp_5/format,f_auto")),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: 300,
-                              child: Image(
-                                  image: NetworkImage(
-                                      "https://bkimg.cdn.bcebos.com/pic/0eb30f2442a7d933b0a8b30ca24bd11373f00148?x-bce-process=image/watermark,image_d2F0ZXIvYmFpa2U5Mg==,g_7,xp_5,yp_5/format,f_auto")),
-                            ),
-                          ],
-                        ));
+                      navigationBar: CupertinoNavigationBar(
+                        previousPageTitle: "返回",
+                        middle: Text("实名认证"),
+                      ),
+                      child: ListView(
+                        children: [
+                          Form(
+                            autovalidateMode: AutovalidateMode.always,
+                            onChanged: () {
+                              Form.of(primaryFocus!.context!)?.save();
+                            },
+                            child: CupertinoFormSection.insetGrouped(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: gutter, vertical: gutterV),
+                                children: [
+                                  _formCell(
+                                      title: '姓名',
+                                      controller: _nameController,
+                                      placeholder: '请输入真实姓名'),
+                                  _formCell(
+                                      title: '手机号',
+                                      controller: _phoneController,
+                                      keyboardType: TextInputType.number,
+                                      maxLength: 16,
+                                      placeholder: '请输入手机号'),
+                                  CupertinoTextFormFieldRow(
+                                    style: TextStyle(height: 1.4),
+                                    prefix: Text("证件类型"),
+                                    textAlign: TextAlign.end,
+                                    placeholder: "身份证",
+                                    controller: _selectValue,
+                                    readOnly: true,
+                                    onTap: () {
+                                      _showTypePick();
+                                    },
+                                    keyboardType: TextInputType.datetime,
+                                    textInputAction: TextInputAction.next,
+                                  ),
+                                  _formCell(
+                                      title: "证件号",
+                                      controller: _idCardController,
+                                      maxLength: 18,
+                                      regExp: r'[0-9|X|x]',
+                                      placeholder: '请输入证件号'),
+                                ]),
+                          ),
+                          _btnWidget(),
+                        ],
+                      ),
+                    );
                   },
                 ));
               },
@@ -453,6 +523,26 @@ class _EditPersonalPageState extends State<EditPersonalPage>
     );
   }
 
+  Widget _btnWidget() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 32),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Hero(
+            tag: 'toNext',
+            child: CupertinoButton.filled(child: Text("下一步"), onPressed: () {
+              Navigator.of(context, rootNavigator: true)
+                  .push(CupertinoPageRoute(builder: (BuildContext context) {
+                return IdCardPageState();
+              }));
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _modalActions() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -474,6 +564,37 @@ class _EditPersonalPageState extends State<EditPersonalPage>
               style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
             ))
       ],
+    );
+  }
+
+  CupertinoTextFormFieldRow _formCell(
+      {required String title,
+      required TextEditingController controller,
+      String? placeholder,
+      bool? readOnly,
+      TextInputType? keyboardType,
+      int? maxLength,
+      String? regExp,
+      bool? isDone}) {
+    var inputFormatters = <TextInputFormatter>[];
+    if (maxLength != null) {
+      inputFormatters.add(LengthLimitingTextInputFormatter(maxLength));
+    }
+    if (regExp != null) {
+      inputFormatters.add(FilteringTextInputFormatter.allow(RegExp(regExp)));
+    }
+
+    return CupertinoTextFormFieldRow(
+      readOnly: readOnly == true,
+      style: TextStyle(height: 1.4),
+      controller: controller,
+      prefix: Text(title),
+      inputFormatters: inputFormatters,
+      textAlign: TextAlign.end,
+      keyboardType: keyboardType,
+      placeholder: placeholder,
+      textInputAction:
+          isDone == true ? TextInputAction.done : TextInputAction.next,
     );
   }
 }
