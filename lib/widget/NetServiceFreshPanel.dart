@@ -18,7 +18,7 @@ class NetServiceFreshPanel extends StatefulWidget {
   final NetCallback? onRequest;
 
   /// 页面状态为 [NetServiceState.SUCCESS] 时显示 [child]
-  final NetServiceState state;
+  NetServiceState state;
 
   /// 状态面板背景色 不设置则为Theme的appbar背景色
   final Color? backgroundColor;
@@ -31,29 +31,17 @@ class NetServiceFreshPanel extends StatefulWidget {
       this.onRequest});
 
   @override
-  State<StatefulWidget> createState() => _NetServiceRefresh(
-      state, child, loadingPanel, backgroundColor, onRequest);
+  State<StatefulWidget> createState() => _NetServiceRefresh();
 }
 
 class _NetServiceRefresh extends State<NetServiceFreshPanel> {
-  NetServiceState state;
-
-  Widget child;
-
-  Widget? loadingPanel;
-
-  final Color? backgroundColor;
-
-  NetCallback? onRequest;
-
-  _NetServiceRefresh(this.state, this.child, this.loadingPanel,
-      this.backgroundColor, this.onRequest);
+  var state = NetServiceState.SUCCESS;
 
   void _refresh() async {
     setState(() {
       state = NetServiceState.PROCESS;
     });
-    Result data = await onRequest!();
+    Result data = await widget.onRequest!();
     setState(() {
       state = (data.code == ResultCode.SUCCESS)
           ? NetServiceState.SUCCESS
@@ -63,7 +51,15 @@ class _NetServiceRefresh extends State<NetServiceFreshPanel> {
 
   @override
   void initState() {
-    if (onRequest != null) _refresh();
+    super.initState();
+    if (widget.onRequest != null) _refresh();
+  }
+@override
+  void didUpdateWidget(covariant NetServiceFreshPanel oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    setState(() {
+      state = widget.state;
+    });
   }
 
   @override
@@ -72,28 +68,27 @@ class _NetServiceRefresh extends State<NetServiceFreshPanel> {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       child: Stack(
-        alignment: AlignmentDirectional.center,
         children: [
-          child,
+          widget.child,
           state == NetServiceState.PROCESS
-              ? loadingPanel != null
-                  ? loadingPanel!
+              ? widget.loadingPanel != null
+                  ? widget.loadingPanel!
                   : BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                       child: Container(
-                        color: backgroundColor != null
-                            ? backgroundColor
+                        color: widget.backgroundColor != null
+                            ? widget.backgroundColor
                             : CupertinoTheme.of(context).barBackgroundColor,
                         alignment: Alignment.center,
                         child: CupertinoActivityIndicator(),
                       ),
                     )
-              : state == NetServiceState.ERROR
+              : widget.state == NetServiceState.ERROR
                   ? BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                       child: Container(
-                        color: backgroundColor != null
-                            ? backgroundColor
+                        color: widget.backgroundColor != null
+                            ? widget.backgroundColor
                             : CupertinoTheme.of(context).barBackgroundColor,
                         alignment: Alignment.center,
                         child: Column(

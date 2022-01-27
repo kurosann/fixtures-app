@@ -1,13 +1,13 @@
-import 'dart:ui';
-import 'package:google_ml_kit/google_ml_kit.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_ml_kit/google_ml_kit.dart';
 
 class FacePainter extends CustomPainter {
   FacePainter({required this.imageSize, required this.face});
+
   final Size imageSize;
   double? scaleX, scaleY;
   Face face;
+
   @override
   void paint(Canvas canvas, Size size) {
     if (face == null) return;

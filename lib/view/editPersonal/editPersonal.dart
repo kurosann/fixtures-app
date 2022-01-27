@@ -80,6 +80,7 @@ class _EditPersonalPageState extends State<EditPersonalPage>
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
+          previousPageTitle: '返回',
           middle: Text("编辑个人资料"),
         ),
         backgroundColor: CupertinoColors.systemGroupedBackground,

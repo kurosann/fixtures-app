@@ -16,48 +16,81 @@ class OrderPage extends StatefulWidget {
 
 class _OrderPageState extends State<OrderPage> with LoginMixin {
   /// 订单数据
-  var orderList = <Order>[Order()];
+  var orderList = <Order>[];
+
+  var freshState = NetServiceState.PROCESS;
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: CupertinoColors.systemGroupedBackground,
       child: SafeArea(
-        child: NetServiceFreshPanel(
-          loadingPanel: Container(
-            color: Colors.white,
-            child: ListView(
-              physics: NeverScrollableScrollPhysics(),
-              children: [for (int i = 0; i < 10; i += 1) _skeletonItemCell()],
-            ),
-          ),
-          onRequest: () async {
-            Result result = Result();
-            await Future.delayed(Duration(seconds: 3));
-            result.code = 200;
-            return result;
-          },
+        child: CupertinoScrollbar(
           child: CustomScrollView(
             slivers: <Widget>[
-              CupertinoSliverRefreshControl(
-                onRefresh: () async {},
+              SliverSafeArea(
+                sliver: freshState == NetServiceState.SUCCESS
+                    ? CupertinoSliverRefreshControl(
+                        onRefresh: () async {
+                          Result result = Result();
+                          await Future.delayed(Duration(seconds: 3));
+                          result.code = 200;
+                          setState(() {
+                            orderList = [
+                              Order(),
+                            ];
+                          });
+                        },
+                      )
+                    : SliverToBoxAdapter(),
               ),
               CupertinoSliverNavigationBar(
-                stretch: true,
+                backgroundColor: CupertinoColors.systemGroupedBackground,
+                border: Border.all(color: CupertinoColors.white.withAlpha(0)),
                 largeTitle: Text("订单"),
               ),
-              SliverSafeArea(
-                sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                  if (index.isOdd)
-                    return Padding(
-                      padding: const EdgeInsets.only(left: 20),
-                      child: Divider(
-                        height: 1,
-                      ),
-                    );
-                  final i = index ~/ 2;
-                  return _itemCell(i);
-                }, childCount: orderList.length * 2)),
+              SliverToBoxAdapter(
+                child: NetServiceFreshPanel(
+                  state: freshState,
+                  loadingPanel: Container(
+                    color: Colors.white,
+                    child: ListView(
+                      physics: NeverScrollableScrollPhysics(),
+                      children: [
+                        for (int i = 0; i < 10; i += 1) _skeletonItemCell()
+                      ],
+                    ),
+                  ),
+                  onRequest: () async {
+                    Result result = Result();
+                    await Future.delayed(Duration(seconds: 3));
+                    setState(() {
+                      orderList = [
+                        Order(),
+                        Order(),
+                      ];
+                      freshState = NetServiceState.SUCCESS;
+                    });
+                    result.code = 200;
+                    return result;
+                  },
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: orderList.length * 2,
+                    itemBuilder: (context, index) {
+                      if (index.isOdd)
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 20),
+                          child: Divider(
+                            height: 1,
+                          ),
+                        );
+                      final i = index ~/ 2;
+                      return _itemCell(i);
+                    },
+                  ),
+                ),
               ),
             ],
           ),

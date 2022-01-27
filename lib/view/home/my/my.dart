@@ -5,8 +5,8 @@ import 'package:fixtures/service/api/UserApi.dart';
 import 'package:fixtures/utils/utils.dart';
 import 'package:fixtures/view/editPersonal/editPersonal.dart';
 import 'package:fixtures/view/home/home.dart';
+import 'package:fixtures/view/home/my/creditCard.dart';
 import 'package:fixtures/view/home/my/balance.dart';
-import 'package:fixtures/view/home/my/checkBankCard.dart';
 import 'package:fixtures/view/setting/setting.dart';
 import 'package:fixtures/view/share/share.dart';
 import 'package:flutter/cupertino.dart';
@@ -405,7 +405,8 @@ class _MyPageState extends State<MyPage> with UserApi {
                           ),
                           Text(
                             "余额",
-                            style: TextStyle(fontSize: 14, color: Colors.black87),
+                            style:
+                                TextStyle(fontSize: 14, color: Colors.black87),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -463,7 +464,8 @@ class _MyPageState extends State<MyPage> with UserApi {
                         Text(
                           vipStr,
                           style: TextStyle(
-                              fontSize: 12, color: CupertinoColors.inactiveGray),
+                              fontSize: 12,
+                              color: CupertinoColors.inactiveGray),
                         )
                       ],
                     ),
@@ -495,8 +497,8 @@ class _MyPageState extends State<MyPage> with UserApi {
                     color: CupertinoColors.inactiveGray,
                   ),
                   onPressed: () {
-                    Navigator.of(context, rootNavigator: true)
-                        .push(CupertinoPageRoute(builder: (BuildContext context) {
+                    Navigator.of(context, rootNavigator: true).push(
+                        CupertinoPageRoute(builder: (BuildContext context) {
                       return SharePage();
                     }));
                   }),
@@ -560,7 +562,7 @@ class _MyPageState extends State<MyPage> with UserApi {
                 onPressed: () {
                   Navigator.of(context, rootNavigator: true)
                       .push(CupertinoPageRoute(builder: (BuildContext context) {
-                    return CheckBankCard();
+                    return CreditCardPage();
                   }));
                 },
               ),

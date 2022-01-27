@@ -8,75 +8,84 @@ import 'package:flutter/material.dart';
 class SettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: CupertinoPageScaffold(
-        child: CustomScrollView(slivers: [
-          CupertinoSliverNavigationBar(
-            stretch: true,
-            largeTitle: Text("设置"),
+    return CupertinoPageScaffold(
+      backgroundColor: CupertinoColors.systemGroupedBackground,
+      child: CustomScrollView(slivers: [
+        CupertinoSliverNavigationBar(
+          backgroundColor: CupertinoColors.systemGroupedBackground,
+          border: Border.all(color: CupertinoColors.white.withAlpha(0)),
+          stretch: true,
+          largeTitle: Text("设置"),
+        ),
+        SliverToBoxAdapter(
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 8,vertical: 4),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Column(
+                children: [
+                  actionCell(
+                      title: "修改密码",
+                      tailing: Icon(
+                        CupertinoIcons.forward,
+                        size: 16,
+                        color: CupertinoColors.inactiveGray,
+                      ),
+                      onPressed: () {
+                        Navigator.of(allContext!).push(
+                            CupertinoPageRoute(builder: (BuildContext context) {
+                          return CupertinoPageScaffold(
+                            child: RePassWord(),
+                          );
+                        }));
+                      }),
+                  Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Divider(
+                      height: 1.0,
+                    ),
+                  ),
+                  actionCell(
+                      title: "关于页面",
+                      tailing: Icon(
+                        CupertinoIcons.forward,
+                        size: 16,
+                        color: CupertinoColors.inactiveGray,
+                      ),
+                      onPressed: () {
+                        Navigator.of(allContext!).push(
+                            CupertinoPageRoute(builder: (BuildContext context) {
+                          return CupertinoPageScaffold(
+                            child: Container(),
+                          );
+                        }));
+                      }),
+                  Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Divider(
+                      height: 1.0,
+                    ),
+                  ),
+                  actionCell(
+                      title: "退出登录",
+                      tailing: Icon(
+                        CupertinoIcons.forward,
+                        size: 16,
+                        color: CupertinoColors.inactiveGray,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pushAndRemoveUntil(
+                            CupertinoPageRoute(builder: (context) => Login()),
+                            (Route<dynamic> route) => false);
+                      }),
+                ],
+              ),
+            ),
           ),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              actionCell(
-                  title: "修改密码",
-                  tailing: Icon(
-                    CupertinoIcons.forward,
-                    size: 16,
-                    color: CupertinoColors.inactiveGray,
-                  ),
-                  onPressed: () {
-                    Navigator.of(allContext!).push(
-                        CupertinoPageRoute(builder: (BuildContext context) {
-                      return CupertinoPageScaffold(
-                        child: RePassWord(),
-                      );
-                    }));
-                  }),
-              Container(
-                color: Colors.white,
-                padding: const EdgeInsets.only(left: 20),
-                child: Divider(
-                  height: 1.0,
-                ),
-              ),
-              actionCell(
-                  title: "关于页面",
-                  tailing: Icon(
-                    CupertinoIcons.forward,
-                    size: 16,
-                    color: CupertinoColors.inactiveGray,
-                  ),
-                  onPressed: () {
-                    Navigator.of(allContext!).push(
-                        CupertinoPageRoute(builder: (BuildContext context) {
-                      return CupertinoPageScaffold(
-                        child: Container(),
-                      );
-                    }));
-                  }),
-              Container(
-                color: Colors.white,
-                padding: const EdgeInsets.only(left: 20),
-                child: Divider(
-                  height: 1.0,
-                ),
-              ),
-              actionCell(
-                  title: "退出登录",
-                  tailing: Icon(
-                    CupertinoIcons.forward,
-                    size: 16,
-                    color: CupertinoColors.inactiveGray,
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pushAndRemoveUntil(
-                        CupertinoPageRoute(builder: (context) => Login()),
-                        (Route<dynamic> route) => false);
-                  }),
-            ]),
-          )
-        ]),
-      ),
+        )
+      ]),
     );
   }
 }

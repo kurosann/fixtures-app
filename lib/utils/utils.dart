@@ -43,7 +43,7 @@ Widget actionCell(
   return Container(
     color: CupertinoColors.lightBackgroundGray,
     child: CupertinoButton(
-      color: Colors.white,
+      color: CupertinoColors.white,
       borderRadius: BorderRadius.circular(0),
       padding: EdgeInsets.all(8),
       onPressed: onPressed,

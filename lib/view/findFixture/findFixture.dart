@@ -64,7 +64,7 @@ class _FindFixtureState extends State<FindFixturePage> with ItemMixin {
       },
       errorCallBack: (code, err) {
         if (code == 500) {
-          openMsg(err);
+//          openMsg(err);
         }
       },
     );
@@ -72,71 +72,66 @@ class _FindFixtureState extends State<FindFixturePage> with ItemMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: emptyAppBar(context),
-      body: CupertinoPageScaffold(
-        backgroundColor: CupertinoColors.systemGroupedBackground,
-        child: CustomScrollView(
-          slivers: <Widget>[
-            CupertinoSliverNavigationBar(
-              stretch: true,
-              previousPageTitle: "小求",
-              largeTitle: Text("选择装修类型"),
-            ),
-            SliverToBoxAdapter(
-              child: Container(
-                margin:
-                    const EdgeInsets.only(left: 4, right: 4, top: 4, bottom: 8),
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: CupertinoSearchTextField(
-                  style: TextStyle(height: 1.4),
-                  backgroundColor: Colors.white,
-                  controller: itemName,
-                  prefixIcon: Icon(CupertinoIcons.search),
-                  placeholder: "搜索",
-                  suffixMode: OverlayVisibilityMode.editing,
-                  onTap: () {
-                    getList(itemName.text);
-                  },
-                ),
-              ),
-            ),
-            SliverGrid(
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 150.0,
-                mainAxisSpacing: 10.0,
-                crossAxisSpacing: 4.0,
-                childAspectRatio: 1.4,
-              ),
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return _itemCell(
-                      itemList[index]["itemName"],
-                      Config.BASE_URL + itemList[index]["image_url"],
-                      itemList[index]["id"]);
+    return CupertinoPageScaffold(
+      backgroundColor: CupertinoColors.systemGroupedBackground,
+      child: CustomScrollView(
+        slivers: <Widget>[
+          CupertinoSliverNavigationBar(
+            stretch: true,
+            previousPageTitle: "小求",
+            largeTitle: Text("装修类型"),
+            backgroundColor: CupertinoColors.systemGroupedBackground,
+            border: Border.all(color: CupertinoColors.white.withAlpha(0)),
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: CupertinoSearchTextField(
+                backgroundColor: Colors.white,
+                controller: itemName,
+                prefixIcon: Icon(CupertinoIcons.search),
+                prefixInsets: EdgeInsets.only(left: 8, top: 2),
+                placeholder: "搜索",
+                suffixMode: OverlayVisibilityMode.editing,
+                onSubmitted: (v) {
+                  getList(itemName.text);
                 },
-                childCount: count,
               ),
-            )
-          ],
-        ),
+            ),
+          ),
+          CupertinoSliverRefreshControl(
+            onRefresh: () async {
+
+            },
+          ),
+          SliverGrid(
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              crossAxisSpacing: 0.0,
+              mainAxisSpacing: 0.0,
+              maxCrossAxisExtent: 150.0,
+              childAspectRatio: 0.4,
+            ),
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return _itemCell(
+                    itemList[index]["itemName"],
+                    Config.BASE_URL + itemList[index]["image_url"],
+                    itemList[index]["id"]);
+              },
+              childCount: count,
+            ),
+          )
+        ],
       ),
     );
   }
 
   Widget _itemCell(label, imageUrl, id) {
     return Container(
-      margin: EdgeInsets.only(left: 8, right: 8),
-      //圆角
-      decoration: new BoxDecoration(
-        color: Colors.white.withOpacity(0.8),
-        // //背景
-        // color: Colors.white,
-        //设置四周圆角 角度
-        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-      ),
-      child: TextButton(
-        style: mainButtonStyle(),
+      color: CupertinoColors.lightBackgroundGray,
+      child: CupertinoButton(
+        color: CupertinoColors.white,
+        borderRadius: BorderRadius.circular(0),
         child: Column(
           children: [
             Image(

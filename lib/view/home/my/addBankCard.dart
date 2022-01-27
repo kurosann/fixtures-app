@@ -1,17 +1,14 @@
-import 'dart:ui';
-
 import 'package:fixtures/service/api/FileApi.dart';
 import 'package:fixtures/service/api/UserApi.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class CheckBankCard extends StatefulWidget {
+class AddBankCard extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _CheckBankCardState();
+  State<StatefulWidget> createState() => _AddBankCardState();
 }
 
-class _CheckBankCardState extends State<CheckBankCard> with FileMixin, UserApi {
+class _AddBankCardState extends State<AddBankCard> with FileMixin, UserApi {
   var _idCardController = TextEditingController();
   var _phoneController = TextEditingController();
   var _nameController = TextEditingController();
@@ -22,14 +19,17 @@ class _CheckBankCardState extends State<CheckBankCard> with FileMixin, UserApi {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
-          middle: Text("验证银行卡信息"),
+          previousPageTitle: '返回',
+          middle: Text("添加"),
         ),
         backgroundColor: CupertinoColors.systemGroupedBackground,
         child: GestureDetector(
           onPanDown: (_) {
             FocusScopeNode currentFocus = FocusScope.of(context);
+
             /// 键盘是否是弹起状态
-            if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+            if (!currentFocus.hasPrimaryFocus &&
+                currentFocus.focusedChild != null) {
               FocusManager.instance.primaryFocus?.unfocus();
             }
           },

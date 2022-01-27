@@ -146,9 +146,7 @@ class _TopUpPageState extends State<TopUpPage> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Divider(
-                          height: 1,
-                        ),
+                        child: Divider(height: 1),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
