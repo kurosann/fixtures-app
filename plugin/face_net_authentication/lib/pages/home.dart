@@ -5,14 +5,14 @@ import 'package:face_net_authentication/services/facenet.service.dart';
 import 'package:face_net_authentication/services/ml_kit_service.dart';
 import 'package:flutter/material.dart';
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key}) : super(key: key);
+class FaceHomePage extends StatefulWidget {
+  FaceHomePage({Key? key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _FaceHomePageState createState() => _FaceHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _FaceHomePageState extends State<FaceHomePage> {
   // Services injection
   FaceNetService _faceNetService = FaceNetService();
   MLKitService _mlKitService = MLKitService();

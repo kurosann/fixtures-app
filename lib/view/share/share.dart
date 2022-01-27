@@ -1,3 +1,4 @@
+import 'package:fixtures/service/api/BonusApi.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -12,15 +13,32 @@ class Demo {
   int? cash;
 }
 
-class _ShareState extends State<SharePage> {
+class _ShareState extends State<SharePage>  with BonusMixin{
   Demo demo = Demo();
-
-
+  String allProfit = "0";
+  int allInvite = 0;
+  int inviteSuccess = 0;
   @override
   void initState() {
     demo.name = '小小猪';
     demo.cash = 111111;
+    getBonusInfo(
+      successCallBack: (data) {
+        setState(() {
+          allProfit = data["all_profit"];
+          allInvite = data["all_invite"];
+          inviteSuccess = data["invite_success"];
+        });
+      },
+      errorCallBack: (code, err) {
+        if (code == 500) {
+          print(err);
+        }
+      },
+    );
+
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -227,7 +245,7 @@ class _ShareState extends State<SharePage> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
-                                      "${521}",
+                                      allProfit,
                                       style: TextStyle(fontSize: 28),
                                     ),
                                     Text("元"),
@@ -243,10 +261,10 @@ class _ShareState extends State<SharePage> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
-                                      "${2}",
+                                      "${allInvite}",
                                       style: TextStyle(fontSize: 28),
                                     ),
-                                    Text("元"),
+                                    Text("人"),
                                   ],
                                 ),
                                 Text("已邀请"),
@@ -259,7 +277,7 @@ class _ShareState extends State<SharePage> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
-                                      "${1}",
+                                      "${inviteSuccess}",
                                       style: TextStyle(fontSize: 28),
                                     ),
                                     Text("人"),

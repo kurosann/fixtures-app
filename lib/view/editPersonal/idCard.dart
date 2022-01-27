@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:face_net_authentication/pages/home.dart';
 import 'package:fixtures/Localizations/AppGlobalCupertinoLocalizationsDelegate.dart';
 import 'package:fixtures/config.dart';
 import 'package:fixtures/model/AreaModel.dart';
@@ -20,12 +21,12 @@ class IdCardPageState extends StatefulWidget {
 
 class _IdCardPageState extends State<IdCardPageState>
     with FileMixin, UserApi {
-  Future<XFile?>? _imagePath;
-
-  var _image;
-
+  Future<XFile?>? _imagePathA;
+  Future<XFile?>? _imagePathB;
+  int isA =0;
+  var _imageA;
+  var _imageB;
   var _imageSource;
-
   var _birthDayController = TextEditingController();
   var _nickNameController = TextEditingController();
 
@@ -81,7 +82,7 @@ class _IdCardPageState extends State<IdCardPageState>
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
-          middle: Text("编辑个人资料"),
+          middle: Text("上传身份证"),
         ),
         backgroundColor: CupertinoColors.systemGroupedBackground,
         child: ListView(
@@ -92,7 +93,7 @@ class _IdCardPageState extends State<IdCardPageState>
         ));
   }
 
-  void UploadFiles(file) async {
+  void UploadFiles(file,int v) async {
     postFile(
         file: file,
         successCallBack: (data) {
@@ -139,28 +140,58 @@ class _IdCardPageState extends State<IdCardPageState>
   void _selectedImage() {
     Future<XFile?> image = ImagePicker().pickImage(source: _imageSource);
     setState(() {
-      _imagePath = image;
+      print(isA);
+      if (isA==1){
+        _imagePathA = image;
+      }
+      if(isA==2){
+        _imagePathB = image;
+      }
     });
   }
 
-  Widget _previewImage() {
+  Widget _previewImageA() {
     return FutureBuilder<XFile?>(
-      future: _imagePath,
+      future: _imagePathA,
       builder: (context, AsyncSnapshot<XFile?> snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.data != null) {
-          _image = snapshot.data;
-          UploadFiles(File(snapshot.data!.path));
-          return Image(
-              width: 100,
-              height: 100,
-              image: FileImage(File(snapshot.data!.path)));
+            _imageA = snapshot.data;
+            UploadFiles(File(snapshot.data!.path),1);
+            return Image(
+                width: 100,
+                height: 100,
+                image: FileImage(File(_imageA!.path)));
         } else {
           return Image(
             width: 100,
             height:100,
-            image: NetworkImage("https://img1.baidu.com/it/u=105496718,1970821593&fm=26&fmt=auto"),
+            image: NetworkImage("https://bkimg.cdn.bcebos.com/pic/0eb30f2442a7d933b0a8b30ca24bd11373f00148?x-bce-process=image/watermark,image_d2F0ZXIvYmFpa2U5Mg==,g_7,xp_5,yp_5/format,f_auto"),
           );
+        }
+      },
+    );
+  }
+
+  Widget _previewImageB() {
+    return FutureBuilder<XFile?>(
+      future: _imagePathB,
+      builder: (context, AsyncSnapshot<XFile?> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.data != null) {
+            _imageB = snapshot.data;
+            UploadFiles(File(snapshot.data!.path),2);
+            return Image(
+                width: 100,
+                height: 100,
+                image: FileImage(File(_imageB!.path)));
+        } else {
+          return Image(
+            width: 100,
+            height:100,
+            image: NetworkImage("https://bkimg.cdn.bcebos.com/pic/0eb30f2442a7d933b0a8b30ca24bd11373f00148?x-bce-process=image/watermark,image_d2F0ZXIvYmFpa2U5Mg==,g_7,xp_5,yp_5/format,f_auto"),
+          );
+
         }
       },
     );
@@ -182,9 +213,10 @@ class _IdCardPageState extends State<IdCardPageState>
                   Text("身份证A面"),
                   GestureDetector(
                     onTap: () {
+                      isA =1;
                       _showSheetDialog();
                     },
-                    child: _previewImage(),
+                    child: _previewImageA(),
                   ),
                 ],
               ),
@@ -196,9 +228,10 @@ class _IdCardPageState extends State<IdCardPageState>
                   Text("身份证B面"),
                   GestureDetector(
                     onTap: () {
+                      isA =2;
                       _showSheetDialog();
                     },
-                    child: _previewImage(),
+                    child: _previewImageB(),
                   ),
                 ],
               ),
@@ -311,7 +344,12 @@ class _IdCardPageState extends State<IdCardPageState>
         children: [
           Hero(
             tag: 'toNext',
-            child: CupertinoButton.filled(child: Text("提交审核"), onPressed: () {}),
+            child: CupertinoButton.filled(child: Text("下一步"), onPressed: () {
+              Navigator.of(context, rootNavigator: true)
+                  .push(CupertinoPageRoute(builder: (BuildContext context) {
+                return FaceHomePage();
+              }));
+            }),
           ),
         ],
       ),

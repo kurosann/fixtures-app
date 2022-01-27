@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:fixtures/model/Order.dart';
 import 'package:fixtures/service/api/LoginApi.dart';
+import 'package:fixtures/service/api/OrderApi.dart';
 import 'package:fixtures/service/base/HttpManager.dart';
 import 'package:fixtures/view/handlingOrder/handlingOrder.dart';
 import 'package:fixtures/view/home/home.dart';
@@ -14,11 +15,54 @@ class OrderPage extends StatefulWidget {
   State<StatefulWidget> createState() => _OrderPageState();
 }
 
-class _OrderPageState extends State<OrderPage> with LoginMixin {
+class _OrderPageState extends State<OrderPage> with OrderApi {
   /// 订单数据
   var orderList = <Order>[];
-
+  var stateNameList = <String>["","待支付","正在进行","已完成","取消"];
+  int total = 0;
   var freshState = NetServiceState.PROCESS;
+  void getOrders(){
+    getUserOrder(
+        successCallBack: (data) {
+          orderList = <Order>[];
+          setState(() {
+            total = data["total"];
+            var list = data["list"];
+            for (int i = 0; i < total; i += 1){
+              var ct = DateTime.parse(list[i]["createdAt"]).toLocal();
+              orderList.add(Order(
+                id:list[i]["id"],
+                orderType:list[i]["orderType"],
+                paymentVoucher:list[i]["paymentVoucher"],
+                payAmount:list[i]["payAmount"],
+                shouldPay:list[i]["shouldPay"],
+                evaluation:list[i]["evaluation"],
+                tagPrice:list[i]["tagPrice"],
+                orderName:list[i]["orderName"],
+                orderUserPhone:list[i]["orderUserPhone"],
+                orderPhone:list[i]["orderPhone"],
+                masterId:list[i]["masterId"],
+                orderNo:list[i]["orderNo"],
+                userId:list[i]["userId"],
+                orderState:list[i]["orderState"],
+                isVirtual:list[i]["isVirtual"],
+                handle_time:list[i]["handle_time"],
+                completeTime:list[i]["completeTime"],
+                deadlineAt:list[i]["deadlineAt"],
+                createdAt:ct.year.toString()+"/"+ct.month.toString()+"/"+ct.day.toString(),
+              ));
+            }
+          });
+        },
+        errorCallBack: (code, msg) {}
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getOrders();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +79,12 @@ class _OrderPageState extends State<OrderPage> with LoginMixin {
                           Result result = Result();
                           await Future.delayed(Duration(seconds: 3));
                           result.code = 200;
-                          setState(() {
-                            orderList = [
-                              Order(),
-                            ];
-                          });
+                          getOrders();
+                          // setState(() {
+                          //   orderList = [
+                          //     Order(),
+                          //   ];
+                          // });
                         },
                       )
                     : SliverToBoxAdapter(),
@@ -57,7 +102,7 @@ class _OrderPageState extends State<OrderPage> with LoginMixin {
                     child: ListView(
                       physics: NeverScrollableScrollPhysics(),
                       children: [
-                        for (int i = 0; i < 10; i += 1) _skeletonItemCell()
+                        for (int i = 0; i < total; i += 1) _skeletonItemCell()
                       ],
                     ),
                   ),
@@ -65,10 +110,10 @@ class _OrderPageState extends State<OrderPage> with LoginMixin {
                     Result result = Result();
                     await Future.delayed(Duration(seconds: 3));
                     setState(() {
-                      orderList = [
-                        Order(),
-                        Order(),
-                      ];
+                      // orderList = [
+                      //   Order(),
+                      //   Order(),
+                      // ];
                       freshState = NetServiceState.SUCCESS;
                     });
                     result.code = 200;
@@ -158,7 +203,7 @@ class _OrderPageState extends State<OrderPage> with LoginMixin {
           Navigator.of(allContext!).push(CupertinoPageRoute(
             builder: (context) {
               return HandlingOrderPage(
-                id: "1",
+                id: "${order.id}",
               );
             },
           ));
@@ -180,7 +225,7 @@ class _OrderPageState extends State<OrderPage> with LoginMixin {
                             fontSize: 14, color: CupertinoColors.black),
                       ),
                       Text(
-                        "000000000",
+                        order.orderNo!,
                         style: TextStyle(
                             fontSize: 14, color: CupertinoColors.black),
                       ),
@@ -194,7 +239,7 @@ class _OrderPageState extends State<OrderPage> with LoginMixin {
                             fontSize: 14, color: CupertinoColors.black),
                       ),
                       Text(
-                        "000000000",
+                        order.createdAt!,
                         style: TextStyle(
                             fontSize: 14, color: CupertinoColors.black),
                       )
@@ -204,8 +249,14 @@ class _OrderPageState extends State<OrderPage> with LoginMixin {
               ),
               Container(
                   child: Text(
-                "工单状态${'000分'}",
-                style: TextStyle(fontSize: 14, color: CupertinoColors.black),
+                "${stateNameList[order.orderState!]}",
+                style: TextStyle(fontSize: 14,
+                    color: order.orderState==1?
+                    CupertinoColors.systemRed:
+                    order.orderState==2?
+                    CupertinoColors.activeOrange:
+                    CupertinoColors.activeGreen
+                ),
               ))
             ],
           ),

@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:fixtures/Localizations/AppGlobalCupertinoLocalizationsDelegate.dart';
 import 'package:fixtures/config.dart';
 import 'package:fixtures/model/AreaModel.dart';
+import 'package:fixtures/model/PersonalModel.dart';
 import 'package:fixtures/service/api/FileApi.dart';
 import 'package:fixtures/service/api/UserApi.dart';
 import 'package:fixtures/utils/utils.dart';
@@ -32,7 +33,7 @@ class _EditPersonalPageState extends State<EditPersonalPage>
   var _nameController = TextEditingController();
   var _birthDayController = TextEditingController();
   var _nickNameController = TextEditingController();
-  var _selectValue = TextEditingController(text:"身份证");
+  var _selectValue = TextEditingController(text: "身份证");
   var _localTextController = TextEditingController();
   var positions = <String>["身份证", "护照"];
   bool _isSelect = false;
@@ -67,13 +68,33 @@ class _EditPersonalPageState extends State<EditPersonalPage>
         String birthday = user["birthday"];
         _birthDayController.text = birthday;
         subLocalList = locals[1].children!;
-        _localTextController.text = "广东深圳";
+        _localTextController.text = user["location"];
         print(subLocalList);
       });
     }, errorCallBack: (code, msg) {
       print(msg);
     });
   }
+
+  void saveMyInfo() {
+    var pmodel = PersonalModel(
+        nickName: _nickNameController.text,
+        headPortrait: pic,
+        sex: sex ? 2 : 1,
+        birthday: _birthDayController.text,
+        location: _localTextController.text
+    );
+    savePersonal(
+      params: pmodel,
+      successCallBack: (data) {
+        setState(() {
+          getMyInfo();
+        });
+      }, errorCallBack: (code, msg) {
+      print(msg);
+    },);
+  }
+
 
   @override
   void initState() {
@@ -101,13 +122,32 @@ class _EditPersonalPageState extends State<EditPersonalPage>
     postFile(
         file: file,
         successCallBack: (data) {
-//          success
+          pic = "/"+data["full_path"];
+          saveMyInfo();
         },
         errorCallBack: (int code, String msg) {
-//          error
+          openMsg(msg);
         });
   }
 
+  void openMsg(String msg) {
+    showCupertinoDialog(
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            title: Text('提示'),
+            content: Text(msg),
+            actions: <Widget>[
+              CupertinoDialogAction(
+                child: Text('确认'),
+                onPressed: () {
+                  Navigator.of(context).pop("ok");
+                },
+              ),
+            ],
+          );
+        });
+  }
   void _showSheetDialog() {
     showCupertinoModalPopup(
       context: context,
@@ -147,6 +187,7 @@ class _EditPersonalPageState extends State<EditPersonalPage>
       _imagePath = image;
     });
   }
+
   void _showTypePick() {
     var i = 0;
     showCupertinoDialog(
@@ -198,7 +239,7 @@ class _EditPersonalPageState extends State<EditPersonalPage>
         } else {
           return CircleAvatar(
 
-        backgroundImage: NetworkImage(Config.BASE_URL + pic),
+            backgroundImage: NetworkImage(Config.BASE_URL + pic),
             radius: 40,
           );
         }
@@ -235,6 +276,9 @@ class _EditPersonalPageState extends State<EditPersonalPage>
               prefix: Text("昵称"),
               textAlign: TextAlign.end,
               placeholder: '请输入昵称',
+              onChanged: (v) {
+                saveMyInfo();
+              },
               textInputAction: TextInputAction.next,
             ),
             CupertinoTextFormFieldRow(
@@ -260,11 +304,12 @@ class _EditPersonalPageState extends State<EditPersonalPage>
                     activeColor: Colors.pinkAccent,
                     trackColor: Colors.blueAccent,
                     thumbColor:
-                        sex ? Colors.pink.shade700 : Colors.blue.shade700,
+                    sex ? Colors.pink.shade700 : Colors.blue.shade700,
                     onChanged: (bool value) {
                       setState(() {
                         sex = value;
                       });
+                      saveMyInfo();
                     },
                   ),
                   Text("女"),
@@ -280,6 +325,7 @@ class _EditPersonalPageState extends State<EditPersonalPage>
               readOnly: true,
               onTap: () {
                 _showDatePicker();
+                saveMyInfo();
               },
               keyboardType: TextInputType.datetime,
               textInputAction: TextInputAction.next,
@@ -296,7 +342,7 @@ class _EditPersonalPageState extends State<EditPersonalPage>
     var _localController = FixedExtentScrollController(initialItem: localIndex);
 
     var _subLocalController =
-        FixedExtentScrollController(initialItem: subLocalIndex);
+    FixedExtentScrollController(initialItem: subLocalIndex);
     showCupertinoModalPopup(
       context: context,
       builder: (context) {
@@ -343,13 +389,14 @@ class _EditPersonalPageState extends State<EditPersonalPage>
                             onSelectedItemChanged: (int value) {
                               state(() {
                                 subLocalName =
-                                    locals[localIndex].children![value].name!;
+                                locals[localIndex].children![value].name!;
 
                                 print(subLocalName);
 
                                 subLocalIndex = value;
                                 _localTextController.text =
                                     locals[localIndex].name! + subLocalName;
+                                saveMyInfo();
                               });
                             },
                             children: createEachItem(subLocalList),
@@ -387,32 +434,33 @@ class _EditPersonalPageState extends State<EditPersonalPage>
   void _showDatePicker() {
     showCupertinoModalPopup(
       context: context,
-      builder: (context) => Container(
-        color: Colors.white,
-        height: 300,
-        child: Container(
-          child: Column(
-            children: [
-              _modalActions(),
-              Container(
-                height: 200,
-                child: Localizations.override(
-                  context: context,
-                  delegates: [AppGlobalCupertinoLocalizationsDelegate()],
-                  child: CupertinoDatePicker(
-                      mode: CupertinoDatePickerMode.date,
-                      onDateTimeChanged: (dateTime) {
-                        setState(() {
-                          this._birthDayController.text =
-                              dataBirthFormat(dateTime);
-                        });
-                      }),
-                ),
+      builder: (context) =>
+          Container(
+            color: Colors.white,
+            height: 300,
+            child: Container(
+              child: Column(
+                children: [
+                  _modalActions(),
+                  Container(
+                    height: 200,
+                    child: Localizations.override(
+                      context: context,
+                      delegates: [AppGlobalCupertinoLocalizationsDelegate()],
+                      child: CupertinoDatePicker(
+                          mode: CupertinoDatePickerMode.date,
+                          onDateTimeChanged: (dateTime) {
+                            setState(() {
+                              this._birthDayController.text =
+                                  dataBirthFormat(dateTime);
+                            });
+                          }),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
     );
   }
 
@@ -568,15 +616,14 @@ class _EditPersonalPageState extends State<EditPersonalPage>
     );
   }
 
-  CupertinoTextFormFieldRow _formCell(
-      {required String title,
-      required TextEditingController controller,
-      String? placeholder,
-      bool? readOnly,
-      TextInputType? keyboardType,
-      int? maxLength,
-      String? regExp,
-      bool? isDone}) {
+  CupertinoTextFormFieldRow _formCell({required String title,
+    required TextEditingController controller,
+    String? placeholder,
+    bool? readOnly,
+    TextInputType? keyboardType,
+    int? maxLength,
+    String? regExp,
+    bool? isDone}) {
     var inputFormatters = <TextInputFormatter>[];
     if (maxLength != null) {
       inputFormatters.add(LengthLimitingTextInputFormatter(maxLength));
@@ -595,7 +642,7 @@ class _EditPersonalPageState extends State<EditPersonalPage>
       keyboardType: keyboardType,
       placeholder: placeholder,
       textInputAction:
-          isDone == true ? TextInputAction.done : TextInputAction.next,
+      isDone == true ? TextInputAction.done : TextInputAction.next,
     );
   }
 }
