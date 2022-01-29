@@ -1,3 +1,5 @@
+import 'package:fixtures/model/IdCardModel.dart';
+import 'package:fixtures/service/api/IdCardApi.dart';
 import 'package:fixtures/view/home/my/addBankCard.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -6,7 +8,64 @@ class CreditCardPage extends StatefulWidget {
   State<StatefulWidget> createState() => _CreditCardPageState();
 }
 
-class _CreditCardPageState extends State<CreditCardPage> {
+class _CreditCardPageState extends State<CreditCardPage>  with IdCardApi {
+  var IdCardList = <IdCardModel>[];
+  int total = 0;
+  void openMsg(String msg) {
+    showCupertinoDialog(
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            title: Text('提示'),
+            content: Text(msg),
+            actions: <Widget>[
+              CupertinoDialogAction(
+                child: Text('确认'),
+                onPressed: () {
+                  Navigator.of(context).pop("ok");
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  void findIdCard(){
+    getIdCard(
+        successCallBack: (data) {
+          IdCardList = <IdCardModel>[];
+          setState(() {
+            total = data["total"];
+            var list = data["list"];
+            for (int i = 0; i < total; i += 1){
+              IdCardList.add(IdCardModel(
+                id:list[i]["id"],
+                userId:list[i]["userId"],
+                bankName:list[i]["bankName"],
+                bankCardNo:list[i]["bankCardNo"],
+                cardOwner:list[i]["cardOwner"],
+                idCard:list[i]["idCard"],
+                phone:list[i]["phone"],
+                treatyState:list[i]["treatyState"],
+                remake:list[i]["remake"],
+              ));
+            }
+          });
+        },
+        errorCallBack: (code, err) {
+          if (code == 500) {
+            openMsg(err);
+          }
+        }
+    );
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    findIdCard();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -41,7 +100,7 @@ class _CreditCardPageState extends State<CreditCardPage> {
               child: ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: 10,
+                itemCount: total,
                 itemBuilder: (context, index) {
                   return Container(
                     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -65,13 +124,13 @@ class _CreditCardPageState extends State<CreditCardPage> {
                                       padding:
                                           EdgeInsets.symmetric(vertical: 4),
                                       child: Text(
-                                        "卡名",
+                                        IdCardList[index].bankName!,
                                         style: TextStyle(
                                             color: CupertinoColors.black),
                                       ),
                                     ),
                                     Text(
-                                      "尾号：0000",
+                                      "尾号：${IdCardList[index].bankCardNo!}",
                                       style: TextStyle(
                                           color: CupertinoColors.inactiveGray,
                                           fontSize: 12),

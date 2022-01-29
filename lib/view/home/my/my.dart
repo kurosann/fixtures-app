@@ -198,76 +198,90 @@ class _MyPageState extends State<MyPage> with UserApi {
             borderRadius: BorderRadius.circular(12)),
         margin: EdgeInsets.only(bottom: gutter),
         padding: EdgeInsets.symmetric(horizontal: 8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage(Config.BASE_URL + pic),
-                  backgroundColor: CupertinoColors.white,
-                  minRadius: 40,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Container(
-                            child: Text(
-                              uName,
-                              style: TextStyle(fontSize: 30),
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.all(gutter),
-                            child: Text(
-                              age + " 岁",
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: CupertinoColors.inactiveGray),
-                            ),
-                          )
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            child: Text(
-                              "身份：" + rolesStr,
-                              style: TextStyle(fontSize: 12),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            child: Text(
-                              "服务：${'某某服务'}",
-                              style: TextStyle(fontSize: 12),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+        child: CupertinoButton(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(0),
+          minSize: 0,
+          padding: EdgeInsets.all(0),
+          onPressed: () {
+            Navigator.of(context, rootNavigator: true)
+                .push(CupertinoPageRoute(builder: (BuildContext context) {
+              return EditPersonalPage();
+            }));
+          },
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(Config.BASE_URL + pic),
+                    backgroundColor: CupertinoColors.white,
+                    minRadius: 40,
                   ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                CupertinoIcons.forward,
-                size: 18,
-                color: CupertinoColors.inactiveGray,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Container(
+                              child: Text(
+                                uName,
+                                style: TextStyle(fontSize: 30,color: CupertinoColors.black),
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(gutter),
+                              child: Text(
+                                age + " 岁",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: CupertinoColors.black),
+                              ),
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              child: Text(
+                                "身份：" + rolesStr,
+                                style: TextStyle(fontSize: 12,
+                                    color: CupertinoColors.black),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              child: Text(
+                                "服务：${'某某服务'}",
+                                style: TextStyle(fontSize: 12,
+                                    color: CupertinoColors.black),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            )
-          ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(
+                  CupertinoIcons.forward,
+                  size: 18,
+                  color: CupertinoColors.inactiveGray,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -73,7 +73,7 @@ class _FindFixtureState extends State<FindFixturePage> with ItemMixin {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      backgroundColor: CupertinoColors.systemGroupedBackground,
+      backgroundColor: CupertinoColors.lightBackgroundGray,
       child: CustomScrollView(
         slivers: <Widget>[
           CupertinoSliverNavigationBar(
@@ -106,16 +106,16 @@ class _FindFixtureState extends State<FindFixturePage> with ItemMixin {
           ),
           SliverGrid(
             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              crossAxisSpacing: 0.0,
-              mainAxisSpacing: 0.0,
+              crossAxisSpacing: 5,
+              mainAxisSpacing: 5,
               maxCrossAxisExtent: 150.0,
-              childAspectRatio: 0.4,
+              childAspectRatio: 0.9,
             ),
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 return _itemCell(
                     itemList[index]["itemName"],
-                    Config.BASE_URL + itemList[index]["image_url"],
+                    Config.BASE_URL + itemList[index]["imageUrl"],
                     itemList[index]["id"]);
               },
               childCount: count,
@@ -127,10 +127,10 @@ class _FindFixtureState extends State<FindFixturePage> with ItemMixin {
   }
 
   Widget _itemCell(label, imageUrl, id) {
+    print(imageUrl);
     return Container(
-      color: CupertinoColors.lightBackgroundGray,
+      color: CupertinoColors.white,
       child: CupertinoButton(
-        color: CupertinoColors.white,
         borderRadius: BorderRadius.circular(0),
         child: Column(
           children: [

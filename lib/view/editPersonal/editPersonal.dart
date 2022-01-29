@@ -87,9 +87,7 @@ class _EditPersonalPageState extends State<EditPersonalPage>
     savePersonal(
       params: pmodel,
       successCallBack: (data) {
-        setState(() {
-          getMyInfo();
-        });
+
       }, errorCallBack: (code, msg) {
       print(msg);
     },);

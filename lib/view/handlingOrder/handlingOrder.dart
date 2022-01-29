@@ -5,17 +5,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class HandlingOrderPage extends StatefulWidget {
-  final String id;
+  final String orderNo;
 
-  HandlingOrderPage({required this.id});
+  HandlingOrderPage({required this.orderNo});
 
   @override
-  State<StatefulWidget> createState() => _HandlerOrderState(id: id);
+  State<StatefulWidget> createState() => _HandlerOrderState(orderNo: orderNo);
 }
 
 class _HandlerOrderState extends State<HandlingOrderPage>
     with SingleTickerProviderStateMixin {
-  final String id;
+  final String orderNo;
   int currentStep = 0;
   int currentRealStep = 2;
 
@@ -23,7 +23,7 @@ class _HandlerOrderState extends State<HandlingOrderPage>
 
   String sizeInput = "";
 
-  _HandlerOrderState({required this.id}) {
+  _HandlerOrderState({required this.orderNo}) {
     currentStep = currentRealStep;
   }
 

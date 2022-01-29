@@ -1,4 +1,6 @@
+import 'package:fixtures/model/IdCardModel.dart';
 import 'package:fixtures/service/api/FileApi.dart';
+import 'package:fixtures/service/api/IdCardApi.dart';
 import 'package:fixtures/service/api/UserApi.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -8,12 +10,49 @@ class AddBankCard extends StatefulWidget {
   State<StatefulWidget> createState() => _AddBankCardState();
 }
 
-class _AddBankCardState extends State<AddBankCard> with FileMixin, UserApi {
+class _AddBankCardState extends State<AddBankCard> with IdCardApi {
   var _idCardController = TextEditingController();
   var _phoneController = TextEditingController();
   var _nameController = TextEditingController();
   var _bankCardController = TextEditingController();
   var _bankController = TextEditingController();
+
+  void openMsg(String msg) {
+    showCupertinoDialog(
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            title: Text('提示'),
+            content: Text(msg),
+            actions: <Widget>[
+              CupertinoDialogAction(
+                child: Text('确认'),
+                onPressed: () {
+                  Navigator.of(context).pop("ok");
+                },
+              ),
+            ],
+          );
+        });
+  }
+  void saveIdCard(){
+    postIdCard(
+      params: IdCardModel(
+          bankName:_bankController.text,
+          bankCardNo:_bankCardController.text,
+          cardOwner:_nameController.text,
+          idCard:_idCardController.text,
+          phone:_phoneController.text),
+      successCallBack: (data) {
+        Navigator.of(context).pop(-1);
+      },
+      errorCallBack: (code, err) {
+        if (code == 500) {
+          openMsg(err);
+        }
+      }
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +65,6 @@ class _AddBankCardState extends State<AddBankCard> with FileMixin, UserApi {
         child: GestureDetector(
           onPanDown: (_) {
             FocusScopeNode currentFocus = FocusScope.of(context);
-
             /// 键盘是否是弹起状态
             if (!currentFocus.hasPrimaryFocus &&
                 currentFocus.focusedChild != null) {
@@ -73,20 +111,27 @@ class _AddBankCardState extends State<AddBankCard> with FileMixin, UserApi {
                           isDone: true),
                     ]),
               ),
+              _btnWidget()
             ],
           ),
         ));
   }
 
-  void UploadFiles(file) async {
-    postFile(
-        file: file,
-        successCallBack: (data) {
-//          success
-        },
-        errorCallBack: (int code, String msg) {
-//          error
-        });
+  Widget _btnWidget() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 32),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Hero(
+            tag: 'toNext',
+            child: CupertinoButton.filled(child: Text("提交"), onPressed: () {
+              saveIdCard();
+            }),
+          ),
+        ],
+      ),
+    );
   }
 
   static final double gutterV = 4;

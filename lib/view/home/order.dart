@@ -203,7 +203,7 @@ class _OrderPageState extends State<OrderPage> with OrderApi {
           Navigator.of(allContext!).push(CupertinoPageRoute(
             builder: (context) {
               return HandlingOrderPage(
-                id: "${order.id}",
+                orderNo: order.orderNo!,
               );
             },
           ));
