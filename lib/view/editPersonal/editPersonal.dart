@@ -24,9 +24,8 @@ class EditPersonalPage extends StatefulWidget {
 class _EditPersonalPageState extends State<EditPersonalPage>
     with FileMixin, UserApi {
   Future<XFile?>? _imagePath;
-
   var _image;
-
+  var cardType = 0;
   var _imageSource;
   var _idCardController = TextEditingController();
   var _phoneController = TextEditingController();
@@ -55,7 +54,8 @@ class _EditPersonalPageState extends State<EditPersonalPage>
   int subLocalIndex = 0;
 
   var sex = false;
-
+  var next = false;
+  var pass = 0;
   String pic = "";
 
   void getMyInfo() {
@@ -82,22 +82,40 @@ class _EditPersonalPageState extends State<EditPersonalPage>
         headPortrait: pic,
         sex: sex ? 2 : 1,
         birthday: _birthDayController.text,
-        location: _localTextController.text
-    );
+        location: _localTextController.text);
     savePersonal(
       params: pmodel,
-      successCallBack: (data) {
-
-      }, errorCallBack: (code, msg) {
-      print(msg);
-    },);
+      successCallBack: (data) {},
+      errorCallBack: (code, msg) {
+        print(msg);
+      },
+    );
   }
 
+  void _getRealInfo() {
+    // idCardAUrl
+    // idCardBUrl
+    // realImgUrl
+    // reason
+    getRealInfo(successCallBack: (data) {
+      setState(() {
+        pass = data["pass"];
+        _nameController.text = data["realName"];
+        _phoneController.text = data["phone"];
+        cardType = data["cardType"];
+        _idCardController.text = data["cardNo"];
+        _selectValue.text = positions[cardType];
+      });
+    }, errorCallBack: (code, msg) {
+      openMsg(msg);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     getMyInfo();
+    _getRealInfo();
   }
 
   @override
@@ -116,11 +134,29 @@ class _EditPersonalPageState extends State<EditPersonalPage>
         ));
   }
 
+  updateInfo() async {
+    editRealInfo(
+        params: {
+          "realName": _nameController.text,
+          "phone": _phoneController.text,
+          "cardType": cardType,
+          "cardNo": _idCardController.text
+        },
+        successCallBack: (data) {
+          setState(() {
+            next = true;
+          });
+        },
+        errorCallBack: (int code, String msg) {
+          openMsg(msg);
+        });
+  }
+
   void UploadFiles(file) async {
     postFile(
         file: file,
         successCallBack: (data) {
-          pic = "/"+data["full_path"];
+          pic = data["full_path"];
           saveMyInfo();
         },
         errorCallBack: (int code, String msg) {
@@ -146,6 +182,7 @@ class _EditPersonalPageState extends State<EditPersonalPage>
           );
         });
   }
+
   void _showSheetDialog() {
     showCupertinoModalPopup(
       context: context,
@@ -187,7 +224,7 @@ class _EditPersonalPageState extends State<EditPersonalPage>
   }
 
   void _showTypePick() {
-    var i = 0;
+    cardType = 0;
     showCupertinoDialog(
       context: context,
       builder: (ctx) {
@@ -199,7 +236,7 @@ class _EditPersonalPageState extends State<EditPersonalPage>
               onPressed: () {
                 setState(() {
                   _isSelect = !_isSelect;
-                  _selectValue.text = positions[i];
+                  _selectValue.text = positions[cardType];
                 });
                 Navigator.of(context).pop();
               },
@@ -210,9 +247,9 @@ class _EditPersonalPageState extends State<EditPersonalPage>
             child: CupertinoPicker(
               itemExtent: 28,
               onSelectedItemChanged: (int value) {
-                i = value;
+                cardType = value;
                 setState(() {
-                  _selectValue.text = positions[i];
+                  _selectValue.text = positions[cardType];
                 });
               },
               children: positions.map((e) => Text(e)).toList(),
@@ -236,7 +273,6 @@ class _EditPersonalPageState extends State<EditPersonalPage>
               backgroundImage: FileImage(File(snapshot.data!.path)));
         } else {
           return CircleAvatar(
-
             backgroundImage: NetworkImage(Config.BASE_URL + pic),
             radius: 40,
           );
@@ -302,7 +338,7 @@ class _EditPersonalPageState extends State<EditPersonalPage>
                     activeColor: Colors.pinkAccent,
                     trackColor: Colors.blueAccent,
                     thumbColor:
-                    sex ? Colors.pink.shade700 : Colors.blue.shade700,
+                        sex ? Colors.pink.shade700 : Colors.blue.shade700,
                     onChanged: (bool value) {
                       setState(() {
                         sex = value;
@@ -340,7 +376,7 @@ class _EditPersonalPageState extends State<EditPersonalPage>
     var _localController = FixedExtentScrollController(initialItem: localIndex);
 
     var _subLocalController =
-    FixedExtentScrollController(initialItem: subLocalIndex);
+        FixedExtentScrollController(initialItem: subLocalIndex);
     showCupertinoModalPopup(
       context: context,
       builder: (context) {
@@ -387,7 +423,7 @@ class _EditPersonalPageState extends State<EditPersonalPage>
                             onSelectedItemChanged: (int value) {
                               state(() {
                                 subLocalName =
-                                locals[localIndex].children![value].name!;
+                                    locals[localIndex].children![value].name!;
 
                                 print(subLocalName);
 
@@ -432,33 +468,32 @@ class _EditPersonalPageState extends State<EditPersonalPage>
   void _showDatePicker() {
     showCupertinoModalPopup(
       context: context,
-      builder: (context) =>
-          Container(
-            color: Colors.white,
-            height: 300,
-            child: Container(
-              child: Column(
-                children: [
-                  _modalActions(),
-                  Container(
-                    height: 200,
-                    child: Localizations.override(
-                      context: context,
-                      delegates: [AppGlobalCupertinoLocalizationsDelegate()],
-                      child: CupertinoDatePicker(
-                          mode: CupertinoDatePickerMode.date,
-                          onDateTimeChanged: (dateTime) {
-                            setState(() {
-                              this._birthDayController.text =
-                                  dataBirthFormat(dateTime);
-                            });
-                          }),
-                    ),
-                  ),
-                ],
+      builder: (context) => Container(
+        color: Colors.white,
+        height: 300,
+        child: Container(
+          child: Column(
+            children: [
+              _modalActions(),
+              Container(
+                height: 200,
+                child: Localizations.override(
+                  context: context,
+                  delegates: [AppGlobalCupertinoLocalizationsDelegate()],
+                  child: CupertinoDatePicker(
+                      mode: CupertinoDatePickerMode.date,
+                      onDateTimeChanged: (dateTime) {
+                        setState(() {
+                          this._birthDayController.text =
+                              dataBirthFormat(dateTime);
+                        });
+                      }),
+                ),
               ),
-            ),
+            ],
           ),
+        ),
+      ),
     );
   }
 
@@ -478,6 +513,7 @@ class _EditPersonalPageState extends State<EditPersonalPage>
             child: TextButton(
               style: mainButtonStyle(),
               onPressed: () {
+                _getRealInfo();
                 Navigator.of(context).push(CupertinoPageRoute(
                   builder: (context) {
                     return CupertinoPageScaffold(
@@ -578,12 +614,19 @@ class _EditPersonalPageState extends State<EditPersonalPage>
         children: [
           Hero(
             tag: 'toNext',
-            child: CupertinoButton.filled(child: Text("下一步"), onPressed: () {
-              Navigator.of(context, rootNavigator: true)
-                  .push(CupertinoPageRoute(builder: (BuildContext context) {
-                return IdCardPageState();
-              }));
-            }),
+            child: CupertinoButton.filled(
+                child: Text("下一步"),
+                onPressed: () async {
+                  if (pass != 2) {
+                    await updateInfo();
+                  }
+                  if (next || pass == 2) {
+                    Navigator.of(context, rootNavigator: true).push(
+                        CupertinoPageRoute(builder: (BuildContext context) {
+                      return IdCardPageState();
+                    }));
+                  }
+                }),
           ),
         ],
       ),
@@ -614,14 +657,15 @@ class _EditPersonalPageState extends State<EditPersonalPage>
     );
   }
 
-  CupertinoTextFormFieldRow _formCell({required String title,
-    required TextEditingController controller,
-    String? placeholder,
-    bool? readOnly,
-    TextInputType? keyboardType,
-    int? maxLength,
-    String? regExp,
-    bool? isDone}) {
+  CupertinoTextFormFieldRow _formCell(
+      {required String title,
+      required TextEditingController controller,
+      String? placeholder,
+      bool? readOnly,
+      TextInputType? keyboardType,
+      int? maxLength,
+      String? regExp,
+      bool? isDone}) {
     var inputFormatters = <TextInputFormatter>[];
     if (maxLength != null) {
       inputFormatters.add(LengthLimitingTextInputFormatter(maxLength));
@@ -640,7 +684,7 @@ class _EditPersonalPageState extends State<EditPersonalPage>
       keyboardType: keyboardType,
       placeholder: placeholder,
       textInputAction:
-      isDone == true ? TextInputAction.done : TextInputAction.next,
+          isDone == true ? TextInputAction.done : TextInputAction.next,
     );
   }
 }

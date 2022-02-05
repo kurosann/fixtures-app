@@ -21,9 +21,6 @@ class _FaceHomePageState extends State<FaceHomePage> {
   CameraDescription? cameraDescription;
   bool loading = false;
 
-  String githubURL =
-      "https://github.com/MCarlomagno/FaceRecognitionAuth/tree/master";
-
   @override
   void initState() {
     super.initState();

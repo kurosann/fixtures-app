@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:face_net_authentication/httpApi/updateFace.dart';
 import 'package:face_net_authentication/pages/home.dart';
 import 'package:fixtures/Localizations/AppGlobalCupertinoLocalizationsDelegate.dart';
 import 'package:fixtures/config.dart';
@@ -14,25 +15,29 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'facePage.dart';
+
 class IdCardPageState extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _IdCardPageState();
+
 }
 
 class _IdCardPageState extends State<IdCardPageState>
-    with FileMixin, UserApi {
+    with FileMixin, UserApi, FaceMixin {
   Future<XFile?>? _imagePathA;
   Future<XFile?>? _imagePathB;
-  int isA =0;
+  int isA = 0;
+  String? idCardAUrl="https://bkimg.cdn.bcebos.com/pic/0eb30f2442a7d933b0a8b30ca24bd11373f00148?x-bce-process=image/watermark,image_d2F0ZXIvYmFpa2U5Mg==,g_7,xp_5,yp_5/format,f_auto";
+  String? idCardBUrl="https://bkimg.cdn.bcebos.com/pic/0eb30f2442a7d933b0a8b30ca24bd11373f00148?x-bce-process=image/watermark,image_d2F0ZXIvYmFpa2U5Mg==,g_7,xp_5,yp_5/format,f_auto";
   var _imageA;
   var _imageB;
   var _imageSource;
   var _birthDayController = TextEditingController();
   var _nickNameController = TextEditingController();
-
+  var next = false;
   var _localTextController = TextEditingController();
-  var positions = <String>["身份证", "护照"];
-  bool _isSelect = false;
+
   List<AreaModel> locals = [
     AreaModel(
         111, "广东", [AreaModel(1222, "惠州", null), AreaModel(1333, "广州", null)]),
@@ -54,6 +59,18 @@ class _IdCardPageState extends State<IdCardPageState>
 
   String pic = "";
 
+  void _getRealInfo() {
+    getRealInfo(successCallBack: (data) {
+      setState(() {
+        if(data["pass"] != 1){
+          idCardAUrl = Config.BASE_URL + data["idCardAUrl"];
+          idCardBUrl = Config.BASE_URL + data["idCardBUrl"];
+        }
+      });
+    }, errorCallBack: (code, msg) {
+      openMsg(msg);
+    });
+  }
   void getMyInfo() {
     getPersonal(successCallBack: (data) {
       setState(() {
@@ -76,6 +93,7 @@ class _IdCardPageState extends State<IdCardPageState>
   void initState() {
     super.initState();
     getMyInfo();
+    _getRealInfo();
   }
 
   @override
@@ -93,14 +111,55 @@ class _IdCardPageState extends State<IdCardPageState>
         ));
   }
 
-  void UploadFiles(file,int v) async {
+  void openMsg(String msg) {
+    showCupertinoDialog(
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            title: Text('提示'),
+            content: Text(msg),
+            actions: <Widget>[
+              CupertinoDialogAction(
+                child: Text('确认'),
+                onPressed: () {
+                  Navigator.of(context).pop("ok");
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  Future<bool> postFaceUrl() async {
+    await postFace(
+        params: {"idCardAUrl": idCardAUrl, "idCardBUrl": idCardBUrl},
+        successCallBack: (data) {
+          setState(() {
+            next = true;
+          });
+        },
+        errorCallBack: (int code, String msg) {
+          openMsg(msg);
+        });
+    return next;
+  }
+
+  void UploadFiles(file, int v) async {
     postFile(
         file: file,
+        params: {"type": "1", "domain": "idCards"},
         successCallBack: (data) {
 //          success
+        print(data.toString());
+          if (v == 1) {
+            idCardAUrl = data["full_path"];
+          } else {
+            idCardBUrl = data["full_path"];
+          }
         },
         errorCallBack: (int code, String msg) {
 //          error
+          openMsg(msg);
         });
   }
 
@@ -141,10 +200,10 @@ class _IdCardPageState extends State<IdCardPageState>
     Future<XFile?> image = ImagePicker().pickImage(source: _imageSource);
     setState(() {
       print(isA);
-      if (isA==1){
+      if (isA == 1) {
         _imagePathA = image;
       }
-      if(isA==2){
+      if (isA == 2) {
         _imagePathB = image;
       }
     });
@@ -156,17 +215,15 @@ class _IdCardPageState extends State<IdCardPageState>
       builder: (context, AsyncSnapshot<XFile?> snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.data != null) {
-            _imageA = snapshot.data;
-            UploadFiles(File(snapshot.data!.path),1);
-            return Image(
-                width: 100,
-                height: 100,
-                image: FileImage(File(_imageA!.path)));
+          _imageA = snapshot.data;
+          UploadFiles(File(snapshot.data!.path), 1);
+          return Image(
+              width: 100, height: 100, image: FileImage(File(_imageA!.path)));
         } else {
           return Image(
             width: 100,
-            height:100,
-            image: NetworkImage("https://bkimg.cdn.bcebos.com/pic/0eb30f2442a7d933b0a8b30ca24bd11373f00148?x-bce-process=image/watermark,image_d2F0ZXIvYmFpa2U5Mg==,g_7,xp_5,yp_5/format,f_auto"),
+            height: 100,
+            image: NetworkImage(idCardAUrl!)
           );
         }
       },
@@ -179,19 +236,16 @@ class _IdCardPageState extends State<IdCardPageState>
       builder: (context, AsyncSnapshot<XFile?> snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.data != null) {
-            _imageB = snapshot.data;
-            UploadFiles(File(snapshot.data!.path),2);
-            return Image(
-                width: 100,
-                height: 100,
-                image: FileImage(File(_imageB!.path)));
+          _imageB = snapshot.data;
+          UploadFiles(File(snapshot.data!.path), 2);
+          return Image(
+              width: 100, height: 100, image: FileImage(File(_imageB!.path)));
         } else {
           return Image(
             width: 100,
-            height:100,
-            image: NetworkImage("https://bkimg.cdn.bcebos.com/pic/0eb30f2442a7d933b0a8b30ca24bd11373f00148?x-bce-process=image/watermark,image_d2F0ZXIvYmFpa2U5Mg==,g_7,xp_5,yp_5/format,f_auto"),
+            height: 100,
+            image: NetworkImage(idCardBUrl!),
           );
-
         }
       },
     );
@@ -213,7 +267,7 @@ class _IdCardPageState extends State<IdCardPageState>
                   Text("身份证A面"),
                   GestureDetector(
                     onTap: () {
-                      isA =1;
+                      isA = 1;
                       _showSheetDialog();
                     },
                     child: _previewImageA(),
@@ -228,7 +282,7 @@ class _IdCardPageState extends State<IdCardPageState>
                   Text("身份证B面"),
                   GestureDetector(
                     onTap: () {
-                      isA =2;
+                      isA = 2;
                       _showSheetDialog();
                     },
                     child: _previewImageB(),
@@ -248,7 +302,7 @@ class _IdCardPageState extends State<IdCardPageState>
     var _localController = FixedExtentScrollController(initialItem: localIndex);
 
     var _subLocalController =
-    FixedExtentScrollController(initialItem: subLocalIndex);
+        FixedExtentScrollController(initialItem: subLocalIndex);
     showCupertinoModalPopup(
       context: context,
       builder: (context) {
@@ -295,10 +349,8 @@ class _IdCardPageState extends State<IdCardPageState>
                             onSelectedItemChanged: (int value) {
                               state(() {
                                 subLocalName =
-                                locals[localIndex].children![value].name!;
-
+                                    locals[localIndex].children![value].name!;
                                 print(subLocalName);
-
                                 subLocalIndex = value;
                                 _localTextController.text =
                                     locals[localIndex].name! + subLocalName;
@@ -344,12 +396,17 @@ class _IdCardPageState extends State<IdCardPageState>
         children: [
           Hero(
             tag: 'toNext',
-            child: CupertinoButton.filled(child: Text("下一步"), onPressed: () {
-              Navigator.of(context, rootNavigator: true)
-                  .push(CupertinoPageRoute(builder: (BuildContext context) {
-                return FaceHomePage();
-              }));
-            }),
+            child: CupertinoButton.filled(
+                child: Text("下一步"),
+                onPressed: () async {
+                  await postFaceUrl();
+                  if (next) {
+                    Navigator.of(context, rootNavigator: true)
+                        .push(CupertinoPageRoute(builder: (BuildContext context) {
+                      return FacePageState();
+                    }));
+                  }
+                }),
           ),
         ],
       ),
@@ -382,13 +439,13 @@ class _IdCardPageState extends State<IdCardPageState>
 
   CupertinoTextFormFieldRow _formCell(
       {required String title,
-        required TextEditingController controller,
-        String? placeholder,
-        bool? readOnly,
-        TextInputType? keyboardType,
-        int? maxLength,
-        String? regExp,
-        bool? isDone}) {
+      required TextEditingController controller,
+      String? placeholder,
+      bool? readOnly,
+      TextInputType? keyboardType,
+      int? maxLength,
+      String? regExp,
+      bool? isDone}) {
     var inputFormatters = <TextInputFormatter>[];
     if (maxLength != null) {
       inputFormatters.add(LengthLimitingTextInputFormatter(maxLength));
@@ -407,7 +464,7 @@ class _IdCardPageState extends State<IdCardPageState>
       keyboardType: keyboardType,
       placeholder: placeholder,
       textInputAction:
-      isDone == true ? TextInputAction.done : TextInputAction.next,
+          isDone == true ? TextInputAction.done : TextInputAction.next,
     );
   }
 }

@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
+import 'package:face_net_authentication/httpApi/FileApi.dart';
+import 'package:face_net_authentication/httpApi/updateFace.dart';
 import 'package:face_net_authentication/pages/widgets/FacePainter.dart';
 import 'package:face_net_authentication/pages/widgets/auth-action-button.dart';
 import 'package:face_net_authentication/pages/widgets/camera_header.dart';
@@ -8,6 +10,7 @@ import 'package:face_net_authentication/services/camera.service.dart';
 import 'package:face_net_authentication/services/facenet.service.dart';
 import 'package:face_net_authentication/services/ml_kit_service.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:flutter/material.dart';
 
@@ -21,8 +24,10 @@ class OpenCameraScan extends StatefulWidget {
   OpenCameraScanState createState() => OpenCameraScanState();
 }
 
-class OpenCameraScanState extends State<OpenCameraScan> {
+class OpenCameraScanState extends State<OpenCameraScan>
+    with FileMixin, FaceMixin {
   String? imagePath;
+  String? realImgUrl;
   Face? faceDetected;
   Size? imageSize;
 
@@ -69,6 +74,46 @@ class OpenCameraScanState extends State<OpenCameraScan> {
     _frameFaces();
   }
 
+  void postFaceUrl() async {
+    postFace(
+        params: {"realImgUrl": realImgUrl},
+        successCallBack: (data) {
+          Navigator.of(context).pop(-1);
+        },
+        errorCallBack: (int code, String msg) {
+          setState(() {
+            _bottomSheetVisible = false;
+            pictureTaked = false;
+            _saving = false;
+          });
+        });
+  }
+
+  Future<bool> UploadFiles(file) async {
+    await postFile(
+        file: file,
+        params: {"type": "1", "domain": "faces"},
+        successCallBack: (data) {
+          setState(() {
+            _bottomSheetVisible = true;
+            pictureTaked = true;
+            realImgUrl = data["full_path"];
+          });
+        },
+        errorCallBack: (int code, String msg) {
+          setState(() {
+            _bottomSheetVisible = false;
+            pictureTaked = false;
+            _saving = false;
+          });
+          AlertDialog(
+            content: Text(msg),
+          );
+        });
+
+    return _saving;
+  }
+
   /// handles the button pressed event
   Future<bool> onShot() async {
     if (faceDetected == null) {
@@ -80,7 +125,6 @@ class OpenCameraScanState extends State<OpenCameraScan> {
           );
         },
       );
-
       return false;
     } else {
       _saving = true;
@@ -92,9 +136,10 @@ class OpenCameraScanState extends State<OpenCameraScan> {
       setState(() {
         _bottomSheetVisible = true;
         pictureTaked = true;
-        print("上传：" + imagePath!);
       });
-      return true;
+      _saving = await UploadFiles(File(imagePath!));
+      postFaceUrl();
+      return _saving;
     }
   }
 
@@ -175,10 +220,9 @@ class OpenCameraScanState extends State<OpenCameraScan> {
                                         alignment: Alignment.center,
                                         child: FittedBox(
                                           fit: BoxFit.cover,
-                                          child: Image.file(
-                                              File(imagePath!),
-                                              alignment:Alignment.bottomCenter
-                                          ),
+                                          child: Image.file(File(imagePath!),
+                                              alignment:
+                                                  Alignment.bottomCenter),
                                         ),
                                         transform: Matrix4.rotationY(mirror))
                                   ],
@@ -229,6 +273,24 @@ class OpenCameraScanState extends State<OpenCameraScan> {
                 onPressed: onShot,
                 reload: _reload,
               )
-            : Container());
+            : Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: 60,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '正在上传人脸...',
+                      style: TextStyle(color: Colors.greenAccent),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    )
+                  ],
+                ),
+              )
+    );
   }
 }

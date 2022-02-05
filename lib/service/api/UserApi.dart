@@ -25,4 +25,26 @@ mixin UserApi {
         successCallBack: successCallBack,
         errorCallBack: errorCallBack);
   }
+  /// post
+  void editRealInfo(
+      { params,
+        required SuccessCallBack successCallBack,
+      ErrorCallBack? errorCallBack}) async {
+    return BaseNet.instance.post(
+        url: '/api/v1/appMasterApply/info',
+        // 不是map需序列化为map
+        params: params,
+        successCallBack: successCallBack,
+        errorCallBack: errorCallBack);
+  }
+
+  void getRealInfo(
+      { required SuccessCallBack successCallBack,
+        ErrorCallBack? errorCallBack}) async {
+    return BaseNet.instance.get(
+        url:"/api/v1/appMasterApply/applyInfo",
+        params: {},
+        successCallBack: successCallBack,
+        errorCallBack: errorCallBack);
+  }
 }

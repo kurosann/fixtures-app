@@ -17,16 +17,16 @@ class FacePainter extends CustomPainter {
     if (this.face.headEulerAngleY! > 20 || this.face.headEulerAngleY! < -20) {
       paint = Paint()
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 3.0
+        ..strokeWidth = 2.0
         ..color = Colors.red;
     } else {
       paint = Paint()
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 3.0
+        ..strokeWidth = 2.0
         ..color = Colors.greenAccent;
     }
 
-    scaleX = size.width / imageSize.width;
+    scaleX = size.width / imageSize.width/1.2;
     scaleY = size.height / imageSize.height;
 
     canvas.drawRRect(
