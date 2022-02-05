@@ -36,6 +36,7 @@ class _EditPersonalPageState extends State<EditPersonalPage>
   var _localTextController = TextEditingController();
   var positions = <String>["身份证", "护照"];
   bool _isSelect = false;
+  bool? readOnly = false;
   List<AreaModel> locals = [
     AreaModel(
         111, "广东", [AreaModel(1222, "惠州", null), AreaModel(1333, "广州", null)]),
@@ -100,6 +101,7 @@ class _EditPersonalPageState extends State<EditPersonalPage>
     getRealInfo(successCallBack: (data) {
       setState(() {
         pass = data["pass"];
+        readOnly = pass!=2?false:true;
         _nameController.text = data["realName"];
         _phoneController.text = data["phone"];
         cardType = data["cardType"];
@@ -534,10 +536,12 @@ class _EditPersonalPageState extends State<EditPersonalPage>
                                 children: [
                                   _formCell(
                                       title: '姓名',
+                                      readOnly:readOnly,
                                       controller: _nameController,
                                       placeholder: '请输入真实姓名'),
                                   _formCell(
                                       title: '手机号',
+                                      readOnly:readOnly,
                                       controller: _phoneController,
                                       keyboardType: TextInputType.number,
                                       maxLength: 16,
@@ -557,6 +561,7 @@ class _EditPersonalPageState extends State<EditPersonalPage>
                                   ),
                                   _formCell(
                                       title: "证件号",
+                                      readOnly:readOnly,
                                       controller: _idCardController,
                                       maxLength: 18,
                                       regExp: r'[0-9|X|x]',

@@ -62,6 +62,7 @@ class _IdCardPageState extends State<IdCardPageState>
   void _getRealInfo() {
     getRealInfo(successCallBack: (data) {
       setState(() {
+        print(data["pass"]);
         if(data["pass"] != 1){
           idCardAUrl = Config.BASE_URL + data["idCardAUrl"];
           idCardBUrl = Config.BASE_URL + data["idCardBUrl"];
