@@ -2,8 +2,11 @@ import 'package:fixtures/utils/utils.dart';
 import 'package:fixtures/view/home/home.dart';
 import 'package:fixtures/view/login/login.dart';
 import 'package:fixtures/view/setting/rePassword.dart';
+import 'package:fixtures/view/setting/rePayPassword.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'rePwdSms.dart';
 
 class SettingPage extends StatelessWidget {
   @override
@@ -25,7 +28,7 @@ class SettingPage extends StatelessWidget {
               child: Column(
                 children: [
                   actionCell(
-                      title: "修改密码",
+                      title: "修改登录密码",
                       tailing: Icon(
                         CupertinoIcons.forward,
                         size: 16,
@@ -36,6 +39,21 @@ class SettingPage extends StatelessWidget {
                             CupertinoPageRoute(builder: (BuildContext context) {
                           return CupertinoPageScaffold(
                             child: RePassWord(),
+                          );
+                        }));
+                      }),
+                  actionCell(
+                      title: "修改支付密码",
+                      tailing: Icon(
+                        CupertinoIcons.forward,
+                        size: 16,
+                        color: CupertinoColors.inactiveGray,
+                      ),
+                      onPressed: () {
+                        Navigator.of(allContext!).push(
+                            CupertinoPageRoute(builder: (BuildContext context) {
+                          return CupertinoPageScaffold(
+                            child: RePwdSms(),
                           );
                         }));
                       }),
