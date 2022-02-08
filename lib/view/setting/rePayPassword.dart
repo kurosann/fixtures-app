@@ -6,18 +6,16 @@ import 'package:fixtures/view/setting/payField/pay_password.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-
-
 /// 支付密码  +  自定义键盘
 
 class RePayPassword extends StatefulWidget {
   static final String sName = "enter";
+
   @override
   State<StatefulWidget> createState() {
     return new RePayPasswordState();
   }
 }
-
 
 class RePayPasswordState extends State<RePayPassword> {
   String pwdData = '';
@@ -27,6 +25,7 @@ class RePayPasswordState extends State<RePayPassword> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   VoidCallback? _showBottomSheetCallback;
+
   void openMsg(String msg) {
     showCupertinoDialog(
         context: context,
@@ -66,7 +65,6 @@ class RePayPasswordState extends State<RePayPassword> {
       color: Color(0xffffffff),
       child: new Column(
         children: <Widget>[
-
           new Padding(
             padding: const EdgeInsets.only(top: 50.0),
             child: new Text(
@@ -105,29 +103,28 @@ class RePayPasswordState extends State<RePayPassword> {
     // 打印支付宝密码
     print(pwdData);
     print(firstPwdData);
-    number+=1;
+    number += 1;
     // 判断是否第二次输入
-    if (number==1) {
+    if (number == 1) {
       firstPwdData = pwdData;
       pwdData = "";
       setState(() {
-        msg="再次确认新密码";
+        msg = "再次确认新密码";
       });
-    }else{
-      if(firstPwdData == pwdData){
-
-      }else{
+    } else {
+      if (firstPwdData == pwdData) {
+      } else {
         openMsg("两次密码不一样，请重新输入");
-        number=0;
+        number = 0;
         pwdData = "";
         setState(() {
-          msg="请在此输入新支付密码";
+          msg = "请在此输入新支付密码";
         });
       }
     }
   }
 
-  void _onKeyDown(KeyEvents data){
+  void _onKeyDown(KeyEvents data) {
     if (data.isDelete()) {
       if (pwdData.length > 0) {
         pwdData = pwdData.substring(0, pwdData.length - 1);
@@ -146,31 +143,33 @@ class RePayPasswordState extends State<RePayPassword> {
       setState(() {});
     }
   }
+
   /// 底部弹出 自定义键盘  下滑消失
   void _showBottomSheet() {
     setState(() {
       // disable the button
       _showBottomSheetCallback = null;
     });
-    _scaffoldKey.currentState?.showBottomSheet<void>((BuildContext context) {
-      return new MyKeyboard(_onKeyDown);
-    })
+    _scaffoldKey.currentState
+        ?.showBottomSheet<void>((BuildContext context) {
+          return new MyKeyboard(_onKeyDown);
+        })
         .closed
         .whenComplete(() {
-      if (mounted) {
-        setState(() {
-          // re-enable the button
-          _showBottomSheetCallback = _showBottomSheet;
+          if (mounted) {
+            setState(() {
+              // re-enable the button
+              _showBottomSheetCallback = _showBottomSheet;
+            });
+          }
         });
-      }
-    });
   }
 
   Widget _buildPwd(var pwd) {
     return new GestureDetector(
       child: new Container(
         width: 250.0,
-        height:40.0,
+        height: 40.0,
 //      color: Colors.white,
         child: new CustomJPasswordField(pwd),
       ),

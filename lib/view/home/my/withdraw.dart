@@ -1,33 +1,162 @@
 import 'dart:async';
 
+import 'package:fixtures/model/IdCardModel.dart';
+import 'package:fixtures/service/api/IdCardApi.dart';
 import 'package:fixtures/view/login/loginStyle.dart';
+import 'package:fixtures/view/setting/payField/customJPasswordField.dart';
+import 'package:fixtures/view/setting/payField/keyboard.dart';
+import 'package:fixtures/view/setting/payField/keyboard_main.dart';
+import 'package:fixtures/view/setting/payField/pay_password.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import 'addBankCard.dart';
+
 class WithdrawPage extends StatefulWidget {
   final String balance;
-
+  static final String sName = "enter";
   WithdrawPage(this.balance);
 
   @override
   State<StatefulWidget> createState() => _WithdrawPageState(balance);
 }
 
-class _WithdrawPageState extends State<WithdrawPage> {
+class _WithdrawPageState extends State<WithdrawPage> with IdCardApi {
   String balance;
+  var IdCardList = <IdCardModel>[];
+  var actionsWidget = <CupertinoActionSheetAction>[];
   late Timer _timer;
   int _countdownTime = 0;
   var way = 0;
+  var wayName = "请选择提现方式";
+  var total = 0;
   final phoneCode = TextEditingController();
   var _controller = TextEditingController();
 
+  String pwdData = '';
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  VoidCallback? _showBottomSheetCallback;
+
   _WithdrawPageState(this.balance);
+
+  void findIdCard() {
+    getIdCard(successCallBack: (data) {
+      IdCardList = <IdCardModel>[];
+      setState(() {
+        total = data["total"];
+        var list = data["list"];
+        for (int i = 0; i < total; i += 1) {
+          actionsWidget.add(CupertinoActionSheetAction(
+            onPressed: () {
+              setState(() {
+                way = list[i]["id"];
+                wayName = list[i]["bankName"];
+              });
+              Navigator.of(context).pop();
+            },
+            child: Text(list[i]["bankName"],
+                style: TextStyle(color: Colors.black87)),
+          ));
+        }
+      });
+    }, errorCallBack: (code, err) {
+      if (code == 500) {
+        openMsg(err);
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _showBottomSheetCallback = _showBottomSheet;
+    findIdCard();
+
+  }
+
+  Widget _buildContent(BuildContext c) {
+    return new Container(
+      child: new Column(
+        children: <Widget>[
+          ///密码框
+          new Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: _buildPwd(pwdData),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+
+  /// 密码键盘 确认按钮 事件
+  void onAffirmButton() {
+    // 打印支付宝密码
+    print(pwdData);
+  }
+
+  void _onKeyDown(KeyEvents data) {
+    if (data.isDelete()) {
+      if (pwdData.length > 0) {
+        pwdData = pwdData.substring(0, pwdData.length - 1);
+        setState(() {});
+      }
+    } else if (data.isCommit()) {
+      if (pwdData.length != 6) {
+//        Fluttertoast.showToast(msg: "密码不足6位，请重试", gravity: ToastGravity.CENTER);
+        return;
+      }
+      onAffirmButton();
+    } else {
+      if (pwdData.length < 6) {
+        pwdData += data.key;
+      }
+      setState(() {});
+    }
+  }
+
+  /// 底部弹出 自定义键盘  下滑消失
+  void _showBottomSheet() {
+    setState(() {
+      // disable the button
+      _showBottomSheetCallback = null;
+    });
+    _scaffoldKey.currentState
+        ?.showBottomSheet<void>((BuildContext context) {
+          return new MyKeyboard(_onKeyDown);
+        })
+        .closed
+        .whenComplete(() {
+          if (mounted) {
+            setState(() {
+              // re-enable the button
+              _showBottomSheetCallback = _showBottomSheet;
+            });
+          }
+        });
+  }
+
+  Widget _buildPwd(var pwd) {
+    return new GestureDetector(
+      child: new Container(
+        width: 250.0,
+        height: 40.0,
+//      color: Colors.white,
+        child: new CustomJPasswordField(pwd),
+      ),
+      onTap: () {
+        _showBottomSheetCallback = _showBottomSheet;
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+        key: _scaffoldKey,
         backgroundColor: CupertinoColors.systemGroupedBackground,
         navigationBar: CupertinoNavigationBar(
           previousPageTitle: '余额',
@@ -59,7 +188,7 @@ class _WithdrawPageState extends State<WithdrawPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "充值方式",
+                            "提现方式",
                             style: TextStyle(fontSize: 14),
                           ),
                           CupertinoButton(
@@ -67,7 +196,31 @@ class _WithdrawPageState extends State<WithdrawPage> {
                             minSize: 0,
                             alignment: Alignment.bottomLeft,
                             onPressed: () {
-                              _showPopupModel(context);
+                              if (total == 0) {
+                                showCupertinoDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return CupertinoAlertDialog(
+                                        title: Text('提示'),
+                                        content: Text("没有银行卡请先添加"),
+                                        actions: <Widget>[
+                                          CupertinoDialogAction(
+                                            child: Text('确认'),
+                                            onPressed: () {
+                                              Navigator.of(context)
+                                                  .push(CupertinoPageRoute(
+                                                builder: (context) {
+                                                  return AddBankCard();
+                                                },
+                                              ));
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    });
+                              } else {
+                                _showPopupModel(context);
+                              }
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -77,23 +230,15 @@ class _WithdrawPageState extends State<WithdrawPage> {
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: way == 0
-                                          ? Icon(
-                                              FontAwesomeIcons.weixin,
-                                              color: Colors.green,
-                                            )
-                                          : Icon(
-                                              FontAwesomeIcons.alipay,
-                                              color: Colors.blue,
-                                            ),
+                                      child: Icon(
+                                        FontAwesomeIcons.wallet,
+                                        color: Colors.blue,
+                                      ),
                                     ),
                                     Text(
-                                      way == 0 ? "微信" : "支付宝",
+                                      wayName,
                                       style: TextStyle(
-                                          fontSize: 20,
-                                          color: way == 0
-                                              ? Colors.green
-                                              : Colors.blue),
+                                          fontSize: 20, color: Colors.black87),
                                     )
                                   ],
                                 ),
@@ -193,7 +338,32 @@ class _WithdrawPageState extends State<WithdrawPage> {
                       Hero(
                         tag: 'Withdraw',
                         child: CupertinoButton.filled(
-                            child: Text("提现"), onPressed: () {}),
+                            child: Text("提现"),
+                            onPressed: () {
+                              // showCupertinoDialog(
+                              //     context: context,
+                              //     builder: (c) {
+                              //       return CupertinoAlertDialog(
+                              //         title: Text('请输入支付密码'),
+                              //         content: _buildContent(c),
+                              //         actions: <Widget>[
+                              //           _buildContent(c),
+                              //           CupertinoDialogAction(
+                              //             child: Text('确认'),
+                              //             onPressed: () {
+                              //               Navigator.of(context).pop("ok");
+                              //             },
+                              //           ),
+                              //         ],
+                              //       );
+                              //     });
+                              Navigator.of(context)
+                                  .push(CupertinoPageRoute(
+                                builder: (context) {
+                                  return main_keyboard();
+                                },
+                              ));
+                            }),
                       ),
                     ],
                   ),
@@ -283,21 +453,15 @@ class _WithdrawPageState extends State<WithdrawPage> {
         context: context,
         builder: (c) {
           return CupertinoAlertDialog(
-            title: Text('短信验证'),
-            content: codeSms(),
+            title: Text('提示'),
+            content: Text(msg),
             actions: <Widget>[
               CupertinoDialogAction(
                 child: Text('确认'),
                 onPressed: () {
                   Navigator.of(context).pop("ok");
                 },
-              ),
-              CupertinoDialogAction(
-                child: Text('取消'),
-                onPressed: () {
-                  Navigator.of(context).pop("ok");
-                },
-              ),
+              )
             ],
           );
         });
@@ -308,26 +472,7 @@ class _WithdrawPageState extends State<WithdrawPage> {
       context: context,
       builder: (context) {
         return CupertinoActionSheet(
-          actions: <CupertinoActionSheetAction>[
-            CupertinoActionSheetAction(
-              onPressed: () {
-                setState(() {
-                  way = 0;
-                });
-                Navigator.of(context).pop();
-              },
-              child: Text("微信", style: TextStyle(color: Colors.green)),
-            ),
-            CupertinoActionSheetAction(
-              onPressed: () {
-                setState(() {
-                  way = 1;
-                });
-                Navigator.of(context).pop();
-              },
-              child: Text("支付宝", style: TextStyle(color: Colors.blue)),
-            ),
-          ],
+          actions: actionsWidget,
           cancelButton: CupertinoActionSheetAction(
             isDestructiveAction: true,
             onPressed: () {
